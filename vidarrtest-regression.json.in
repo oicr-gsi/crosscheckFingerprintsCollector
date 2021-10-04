@@ -76,7 +76,7 @@
 				},
             "crosscheckFingerprintsCollector.fastqR2": {
                  "contents": {
-				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R1.fastq.gz",
+				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R2.fastq.gz",
 					 "externalIds": [
 					 	{
 							"id":"TEST",
