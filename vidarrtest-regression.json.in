@@ -1,5 +1,8 @@
 [
     {
+        "id": "TEST_0001_WG_HG38",
+        "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38",
+
         "arguments": {
             "crosscheckFingerprintsCollector.fastqR1": {
                  "contents": {
@@ -22,17 +25,13 @@
 					]
 				},
 		    "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG",
+		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
 		    "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
 		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
 		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef" : "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
 		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12"
         },
-		
-		
-        "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38",
-        "engineArguments": {},
-        "id": "TEST_0001_WG_HG38",
+		"engineArguments": {},		
         "metadata": {
             "crosscheckFingerprintsCollector.vcf": {
                 "contents": [
@@ -46,6 +45,66 @@
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            }
+        },
+        "validators": [
+            {
+                "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
+                "metrics_compare": "@CHECKOUT@/tests/compare.sh",
+                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprints/output_expectation/TEST_0001_WG.metrics",
+                "type": "script"
+            }
+        ]
+    },
+    {
+        "id": "TEST_0001_WT_HG38",
+        "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38",
+
+        "arguments": {
+            "crosscheckFingerprintsCollector.fastqR1": {
+                 "contents": {
+				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R1.fastq.gz",
+					 "externalIds": [
+					 	{
+							"id":"TEST",
+							"provider":"TEST",
+						}
+					]
+				},
+            "crosscheckFingerprintsCollector.fastqR2": {
+                 "contents": {
+				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R1.fastq.gz",
+					 "externalIds": [
+					 	{
+							"id":"TEST",
+							"provider":"TEST",
+						}
+					]
+				},
+		    "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
+		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
+		    "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
+		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
+		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef" : "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
+		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12"
+        },
+		"engineArguments": {},		
+        "metadata": {
+            "crosscheckFingerprintsCollector.vcf": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_@JENKINSID@"
+                    }
+                ],
+                "type": "ALL"
+            },
+            "crosscheckFingerprintsCollector.tbi": {
+                "contents": [
+                    {
+                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_@JENKINSID@"
                     }
                 ],
                 "type": "ALL"
