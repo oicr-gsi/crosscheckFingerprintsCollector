@@ -62,6 +62,8 @@
 	        "crosscheckFingerprintsCollector.bwaMem.trimMinQuality" : null,
 	        "crosscheckFingerprintsCollector.bwaMem.adapter1" : null,
 	        "crosscheckFingerprintsCollector.bwaMem.adapter2" : null,
+			"crosscheckFingerprintsCollector.bwaMem.runBwaMem_addParam" : null,
+			"crosscheckFingerprintsCollector.bwaMem.adapterTrimming_addParam" : null,
 		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12",
 			"crosscheckFingerprintsCollector.extractFingerprint.jobMemory" : null,
 			"crosscheckFingerprintsCollector.extractFingerprint.timeout" : null,
