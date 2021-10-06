@@ -58,8 +58,8 @@ workflow crosscheckFingerprintsCollector {
       },
     ]
     output_meta: {
-      outputVcf: "gzipped vcf expression levels for all genes recorded in the reference",
-      outbutTbi: "expression levels for all isoforms recorded in the reference",
+      outputVcf: "gzipped vcf expression levels for all genes recorded in the reference"
+      outbutTbi: "expression levels for all isoforms recorded in the reference"
     }
   }
 
@@ -70,7 +70,7 @@ workflow crosscheckFingerprintsCollector {
 }
 
 # ==========================================
-#  configure and run extractFingerprint
+#  configure and run extractFingerprintsCollector
 # ==========================================
 task extractFingerprint {
 input {
