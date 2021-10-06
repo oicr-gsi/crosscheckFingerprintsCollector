@@ -48,10 +48,7 @@ workflow crosscheckFingerprintsCollector {
       File outputTbi = extractFingerprint.tbi
      }
 	 
-    output_meta {
-      outputVcf: "gzipped vcf expression levels for all genes recorded in the reference"
-      outbutTbi: "expression levels for all isoforms recorded in the reference"
-    }
+    
 
     meta {
      author: "Lawrence Heisler"
@@ -66,8 +63,12 @@ workflow crosscheckFingerprintsCollector {
         name: "tabix/0.2.6",
         url: "http://www.htslib.org"
       },
-    ]
-	}
+     ]
+     output_meta {
+       outputVcf: "gzipped vcf expression levels for all genes recorded in the reference"
+       outbutTbi: "expression levels for all isoforms recorded in the reference"
+     }
+  }
 }
 
 # ==========================================
