@@ -32,7 +32,39 @@
 		    "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
 		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
 		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef" : "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
-		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12"
+	        "crosscheckFingerprintsCollector.bwaMem.adapterTrimmingLog_timeout" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.adapterTrimmingLog_jobMemory" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.indexBam_timeout" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.indexBam_modules" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.indexBam_jobMemory" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.bamMerge_timeout" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.bamMerge_modules" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.bamMerge_jobMemory" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.runBwaMem_timeout" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.runBwaMem_jobMemory" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.runBwaMem_threads" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.adapterTrimming_timeout" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.adapterTrimming_jobMemory" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.adapterTrimming_modules" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.slicerR2_timeout" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.slicerR2_jobMemory" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.slicerR2_modules" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.slicerR1_timeout" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.slicerR1_jobMemory" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.slicerR1_modules" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.countChunkSize_timeout" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.countChunkSize_jobMemory" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.readGroups" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.outputFileNamePrefix" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.numChunk" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.doTrim" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.trimMinLength" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.trimMinQuality" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.adapter1" : null,
+	        "crosscheckFingerprintsCollector.bwaMem.adapter2" : null,
+		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12",
+			"crosscheckFingerprintsCollector.extractFingerprint.jobMemory" : null,
+			"crosscheckFingerprintsCollector.extractFingerprint.timeout" : null
         },
 		"engineArguments": {},		
         "metadata": {
@@ -61,195 +93,5 @@
                 "type": "script"
             }
         ]
-    },
-    {
-        "id": "TEST_0001_WT_HG38_FASTQ_INPUT",
-        "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38",
-
-        "arguments": {
-            "crosscheckFingerprintsCollector.fastqR1": {
-                 "contents": {
-				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R1.fastq.gz",
-					 "externalIds": [
-					 	{
-							"id":"TEST",
-							"provider":"TEST"
-						}
-					]
-				}
-			},
-            "crosscheckFingerprintsCollector.fastqR2": {
-                 "contents": {
-				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R2.fastq.gz",
-					 "externalIds": [
-					 	{
-							"id":"TEST",
-							"provider":"TEST"
-						}
-					]
-				}
-			},
-			"crosscheckFingerprintsCollector.inputType" : "fastq",	
-		    "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
-		    "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
-		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
-		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef" : "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
-		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12"
-        },
-		"engineArguments": {},		
-        "metadata": {
-            "crosscheckFingerprintsCollector.vcf": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            },
-            "crosscheckFingerprintsCollector.tbi": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            }
-        },
-        "validators": [
-            {
-                "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
-                "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_INPUT.metrics",
-                "type": "script"
-            }
-        ]
-    },
-    {
-        "id": "TEST_0001_WG_HG38_BAM_INPUT",
-        "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38",
-
-        "arguments": {
-            "crosscheckFingerprintsCollector.fastqR1": {
-                 "contents": {
-				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WG_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R1.fastq.gz",
-					 "externalIds": [
-					 	{
-							"id":"TEST",
-							"provider":"TEST"
-						}
-					]
-				}
-			},
-            "crosscheckFingerprintsCollector.fastqR2": {
-                 "contents": {
-				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WG_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R2.fastq.gz",
-					 "externalIds": [
-					 	{
-							"id":"TEST",
-							"provider":"TEST"
-						}
-					]
-				}
-			},
-		    "crosscheckFingerprintsCollector.inputType" : "bam",
-			"crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
-		    "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
-		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
-		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef" : "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
-		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12"
-        },
-		"engineArguments": {},		
-        "metadata": {
-            "crosscheckFingerprintsCollector.vcf": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            },
-            "crosscheckFingerprintsCollector.tbi": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            }
-        },
-        "validators": [
-            {
-                "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
-                "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_BAM_INPUT.metrics",
-                "type": "script"
-            }
-        ]
-    },
-    {
-        "id": "TEST_0001_WT_HG38_BAM_INPUT",
-        "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38",
-
-        "arguments": {
-            "crosscheckFingerprintsCollector.fastqR1": {
-                 "contents": {
-				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R1.fastq.gz",
-					 "externalIds": [
-					 	{
-							"id":"TEST",
-							"provider":"TEST"
-						}
-					]
-				}
-			},
-            "crosscheckFingerprintsCollector.fastqR2": {
-                 "contents": {
-				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R2.fastq.gz",
-					 "externalIds": [
-					 	{
-							"id":"TEST",
-							"provider":"TEST"
-						}
-					]
-				}
-			},
-			"crosscheckFingerprintsCollector.inputType" : "bam",	
-		    "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
-		    "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
-		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
-		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef" : "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
-		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12"
-        },
-		"engineArguments": {},		
-        "metadata": {
-            "crosscheckFingerprintsCollector.vcf": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            },
-            "crosscheckFingerprintsCollector.tbi": {
-                "contents": [
-                    {
-                        "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_@JENKINSID@"
-                    }
-                ],
-                "type": "ALL"
-            }
-        },
-        "validators": [
-            {
-                "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
-                "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_BAM_INPUT.metrics",
-                "type": "script"
-            }
-        ]
-    }
-	
+    }	
 ]
