@@ -13,7 +13,8 @@
 							"provider":"TEST"
 						}
 					]
-				}
+				},
+				"type": "EXTERNAL"
 			},
             "crosscheckFingerprintsCollector.fastqR2": {
                  "contents": {
@@ -24,7 +25,8 @@
 							"provider":"TEST"
 						}
 					]
-				}
+				},
+				"type": "EXTERNAL"
 			},
 		    "crosscheckFingerprintsCollector.inputType" : "fastq",
 			"crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
