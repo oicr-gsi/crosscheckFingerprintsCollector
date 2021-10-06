@@ -48,7 +48,7 @@ workflow crosscheckFingerprintsCollector {
       File outputTbi = extractFingerprint.tbi
      }
 	 
-    output_meta: {
+    output_meta {
       outputVcf: "gzipped vcf expression levels for all genes recorded in the reference"
       outbutTbi: "expression levels for all isoforms recorded in the reference"
     }
