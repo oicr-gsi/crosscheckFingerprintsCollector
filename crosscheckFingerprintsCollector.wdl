@@ -6,9 +6,9 @@ workflow crosscheckFingerprintsCollector {
    input {
         File? fastqR1
         File? fastqR2
-		File? bam
-		File? bamIndex
-		String inputType
+        File? bam
+        File? bamIndex
+        String inputType
         String outputFileNamePrefix
         String refFasta
         String haplotypeMap
@@ -16,12 +16,12 @@ workflow crosscheckFingerprintsCollector {
    parameter_meta {
         fastqR1: "fastq file for read 1"
         fastqR2: "fastq file for read 2"
-		bam: "bam file"
-		bamIndex: "bam index file"
-		inputType: "one of either fastq or bam"
+        bam: "bam file"
+        bamIndex: "bam index file"
+        inputType: "one of either fastq or bam"
         outputFileNamePrefix: "Optional output prefix for the output"
-	    refFasta: "Path to the reference fasta file"
-	    haplotypeMap: "Path to the gzipped hotspot vcf file"
+        refFasta: "Path to the reference fasta file"
+        haplotypeMap: "Path to the gzipped hotspot vcf file"
    }
 
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
@@ -31,7 +31,7 @@ workflow crosscheckFingerprintsCollector {
           fastqR2 = select_first([fastqR1]),
           outputFileNamePrefix = outputFileNamePrefix,
           readGroups = "'@RG\\tID:ID\\tSM:SAMPLE'",
-	      doTrim = false
+          doTrim = false
       }
    }
    call extractFingerprint {
