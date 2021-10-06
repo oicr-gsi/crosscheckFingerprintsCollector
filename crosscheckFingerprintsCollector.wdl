@@ -43,7 +43,17 @@ workflow crosscheckFingerprintsCollector {
         outputFileNamePrefix = outputFileNamePrefix
     }
 
-   meta {
+    output {
+      File outputVcf = extractFingerprint.vgz
+      File outputTbi = extractFingerprint.tbi
+     }
+	 
+    output_meta: {
+      outputVcf: "gzipped vcf expression levels for all genes recorded in the reference"
+      outbutTbi: "expression levels for all isoforms recorded in the reference"
+    }
+
+    meta {
      author: "Lawrence Heisler"
      email: "lawrence.heisler@oicr.on.ca"
      description: "crosscheckFingerprintsCollector, workflow that generates genotype fingerprints using gatk ExtractFingprint.  Output are vcf files that can be proccessed through gatk Crosscheck fingerprints\n##"
@@ -57,16 +67,7 @@ workflow crosscheckFingerprintsCollector {
         url: "http://www.htslib.org"
       },
     ]
-    output_meta: {
-      outputVcf: "gzipped vcf expression levels for all genes recorded in the reference"
-      outbutTbi: "expression levels for all isoforms recorded in the reference"
-    }
-  }
-
-  output {
-    File outputVcf = extractFingerprint.vgz
-    File outputTbi = extractFingerprint.tbi
-   }
+	}
 }
 
 # ==========================================
