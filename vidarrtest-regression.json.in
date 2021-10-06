@@ -66,7 +66,7 @@
 			"crosscheckFingerprintsCollector.extractFingerprint.jobMemory" : null,
 			"crosscheckFingerprintsCollector.extractFingerprint.timeout" : null,
 			"crosscheckFingerprintsCollector.bam" : null,
-			"crosscheckFingerprintsCollector.bamIndex" : null,
+			"crosscheckFingerprintsCollector.bamIndex" : null
 			
         },
 		"engineArguments": {},		
