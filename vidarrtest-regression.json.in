@@ -75,7 +75,7 @@
         },
 		"engineArguments": {},		
         "metadata": {
-            "crosscheckFingerprintsCollector.vcf": {
+            "crosscheckFingerprintsCollector.outputVcf": {
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
@@ -83,7 +83,7 @@
                 ],
                 "type": "ALL"
             },
-            "crosscheckFingerprintsCollector.tbi": {
+            "crosscheckFingerprintsCollector.outputTbi": {
                 "contents": [
                     {
                         "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
