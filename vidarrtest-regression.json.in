@@ -13,7 +13,8 @@
 							"provider":"TEST"
 						}
 					]
-				},
+				}
+			},
             "crosscheckFingerprintsCollector.fastqR2": {
                  "contents": {
 				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WG_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R2.fastq.gz",
@@ -23,7 +24,8 @@
 							"provider":"TEST"
 						}
 					]
-				},
+				}
+			},
 		    "crosscheckFingerprintsCollector.inputType" : "fastq",
 			"crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
 		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
@@ -74,7 +76,8 @@
 							"provider":"TEST"
 						}
 					]
-				},
+				}
+			},
             "crosscheckFingerprintsCollector.fastqR2": {
                  "contents": {
 				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R2.fastq.gz",
@@ -84,7 +87,8 @@
 							"provider":"TEST"
 						}
 					]
-				},
+				}
+			},
 			"crosscheckFingerprintsCollector.inputType" : "fastq",	
 		    "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
 		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
@@ -135,7 +139,8 @@
 							"provider":"TEST"
 						}
 					]
-				},
+				}
+			},
             "crosscheckFingerprintsCollector.fastqR2": {
                  "contents": {
 				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WG_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R2.fastq.gz",
@@ -145,7 +150,8 @@
 							"provider":"TEST"
 						}
 					]
-				},
+				}
+			},
 		    "crosscheckFingerprintsCollector.inputType" : "bam",
 			"crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
 		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
@@ -196,7 +202,8 @@
 							"provider":"TEST"
 						}
 					]
-				},
+				}
+			},
             "crosscheckFingerprintsCollector.fastqR2": {
                  "contents": {
 				     "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_201130_M06816_0073_000000000-DB5C9_1_AATCGTTA-AATAACGT_R2.fastq.gz",
@@ -206,7 +213,8 @@
 							"provider":"TEST"
 						}
 					]
-				},
+				}
+			},
 			"crosscheckFingerprintsCollector.inputType" : "bam",	
 		    "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
 		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
