@@ -55,7 +55,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprints/output_expectation/TEST_0001_WG.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG.metrics",
                 "type": "script"
             }
         ]
@@ -116,7 +116,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprints/output_expectation/TEST_0001_WG.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG.metrics",
                 "type": "script"
             }
         ]
@@ -177,7 +177,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprints/output_expectation/TEST_0001_WG.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG.metrics",
                 "type": "script"
             }
         ]
@@ -238,7 +238,7 @@
             {
                 "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
                 "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprints/output_expectation/TEST_0001_WG.metrics",
+                "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG.metrics",
                 "type": "script"
             }
         ]
