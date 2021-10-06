@@ -64,7 +64,10 @@
 	        "crosscheckFingerprintsCollector.bwaMem.adapter2" : null,
 		    "crosscheckFingerprintsCollector.extractFingerprint.modules" : "gatk/4.1.7.0 tabix/0.2.6 hg38/p12",
 			"crosscheckFingerprintsCollector.extractFingerprint.jobMemory" : null,
-			"crosscheckFingerprintsCollector.extractFingerprint.timeout" : null
+			"crosscheckFingerprintsCollector.extractFingerprint.timeout" : null,
+			"crosscheckFingerprintsCollector.bam" : null,
+			"crosscheckFingerprintsCollector.bamIndex" : null,
+			
         },
 		"engineArguments": {},		
         "metadata": {
