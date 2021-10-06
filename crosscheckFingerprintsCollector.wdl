@@ -28,7 +28,7 @@ workflow crosscheckFingerprintsCollector {
       call bwaMem.bwaMem {
         input:
           fastqR1 = select_first([fastqR1]),
-          fastqR2 = select_first([fastqR1]),
+          fastqR2 = select_first([fastqR2]),
           outputFileNamePrefix = outputFileNamePrefix,
           readGroups = "'@RG\\tID:ID\\tSM:SAMPLE'",
           doTrim = false
@@ -36,8 +36,8 @@ workflow crosscheckFingerprintsCollector {
    }
    call extractFingerprint {
      input:
-        inputBam = select_first([bam, bwaMem.bwaMemBam]),
-        inputBai = select_first([bamIndex, bwaMem.bwaMemIndex]),
+        inputBam = select_first([bwaMem.bwaMemBam,bam]),
+        inputBai = select_first([bwaMem.bwaMemIndex,bamIndex]),
         haplotypeMap = haplotypeMap,
         refFasta = refFasta,
         outputFileNamePrefix = outputFileNamePrefix
