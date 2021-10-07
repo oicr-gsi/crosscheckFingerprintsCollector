@@ -30,7 +30,7 @@
 			},
 		    "crosscheckFingerprintsCollector.inputType" : "fastq",
 			"crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38",
+		    "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ",
 		    "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
 		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
 		    "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef" : "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
