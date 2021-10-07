@@ -73,10 +73,7 @@
 			"crosscheckFingerprintsCollector.bamIndex" : null
 			
         },
-		"engineArguments": {
-            "write_to_cache": false,
-            "read_from_cache": false
-        },		
+		"engineArguments": {},
         "metadata": {
             "crosscheckFingerprintsCollector.outputVcf": {
                 "contents": [
