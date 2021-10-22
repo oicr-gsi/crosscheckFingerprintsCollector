@@ -9,6 +9,7 @@ workflow crosscheckFingerprintsCollector {
         File? bam
         File? bamIndex
         String inputType
+		String aligner
         String outputFileNamePrefix
         String refFasta
         String haplotypeMap
@@ -18,22 +19,33 @@ workflow crosscheckFingerprintsCollector {
         fastqR2: "fastq file for read 2"
         bam: "bam file"
         bamIndex: "bam index file"
-        inputType: "one of either fastq or bam"
+		inputType: "one of either fastq or bam"
+		aligner : "aligner to use for fastq input, either bwa or star"
         outputFileNamePrefix: "Optional output prefix for the output"
         refFasta: "Path to the reference fasta file"
         haplotypeMap: "Path to the gzipped hotspot vcf file"
    }
 
+
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
-      call bwaMem.bwaMem {
-        input:
-          fastqR1 = select_first([fastqR1]),
-          fastqR2 = select_first([fastqR2]),
-          outputFileNamePrefix = outputFileNamePrefix,
-          readGroups = "'@RG\\tID:ID\\tSM:SAMPLE'",
-          doTrim = false
-      }
+     if(aligner=="bwa"){
+       call bwaMem.bwaMem {
+         input:
+           fastqR1 = select_first([fastqR1]),
+           fastqR2 = select_first([fastqR2]),
+           outputFileNamePrefix = outputFileNamePrefix,
+           readGroups = "'@RG\\tID:ID\\tSM:SAMPLE'",
+           doTrim = false
+      }elsif(aligner=="star"){
+	    call star.star {
+		  input:
+           inputGroups = (select_first([fastqR1]),select_first([fastqR2]),"'@RG\\tID:ID\\tSM:SAMPLE'"),
+           outputFileNamePrefix = outputFileNamePrefix
+		}
+	  }
    }
+
+
    call extractFingerprint {
      input:
         inputBam = select_first([bwaMem.bwaMemBam,bam]),
