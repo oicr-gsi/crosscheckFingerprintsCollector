@@ -39,7 +39,11 @@ workflow crosscheckFingerprintsCollector {
       }elsif(aligner=="star"){
 	    call star.star {
 		  input:
-           inputGroups = (select_first([fastqR1]),select_first([fastqR2]),"'@RG\\tID:ID\\tSM:SAMPLE'"),
+           inputGroups = inputGroup{
+		     fastqR1: select_first([fastqR1]),
+			 fastqR2: select_first([fastqR2]),
+			 readGroup: "'@RG\\tID:ID\\tSM:SAMPLE'"
+		   },
            outputFileNamePrefix = outputFileNamePrefix
 		}
 	  }
