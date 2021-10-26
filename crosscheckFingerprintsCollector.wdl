@@ -1,6 +1,13 @@
 version 1.0
 
 import "imports/pull_bwaMem.wdl" as bwaMem
+import "imports/pull_star.wdl" as star
+
+struct InputGroup {
+  File fastqR1
+  File fastqR2
+  String readGroup
+}
 
 workflow crosscheckFingerprintsCollector {
    input {
@@ -9,7 +16,7 @@ workflow crosscheckFingerprintsCollector {
         File? bam
         File? bamIndex
         String inputType
-		String aligner
+        String aligner
         String outputFileNamePrefix
         String refFasta
         String haplotypeMap
@@ -19,7 +26,7 @@ workflow crosscheckFingerprintsCollector {
         fastqR2: "fastq file for read 2"
         bam: "bam file"
         bamIndex: "bam index file"
-		inputType: "one of either fastq or bam"
+	    inputType: "one of either fastq or bam"
 		aligner : "aligner to use for fastq input, either bwa or star"
         outputFileNamePrefix: "Optional output prefix for the output"
         refFasta: "Path to the reference fasta file"
@@ -36,14 +43,14 @@ workflow crosscheckFingerprintsCollector {
            outputFileNamePrefix = outputFileNamePrefix,
            readGroups = "'@RG\\tID:ID\\tSM:SAMPLE'",
            doTrim = false
-      }elsif(aligner=="star"){
-	    call star.star {
+      }
+	  if(aligner=="star"){
+		
+        InputGroup starInput = InputGroup { fastqR1: select_first([fastqR1]),fastqR2: select_first([fastqR2]),readGroup: "'@RG\\tID:ID\\tSM:SAMPLE'" }
+	    
+		call star.star { 
 		  input:
-           inputGroups = inputGroup{
-		     fastqR1: select_first([fastqR1]),
-			 fastqR2: select_first([fastqR2]),
-			 readGroup: "'@RG\\tID:ID\\tSM:SAMPLE'"
-		   },
+		   inputGroups = ( starInput ),
            outputFileNamePrefix = outputFileNamePrefix
 		}
 	  }
