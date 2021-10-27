@@ -36,31 +36,30 @@ workflow crosscheckFingerprintsCollector {
 
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
      
-	 if(aligner=="bwa"){
+     if(aligner=="bwa"){
        call bwaMem.bwaMem {
          input:
            fastqR1 = select_first([fastqR1]),
            fastqR2 = select_first([fastqR2]),
            outputFileNamePrefix = outputFileNamePrefix,
-           readGroups = "'@RG\\tID:ID\\tSM:SAMPLE'",
+           readGroups = "'@RG\\tID:CROSSCHECK\\tSM:SAMPLE'",
            doTrim = false
         }
-	 }
+      }
 
-	 if(aligner=="star"){
+      if(aligner=="star"){
        InputGroup starInput = { 
          "fastqR1": select_first([fastqR1]),
          "fastqR2": select_first([fastqR2]),
-         "readGroup": "'ID:ID\\tSM:SAMPLE'"
-	   }
+         "readGroup": "ID:CROSSCHECK SM:SAMPLE"
+       }
        call star.star { 
-		  input:
-            inputGroups = [ starInput ],
-            outputFileNamePrefix = outputFileNamePrefix
-		}
-
-
-	  }
+         input:
+           inputGroups = [ starInput ],
+           outputFileNamePrefix = outputFileNamePrefix,
+           runStar_chimOutType = "Junctions"
+       }
+     }
    }
   
 
@@ -129,6 +128,7 @@ parameter_meta {
 
 command <<<
  set -euo pipefail
+
  $GATK_ROOT/bin/gatk ExtractFingerprint \
                     -R ~{refFasta} \
                     -H ~{haplotypeMap} \
