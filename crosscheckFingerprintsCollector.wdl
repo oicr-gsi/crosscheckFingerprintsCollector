@@ -35,7 +35,8 @@ workflow crosscheckFingerprintsCollector {
 
 
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
-     if(aligner=="bwa"){
+     
+	 if(aligner=="bwa"){
        call bwaMem.bwaMem {
          input:
            fastqR1 = select_first([fastqR1]),
@@ -43,24 +44,31 @@ workflow crosscheckFingerprintsCollector {
            outputFileNamePrefix = outputFileNamePrefix,
            readGroups = "'@RG\\tID:ID\\tSM:SAMPLE'",
            doTrim = false
-      }
-	  if(aligner=="star"){
-		
-        InputGroup starInput = InputGroup { fastqR1: select_first([fastqR1]),fastqR2: select_first([fastqR2]),readGroup: "'@RG\\tID:ID\\tSM:SAMPLE'" }
-	    
-		call star.star { 
+        }
+	 }
+
+	 if(aligner=="star"){
+       InputGroup starInput = { 
+         "fastqR1": select_first([fastqR1]),
+         "fastqR2": select_first([fastqR2]),
+         "readGroup": "'ID:ID\\tSM:SAMPLE'"
+	   }
+       call star.star { 
 		  input:
-		   inputGroups = ( starInput ),
-           outputFileNamePrefix = outputFileNamePrefix
+            inputGroups = [ starInput ],
+            outputFileNamePrefix = outputFileNamePrefix
 		}
+
+
 	  }
    }
+  
 
 
    call extractFingerprint {
      input:
-        inputBam = select_first([bwaMem.bwaMemBam,bam]),
-        inputBai = select_first([bwaMem.bwaMemIndex,bamIndex]),
+        inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
         haplotypeMap = haplotypeMap,
         refFasta = refFasta,
         outputFileNamePrefix = outputFileNamePrefix
