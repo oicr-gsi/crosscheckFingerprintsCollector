@@ -103,7 +103,8 @@
       "crosscheckFingerprintsCollector.star.runStar_transcriptomeSuffix": null,
       "crosscheckFingerprintsCollector.star.runStar_uniqMAPQ": null,
 	  "crosscheckFingerprintsCollector.star.indexBam_modules" : null,
-	  "crosscheckFingerprintsCollector.star.indexBam_timeout" : null
+	  "crosscheckFingerprintsCollector.star.indexBam_timeout" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_jobMemory" : null
     },
     "engineArguments": {
       "write_to_cache": false,
