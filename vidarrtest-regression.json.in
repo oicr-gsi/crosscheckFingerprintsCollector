@@ -270,7 +270,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/calculate.sh",
         "metrics_compare": "@CHECKOUT@/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_FASTQ_STAR_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_STAR_INPUT.metrics",
         "type": "script"
       }
     ]
@@ -390,7 +390,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -398,7 +398,7 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -408,7 +408,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/calculate.sh",
         "metrics_compare": "@CHECKOUT@/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_BAM_STAR_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_BAM_INPUT.metrics",
         "type": "script"
       }
     ]
@@ -546,7 +546,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/calculate.sh",
         "metrics_compare": "@CHECKOUT@/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_STAR_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_BAM_STAR_INPUT.metrics",
         "type": "script"
       }
     ]
