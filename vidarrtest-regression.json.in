@@ -30,6 +30,7 @@
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ",
+	  "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -69,7 +70,9 @@
       "crosscheckFingerprintsCollector.extractFingerprint.jobMemory": null,
       "crosscheckFingerprintsCollector.extractFingerprint.timeout": null,
       "crosscheckFingerprintsCollector.bam": null,
-      "crosscheckFingerprintsCollector.bamIndex": null
+      "crosscheckFingerprintsCollector.bamIndex": null,
+      "crosscheckFingerprintsCollector.star.runStar_modules" : "star/2.7.3a hg38-star-index100/2.7.3a",
+      "crosscheckFingerprintsCollector.star.runStar_genomeIndexDir" : "/.mounts/labs/gsi/modulator/sw/data/hg38-star-index100-2.7.3a"
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -134,6 +137,7 @@
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
+	  "crosscheckFingerprintsCollector.aligner": "star",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.adapterTrimmingLog_timeout": null,
@@ -172,7 +176,9 @@
       "crosscheckFingerprintsCollector.extractFingerprint.jobMemory": null,
       "crosscheckFingerprintsCollector.extractFingerprint.timeout": null,
       "crosscheckFingerprintsCollector.bam": null,
-      "crosscheckFingerprintsCollector.bamIndex": null
+      "crosscheckFingerprintsCollector.bamIndex": null,
+      "crosscheckFingerprintsCollector.star.runStar_modules" : "star/2.7.3a hg38-star-index100/2.7.3a",
+      "crosscheckFingerprintsCollector.star.runStar_genomeIndexDir" : "/.mounts/labs/gsi/modulator/sw/data/hg38-star-index100-2.7.3a"  
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -239,6 +245,7 @@
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
+      "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.bwaMem.adapterTrimmingLog_timeout": null,
       "crosscheckFingerprintsCollector.bwaMem.adapterTrimmingLog_jobMemory": null,
       "crosscheckFingerprintsCollector.bwaMem.indexBam_timeout": null,
@@ -275,7 +282,9 @@
       "crosscheckFingerprintsCollector.extractFingerprint.jobMemory": null,
       "crosscheckFingerprintsCollector.extractFingerprint.timeout": null,
       "crosscheckFingerprintsCollector.fastqR1": null,
-      "crosscheckFingerprintsCollector.fastqR2": null
+      "crosscheckFingerprintsCollector.fastqR2": null,
+      "crosscheckFingerprintsCollector.star.runStar_modules" : "star/2.7.3a hg38-star-index100/2.7.3a",
+      "crosscheckFingerprintsCollector.star.runStar_genomeIndexDir" : "/.mounts/labs/gsi/modulator/sw/data/hg38-star-index100-2.7.3a"	  
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -342,6 +351,7 @@
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
+      "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.bwaMem.adapterTrimmingLog_timeout": null,
       "crosscheckFingerprintsCollector.bwaMem.adapterTrimmingLog_jobMemory": null,
       "crosscheckFingerprintsCollector.bwaMem.indexBam_timeout": null,
@@ -378,7 +388,9 @@
       "crosscheckFingerprintsCollector.extractFingerprint.jobMemory": null,
       "crosscheckFingerprintsCollector.extractFingerprint.timeout": null,
       "crosscheckFingerprintsCollector.fastqR1": null,
-      "crosscheckFingerprintsCollector.fastqR2": null
+      "crosscheckFingerprintsCollector.fastqR2": null,
+      "crosscheckFingerprintsCollector.star.runStar_modules" : "star/2.7.3a hg38-star-index100/2.7.3a",
+      "crosscheckFingerprintsCollector.star.runStar_genomeIndexDir" : "/.mounts/labs/gsi/modulator/sw/data/hg38-star-index100-2.7.3a"
     },
     "engineArguments": {
       "write_to_cache": false,
