@@ -1,3 +1,6 @@
 [submodule "subworkflows/bwaMem"]
 	path = subworkflows/bwaMem
 	url = git@github.com:oicr-gsi/bwa.git
+[submodule "subworkflows/star"]
+	path = subworkflows/star
+	url = git@github.com:oicr-gsi/star.git

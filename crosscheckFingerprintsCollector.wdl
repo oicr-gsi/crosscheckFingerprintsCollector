@@ -1,6 +1,13 @@
 version 1.0
 
 import "imports/pull_bwaMem.wdl" as bwaMem
+import "imports/pull_star.wdl" as star
+
+struct InputGroup {
+  File fastqR1
+  File fastqR2
+  String readGroup
+}
 
 workflow crosscheckFingerprintsCollector {
    input {
@@ -9,6 +16,7 @@ workflow crosscheckFingerprintsCollector {
         File? bam
         File? bamIndex
         String inputType
+        String aligner
         String outputFileNamePrefix
         String refFasta
         String haplotypeMap
@@ -18,26 +26,48 @@ workflow crosscheckFingerprintsCollector {
         fastqR2: "fastq file for read 2"
         bam: "bam file"
         bamIndex: "bam index file"
-        inputType: "one of either fastq or bam"
+	    inputType: "one of either fastq or bam"
+		aligner : "aligner to use for fastq input, either bwa or star"
         outputFileNamePrefix: "Optional output prefix for the output"
         refFasta: "Path to the reference fasta file"
         haplotypeMap: "Path to the gzipped hotspot vcf file"
    }
 
+
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
-      call bwaMem.bwaMem {
-        input:
-          fastqR1 = select_first([fastqR1]),
-          fastqR2 = select_first([fastqR2]),
-          outputFileNamePrefix = outputFileNamePrefix,
-          readGroups = "'@RG\\tID:ID\\tSM:SAMPLE'",
-          doTrim = false
+     
+     if(aligner=="bwa"){
+       call bwaMem.bwaMem {
+         input:
+           fastqR1 = select_first([fastqR1]),
+           fastqR2 = select_first([fastqR2]),
+           outputFileNamePrefix = outputFileNamePrefix,
+           readGroups = "'@RG\\tID:CROSSCHECK\\tSM:SAMPLE'",
+           doTrim = false
+        }
       }
+
+      if(aligner=="star"){
+       InputGroup starInput = { 
+         "fastqR1": select_first([fastqR1]),
+         "fastqR2": select_first([fastqR2]),
+         "readGroup": "ID:CROSSCHECK SM:SAMPLE"
+       }
+       call star.star { 
+         input:
+           inputGroups = [ starInput ],
+           outputFileNamePrefix = outputFileNamePrefix,
+           runStar_chimOutType = "Junctions"
+       }
+     }
    }
+  
+
+
    call extractFingerprint {
      input:
-        inputBam = select_first([bwaMem.bwaMemBam,bam]),
-        inputBai = select_first([bwaMem.bwaMemIndex,bamIndex]),
+        inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
         haplotypeMap = haplotypeMap,
         refFasta = refFasta,
         outputFileNamePrefix = outputFileNamePrefix
@@ -98,6 +128,7 @@ parameter_meta {
 
 command <<<
  set -euo pipefail
+
  $GATK_ROOT/bin/gatk ExtractFingerprint \
                     -R ~{refFasta} \
                     -H ~{haplotypeMap} \

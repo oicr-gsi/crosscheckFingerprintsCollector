@@ -30,6 +30,7 @@
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ",
+	  "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -69,7 +70,41 @@
       "crosscheckFingerprintsCollector.extractFingerprint.jobMemory": null,
       "crosscheckFingerprintsCollector.extractFingerprint.timeout": null,
       "crosscheckFingerprintsCollector.bam": null,
-      "crosscheckFingerprintsCollector.bamIndex": null
+      "crosscheckFingerprintsCollector.bamIndex": null,
+      "crosscheckFingerprintsCollector.star.runStar_modules" : "star/2.7.3a hg38-star-index100/2.7.3a",
+      "crosscheckFingerprintsCollector.star.runStar_genomeIndexDir" : "/.mounts/labs/gsi/modulator/sw/data/hg38-star-index100-2.7.3a",
+      "crosscheckFingerprintsCollector.star.outputFileNamePrefix": null,
+      "crosscheckFingerprintsCollector.star.runStar_addParam": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignIntMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignMatGapMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignSJDBOvMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimJunOvMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimMulmapNmax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimMulmapScoRan": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimNonchimScoDMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimOutJunForm": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimOutType": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoJunNonGTAG": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoreDropMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoreSeparation": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimSegmentReadGapMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimSegmin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimericjunctionSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_genereadSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_jobMemory": null,
+      "crosscheckFingerprintsCollector.star.runStar_multiMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_outFilterMultimapNmax": null,
+      "crosscheckFingerprintsCollector.star.runStar_peOvMMp": null,
+      "crosscheckFingerprintsCollector.star.runStar_peOvNbasesMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_saSparsed": null,
+      "crosscheckFingerprintsCollector.star.runStar_starSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_threads": null,
+      "crosscheckFingerprintsCollector.star.runStar_timeout": null,
+      "crosscheckFingerprintsCollector.star.runStar_transcriptomeSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_uniqMAPQ": null,
+	  "crosscheckFingerprintsCollector.star.indexBam_modules" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_timeout" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_jobMemory" : null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -79,7 +114,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -87,7 +122,7 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -104,7 +139,7 @@
   },
   {
     "id": "TEST_0001_WT_HG38_FASTQ_INPUT",
-    "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38, with fastq as input",
+    "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38, with fastq as input, star as aligner",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
         "contents": {
@@ -133,6 +168,7 @@
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ",
+	  "crosscheckFingerprintsCollector.aligner": "star",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -172,7 +208,41 @@
       "crosscheckFingerprintsCollector.extractFingerprint.jobMemory": null,
       "crosscheckFingerprintsCollector.extractFingerprint.timeout": null,
       "crosscheckFingerprintsCollector.bam": null,
-      "crosscheckFingerprintsCollector.bamIndex": null
+      "crosscheckFingerprintsCollector.bamIndex": null,
+      "crosscheckFingerprintsCollector.star.runStar_modules" : "star/2.7.3a hg38-star-index100/2.7.3a",
+      "crosscheckFingerprintsCollector.star.runStar_genomeIndexDir" : "/.mounts/labs/gsi/modulator/sw/data/hg38-star-index100-2.7.3a",
+      "crosscheckFingerprintsCollector.star.outputFileNamePrefix": null,
+      "crosscheckFingerprintsCollector.star.runStar_addParam": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignIntMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignMatGapMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignSJDBOvMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimJunOvMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimMulmapNmax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimMulmapScoRan": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimNonchimScoDMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimOutJunForm": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimOutType": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoJunNonGTAG": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoreDropMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoreSeparation": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimSegmentReadGapMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimSegmin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimericjunctionSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_genereadSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_jobMemory": null,
+      "crosscheckFingerprintsCollector.star.runStar_multiMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_outFilterMultimapNmax": null,
+      "crosscheckFingerprintsCollector.star.runStar_peOvMMp": null,
+      "crosscheckFingerprintsCollector.star.runStar_peOvNbasesMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_saSparsed": null,
+      "crosscheckFingerprintsCollector.star.runStar_starSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_threads": null,
+      "crosscheckFingerprintsCollector.star.runStar_timeout": null,
+      "crosscheckFingerprintsCollector.star.runStar_transcriptomeSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_uniqMAPQ": null,
+	  "crosscheckFingerprintsCollector.star.indexBam_modules" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_timeout" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_jobMemory" : null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -182,7 +252,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -190,7 +260,7 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -200,14 +270,14 @@
       {
         "metrics_calculate": "@CHECKOUT@/calculate.sh",
         "metrics_compare": "@CHECKOUT@/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_STAR_INPUT.metrics",
         "type": "script"
       }
     ]
   },
   {
     "id": "TEST_0001_WG_HG38_BAM_INPUT",
-    "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with bam files as iput",
+    "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with bam files as input",
     "arguments": {
       "crosscheckFingerprintsCollector.bam": {
         "contents": {
@@ -236,6 +306,7 @@
       "crosscheckFingerprintsCollector.inputType": "bam",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_BAM",
+	  "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -275,7 +346,41 @@
       "crosscheckFingerprintsCollector.extractFingerprint.jobMemory": null,
       "crosscheckFingerprintsCollector.extractFingerprint.timeout": null,
       "crosscheckFingerprintsCollector.fastqR1": null,
-      "crosscheckFingerprintsCollector.fastqR2": null
+      "crosscheckFingerprintsCollector.fastqR2": null,
+      "crosscheckFingerprintsCollector.star.runStar_modules" : "star/2.7.3a hg38-star-index100/2.7.3a",
+      "crosscheckFingerprintsCollector.star.runStar_genomeIndexDir" : "/.mounts/labs/gsi/modulator/sw/data/hg38-star-index100-2.7.3a",
+      "crosscheckFingerprintsCollector.star.outputFileNamePrefix": null,
+      "crosscheckFingerprintsCollector.star.runStar_addParam": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignIntMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignMatGapMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignSJDBOvMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimJunOvMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimMulmapNmax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimMulmapScoRan": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimNonchimScoDMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimOutJunForm": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimOutType": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoJunNonGTAG": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoreDropMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoreSeparation": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimSegmentReadGapMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimSegmin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimericjunctionSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_genereadSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_jobMemory": null,
+      "crosscheckFingerprintsCollector.star.runStar_multiMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_outFilterMultimapNmax": null,
+      "crosscheckFingerprintsCollector.star.runStar_peOvMMp": null,
+      "crosscheckFingerprintsCollector.star.runStar_peOvNbasesMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_saSparsed": null,
+      "crosscheckFingerprintsCollector.star.runStar_starSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_threads": null,
+      "crosscheckFingerprintsCollector.star.runStar_timeout": null,
+      "crosscheckFingerprintsCollector.star.runStar_transcriptomeSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_uniqMAPQ": null,
+	  "crosscheckFingerprintsCollector.star.indexBam_modules" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_timeout" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_jobMemory" : null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -285,7 +390,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -293,7 +398,7 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -314,7 +419,7 @@
     "arguments": {
       "crosscheckFingerprintsCollector.bam": {
         "contents": {
-          "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_HG38.bam",
+          "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_HG38.Aligned.sortedByCoord.out.bam",
           "externalIds": [
             {
               "id": "TEST",
@@ -326,7 +431,7 @@
       },
       "crosscheckFingerprintsCollector.bamIndex": {
         "contents": {
-          "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_HG38.bam.bai",
+          "configuration": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/input_data/TEST_0001_WT_HG38.Aligned.sortedByCoord.out.bai",
           "externalIds": [
             {
               "id": "TEST",
@@ -339,6 +444,7 @@
       "crosscheckFingerprintsCollector.inputType": "bam",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_BAM",
+	  "crosscheckFingerprintsCollector.aligner": "star",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -378,7 +484,41 @@
       "crosscheckFingerprintsCollector.extractFingerprint.jobMemory": null,
       "crosscheckFingerprintsCollector.extractFingerprint.timeout": null,
       "crosscheckFingerprintsCollector.fastqR1": null,
-      "crosscheckFingerprintsCollector.fastqR2": null
+      "crosscheckFingerprintsCollector.fastqR2": null,
+      "crosscheckFingerprintsCollector.star.runStar_modules" : "star/2.7.3a hg38-star-index100/2.7.3a",
+      "crosscheckFingerprintsCollector.star.runStar_genomeIndexDir" : "/.mounts/labs/gsi/modulator/sw/data/hg38-star-index100-2.7.3a",
+      "crosscheckFingerprintsCollector.star.outputFileNamePrefix": null,
+      "crosscheckFingerprintsCollector.star.runStar_addParam": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignIntMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignMatGapMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_alignSJDBOvMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimJunOvMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimMulmapNmax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimMulmapScoRan": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimNonchimScoDMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimOutJunForm": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimOutType": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoJunNonGTAG": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoreDropMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimScoreSeparation": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimSegmentReadGapMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimSegmin": null,
+      "crosscheckFingerprintsCollector.star.runStar_chimericjunctionSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_genereadSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_jobMemory": null,
+      "crosscheckFingerprintsCollector.star.runStar_multiMax": null,
+      "crosscheckFingerprintsCollector.star.runStar_outFilterMultimapNmax": null,
+      "crosscheckFingerprintsCollector.star.runStar_peOvMMp": null,
+      "crosscheckFingerprintsCollector.star.runStar_peOvNbasesMin": null,
+      "crosscheckFingerprintsCollector.star.runStar_saSparsed": null,
+      "crosscheckFingerprintsCollector.star.runStar_starSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_threads": null,
+      "crosscheckFingerprintsCollector.star.runStar_timeout": null,
+      "crosscheckFingerprintsCollector.star.runStar_transcriptomeSuffix": null,
+      "crosscheckFingerprintsCollector.star.runStar_uniqMAPQ": null,
+	  "crosscheckFingerprintsCollector.star.indexBam_modules" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_timeout" : null,
+	  "crosscheckFingerprintsCollector.star.indexBam_jobMemory" : null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -388,7 +528,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -396,7 +536,7 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -406,7 +546,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/calculate.sh",
         "metrics_compare": "@CHECKOUT@/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_BAM_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_BAM_STAR_INPUT.metrics",
         "type": "script"
       }
     ]
