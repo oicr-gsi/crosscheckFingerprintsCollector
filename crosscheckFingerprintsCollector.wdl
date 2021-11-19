@@ -20,7 +20,7 @@ workflow crosscheckFingerprintsCollector {
         String outputFileNamePrefix
         String refFasta
         String haplotypeMap
-        Int nreads = 0
+        Int maxReads = 0
    }
    parameter_meta {
         fastqR1: "fastq file for read 1"
@@ -32,20 +32,18 @@ workflow crosscheckFingerprintsCollector {
         outputFileNamePrefix: "Optional output prefix for the output"
         refFasta: "Path to the reference fasta file"
         haplotypeMap: "Path to the gzipped hotspot vcf file"
+        maxReads: "The maximum number of reads to process; if set, this will sample the requested number of reads"
    }
 
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
-
-
-     if(nreads>0){
+     if(maxReads>0){
       call downsample{
         input:
           fastqR1 = select_first([fastqR1]),
           fastqR2 = select_first([fastqR2]),
-          nreads = nreads
+          maxReads = maxReads
       }
      }
-
 
      if(aligner=="bwa"){
        call bwaMem.bwaMem {
@@ -88,8 +86,6 @@ workflow crosscheckFingerprintsCollector {
       File outputVcf = extractFingerprint.vgz
       File outputTbi = extractFingerprint.tbi
      }
-
-    
 
     meta {
      author: "Lawrence Heisler"
@@ -176,35 +172,36 @@ task downsample {
  input{
   File fastqR1
   File fastqR2
-  Int nreads
+  Int maxReads
+  String modules
+  Int jobMemory = 8
+  Int timeout = 24
  }
  
  parameter_meta {
   fastqR1 : "Read1 fastq file"
   fastqR2 : "Read2 fastq file"
-  nreads : "the maximum number of reads to use"
+  maxReads : "the maximum number of reads to use"
  }
  
- Int nrecs=nreads*4
  String fastqR1m = basename(fastqR1,".fastq.gz") + ".mod.fastq"
  String fastqR2m = basename(fastqR2,".fastq.gz") + ".mod.fastq"
   
 command <<<
  set -euo pipefail
  
- echo "downsampling read1" > info.txt  
- zcat ~{fastqR1} | head -n ~{nrecs}  > ~{fastqR1m}
- echo "zipping read1" >> info.txt  
+ seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
  gzip ~{fastqR1m}
  
- echo "downsampling read2" >> info.txt  
- zcat ~{fastqR2} | head -n ~{nrecs} > ~{fastqR2m}
- echo "zipping read2" >> info.txt  
+ seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
  gzip ~{fastqR2m}
- echo "downsampling complete" >> info.txt  
 >>>
 
-
+ runtime {
+  memory:  "~{jobMemory} GB"
+  modules: "~{modules}"
+  timeout: "~{timeout}"
+ }
 
  output {
   File fastqR1mod = "~{fastqR1m}.gz"
