@@ -28,6 +28,7 @@ Parameter|Value|Description
 `outputFileNamePrefix`|String|Optional output prefix for the output
 `refFasta`|String|Path to the reference fasta file
 `haplotypeMap`|String|Path to the gzipped hotspot vcf file
+`downsample.modules`|String|Names and versions of modules
 `bwaMem.runBwaMem_bwaRef`|String|The reference genome to align the sample with by BWA
 `bwaMem.runBwaMem_modules`|String|Required environment modules
 `extractFingerprint.modules`|String|Names and versions of modules
@@ -40,11 +41,14 @@ Parameter|Value|Default|Description
 `fastqR2`|File?|None|fastq file for read 2
 `bam`|File?|None|bam file
 `bamIndex`|File?|None|bam index file
+`maxReads`|Int|0|The maximum number of reads to process; if set, this will sample the requested number of reads
 
 
 #### Optional task parameters:
 Parameter|Value|Default|Description
 ---|---|---|---
+`downsample.jobMemory`|Int|8|memory allocated for Job
+`downsample.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `bwaMem.adapterTrimmingLog_timeout`|Int|48|Hours before task timeout
 `bwaMem.adapterTrimmingLog_jobMemory`|Int|12|Memory allocated indexing job
 `bwaMem.indexBam_timeout`|Int|48|Hours before task timeout

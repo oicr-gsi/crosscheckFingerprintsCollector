@@ -182,6 +182,9 @@ task downsample {
   fastqR1 : "Read1 fastq file"
   fastqR2 : "Read2 fastq file"
   maxReads : "the maximum number of reads to use"
+  jobMemory: "memory allocated for Job"
+  modules: "Names and versions of modules"
+  timeout: "Timeout in hours, needed to override imposed limits"
  }
  
  String fastqR1m = basename(fastqR1,".fastq.gz") + ".mod.fastq"
