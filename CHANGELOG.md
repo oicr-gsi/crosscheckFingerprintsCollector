@@ -21,3 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - modifications to regression tests to put WT libraries through STAR
 - modification to inputs to use star aligned bams for WT libraries, in bam mode
 
+## [1.0.3] - 2021-11-19
+## Added
+- added input parameter maxReads, with default 0
+- if maxReads > 0, then a new task is run, downsample, using seqtk to downsample the fastq files prior to alignment
+
