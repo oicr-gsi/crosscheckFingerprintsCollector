@@ -662,7 +662,7 @@
       "crosscheckFingerprintsCollector.star.runStar_uniqMAPQ": null,
       "crosscheckFingerprintsCollector.star.indexBam_modules" : null,
       "crosscheckFingerprintsCollector.star.indexBam_timeout" : null,
-      "crosscheckFingerprintsCollector.star.indexBam_jobMemory" : null.
+      "crosscheckFingerprintsCollector.star.indexBam_jobMemory" : null,
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3"
     },
     "engineArguments": {
