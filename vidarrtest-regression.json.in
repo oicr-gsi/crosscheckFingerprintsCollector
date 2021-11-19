@@ -108,7 +108,7 @@
       "crosscheckFingerprintsCollector.maxReads" : 50000,
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3",
       "crosscheckFingerprintsCollector.downsample.jobMemory" : null,
-      "crosscheckFingerprintsCollector.downsample.timeout" : null,
+      "crosscheckFingerprintsCollector.downsample.timeout" : null
     },
     "engineArguments": {
       "write_to_cache": false,
