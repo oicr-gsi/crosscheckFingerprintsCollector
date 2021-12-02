@@ -20,27 +20,36 @@ workflow crosscheckFingerprintsCollector {
         String outputFileNamePrefix
         String refFasta
         String haplotypeMap
+        Int maxReads = 0
    }
    parameter_meta {
         fastqR1: "fastq file for read 1"
         fastqR2: "fastq file for read 2"
         bam: "bam file"
         bamIndex: "bam index file"
-	    inputType: "one of either fastq or bam"
-		aligner : "aligner to use for fastq input, either bwa or star"
+        inputType: "one of either fastq or bam"
+        aligner : "aligner to use for fastq input, either bwa or star"
         outputFileNamePrefix: "Optional output prefix for the output"
         refFasta: "Path to the reference fasta file"
         haplotypeMap: "Path to the gzipped hotspot vcf file"
+        maxReads: "The maximum number of reads to process; if set, this will sample the requested number of reads"
    }
 
-
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
-     
+     if(maxReads>0){
+      call downsample{
+        input:
+          fastqR1 = select_first([fastqR1]),
+          fastqR2 = select_first([fastqR2]),
+          maxReads = maxReads
+      }
+     }
+
      if(aligner=="bwa"){
        call bwaMem.bwaMem {
          input:
-           fastqR1 = select_first([fastqR1]),
-           fastqR2 = select_first([fastqR2]),
+           fastqR1 = select_first([downsample.fastqR1mod,fastqR1]),
+           fastqR2 = select_first([downsample.fastqR2mod,fastqR2]),
            outputFileNamePrefix = outputFileNamePrefix,
            readGroups = "'@RG\\tID:CROSSCHECK\\tSM:SAMPLE'",
            doTrim = false
@@ -49,8 +58,8 @@ workflow crosscheckFingerprintsCollector {
 
       if(aligner=="star"){
        InputGroup starInput = { 
-         "fastqR1": select_first([fastqR1]),
-         "fastqR2": select_first([fastqR2]),
+         "fastqR1": select_first([downsample.fastqR1mod,fastqR1]),
+         "fastqR2": select_first([downsample.fastqR2mod,fastqR2]),
          "readGroup": "ID:CROSSCHECK SM:SAMPLE"
        }
        call star.star { 
@@ -77,8 +86,6 @@ workflow crosscheckFingerprintsCollector {
       File outputVcf = extractFingerprint.vgz
       File outputTbi = extractFingerprint.tbi
      }
-	 
-    
 
     meta {
      author: "Lawrence Heisler"
@@ -99,11 +106,13 @@ workflow crosscheckFingerprintsCollector {
        outputTbi: "expression levels for all isoforms recorded in the reference"
      }
   }
-}
 
+}
 # ==========================================
 #  configure and run extractFingerprintsCollector
 # ==========================================
+
+
 task extractFingerprint {
 input {
  File inputBam
@@ -127,7 +136,7 @@ parameter_meta {
 }
 
 command <<<
- set -euo pipefail
+  set -euo pipefail
 
  $GATK_ROOT/bin/gatk ExtractFingerprint \
                     -R ~{refFasta} \
@@ -153,3 +162,52 @@ command <<<
 }
 
 
+
+# ==========================================
+#  downsample the fastq files to the first N reads
+# ==========================================
+
+
+task downsample {
+ input{
+  File fastqR1
+  File fastqR2
+  Int maxReads
+  String modules
+  Int jobMemory = 8
+  Int timeout = 24
+ }
+ 
+ parameter_meta {
+  fastqR1 : "Read1 fastq file"
+  fastqR2 : "Read2 fastq file"
+  maxReads : "the maximum number of reads to use"
+  jobMemory: "memory allocated for Job"
+  modules: "Names and versions of modules"
+  timeout: "Timeout in hours, needed to override imposed limits"
+ }
+ 
+ String fastqR1m = basename(fastqR1,".fastq.gz") + ".mod.fastq"
+ String fastqR2m = basename(fastqR2,".fastq.gz") + ".mod.fastq"
+  
+command <<<
+ set -euo pipefail
+ 
+ seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
+ gzip ~{fastqR1m}
+ 
+ seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
+ gzip ~{fastqR2m}
+>>>
+
+ runtime {
+  memory:  "~{jobMemory} GB"
+  modules: "~{modules}"
+  timeout: "~{timeout}"
+ }
+
+ output {
+  File fastqR1mod = "~{fastqR1m}.gz"
+  File fastqR2mod = "~{fastqR2m}.gz"
+ }    
+}

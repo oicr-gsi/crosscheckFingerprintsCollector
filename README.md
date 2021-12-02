@@ -28,6 +28,7 @@ Parameter|Value|Description
 `outputFileNamePrefix`|String|Optional output prefix for the output
 `refFasta`|String|Path to the reference fasta file
 `haplotypeMap`|String|Path to the gzipped hotspot vcf file
+`downsample.modules`|String|Names and versions of modules
 `bwaMem.runBwaMem_bwaRef`|String|The reference genome to align the sample with by BWA
 `bwaMem.runBwaMem_modules`|String|Required environment modules
 `extractFingerprint.modules`|String|Names and versions of modules
@@ -40,11 +41,14 @@ Parameter|Value|Default|Description
 `fastqR2`|File?|None|fastq file for read 2
 `bam`|File?|None|bam file
 `bamIndex`|File?|None|bam index file
+`maxReads`|Int|0|The maximum number of reads to process; if set, this will sample the requested number of reads
 
 
 #### Optional task parameters:
 Parameter|Value|Default|Description
 ---|---|---|---
+`downsample.jobMemory`|Int|8|memory allocated for Job
+`downsample.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `bwaMem.adapterTrimmingLog_timeout`|Int|48|Hours before task timeout
 `bwaMem.adapterTrimmingLog_jobMemory`|Int|12|Memory allocated indexing job
 `bwaMem.indexBam_timeout`|Int|48|Hours before task timeout
@@ -118,31 +122,35 @@ Output | Type | Description
 `outputTbi`|File|expression levels for all isoforms recorded in the reference
 
 
-## Niassa + Cromwell
-
-This WDL workflow is wrapped in a Niassa workflow (https://github.com/oicr-gsi/pipedev/tree/master/pipedev-niassa-cromwell-workflow) so that it can used with the Niassa metadata tracking system (https://github.com/oicr-gsi/niassa).
-
-* Building
+## Commands
+ This section lists command(s) run by WORKFLOW workflow
+ 
+ * Running WORKFLOW
+ 
+ Fastq Input
+ 
+ (optional) Downsampling
 ```
-mvn clean install
-```
-
-* Testing
-```
-mvn clean verify \
--Djava_opts="-Xmx1g -XX:+UseG1GC -XX:+UseStringDeduplication" \
--DrunTestThreads=2 \
--DskipITs=false \
--DskipRunITs=false \
--DworkingDirectory=/path/to/tmp/ \
--DschedulingHost=niassa_oozie_host \
--DwebserviceUrl=http://niassa-url:8080 \
--DwebserviceUser=niassa_user \
--DwebservicePassword=niassa_user_password \
--Dcromwell-host=http://cromwell-url:8000
+ seqtk -s N ~{outputFileNamePrefix}_R1.fastq.gz
+ seqtk -s N ~{outputFileNamePrefix}_R2.fastq.gz
 ```
 
-## Support
+ Alignment
+ see bwa mem or STAR workflows, produced bam files
+ 
+ Fingerprint Generation (from bam files)
+``` 
+  $GATK_ROOT/bin/gatk ExtractFingerprint \
+                     -R ~{refFasta} \
+                     -H ~{haplotypeMap} \
+                     -I ~{inputBam} \
+                     -O ~{outputFileNamePrefix}.vcf
+ 
+  $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
+
+  $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
+```
+ ## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
 
