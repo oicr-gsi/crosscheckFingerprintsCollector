@@ -130,7 +130,9 @@ Output | Type | Description
  Fastq Input
  
  (optional) Downsampling
+
  seqtk -s N ~{outputFileNamePrefix}_R1.fastq.gz
+
  seqtk -s N ~{outputFileNamePrefix}_R2.fastq.gz
  
  Alignment
@@ -145,6 +147,7 @@ Output | Type | Description
                      -O ~{outputFileNamePrefix}.vcf
  
   $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
+
   $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
  
  ## Support
