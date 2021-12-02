@@ -130,16 +130,16 @@ Output | Type | Description
  Fastq Input
  
  (optional) Downsampling
-
+```
  seqtk -s N ~{outputFileNamePrefix}_R1.fastq.gz
-
  seqtk -s N ~{outputFileNamePrefix}_R2.fastq.gz
- 
+```
+
  Alignment
  see bwa mem or STAR workflows, produced bam files
  
  Fingerprint Generation (from bam files)
- 
+``` 
   $GATK_ROOT/bin/gatk ExtractFingerprint \
                      -R ~{refFasta} \
                      -H ~{haplotypeMap} \
@@ -149,7 +149,7 @@ Output | Type | Description
   $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
 
   $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
- 
+```
  ## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
