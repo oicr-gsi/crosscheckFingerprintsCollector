@@ -122,31 +122,24 @@ Output | Type | Description
 `outputTbi`|File|expression levels for all isoforms recorded in the reference
 
 
-## Niassa + Cromwell
-
-This WDL workflow is wrapped in a Niassa workflow (https://github.com/oicr-gsi/pipedev/tree/master/pipedev-niassa-cromwell-workflow) so that it can used with the Niassa metadata tracking system (https://github.com/oicr-gsi/niassa).
-
-* Building
-```
-mvn clean install
-```
-
-* Testing
-```
-mvn clean verify \
--Djava_opts="-Xmx1g -XX:+UseG1GC -XX:+UseStringDeduplication" \
--DrunTestThreads=2 \
--DskipITs=false \
--DskipRunITs=false \
--DworkingDirectory=/path/to/tmp/ \
--DschedulingHost=niassa_oozie_host \
--DwebserviceUrl=http://niassa-url:8080 \
--DwebserviceUser=niassa_user \
--DwebservicePassword=niassa_user_password \
--Dcromwell-host=http://cromwell-url:8000
-```
-
-## Support
+## Commands
+ This section lists command(s) run by WORKFLOW workflow
+ 
+ * Running WORKFLOW
+ 
+ === crosscheckFingerprintsCollector generated a fingerprint using GATK ExtractFingerprint which can be read by the GATK crosscheckFingerprints tool to assess sample relatedness.  It takes in either aligned sequence in bam format or raw fastq sequence data, which is aligned against a reference using either bwa mem or STAR. Fastq files can be downsampled if desired ===
+ 
+ <<<
+  $GATK_ROOT/bin/gatk ExtractFingerprint \
+                     -R ~{refFasta} \
+                     -H ~{haplotypeMap} \
+                     -I ~{inputBam} \
+                     -O ~{outputFileNamePrefix}.vcf
+ 
+  $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
+  $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
+ >>>
+ ## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
 
