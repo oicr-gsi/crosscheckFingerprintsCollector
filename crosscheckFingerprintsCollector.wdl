@@ -119,8 +119,10 @@ workflow crosscheckFingerprintsCollector {
       }
      ]
      output_meta: {
-       outputVcf: "gzipped vcf expression levels for all genes recorded in the reference",
-       outputTbi: "expression levels for all isoforms recorded in the reference"
+       outputVcf: "the crosscheck fingerprint, gzipped vcf file",
+       outputTbi: "index for the vcf fingerprint",
+       coverage : "output from samtools coverage, with per chromosome metrics",
+       json : "metrics in json format, currently only the mean coverage for the alignment"
      }
   }
 
