@@ -30,7 +30,7 @@ workflow crosscheckFingerprintsCollector {
         bamIndex: "bam index file"
         inputType: "one of either fastq or bam"
         aligner : "aligner to use for fastq input, either bwa or star"
-        markdups : "should the alignment be duplicate marked?, generally yes"
+        markDups : "should the alignment be duplicate marked?, generally yes"
         outputFileNamePrefix: "Optional output prefix for the output"
         refFasta: "Path to the reference fasta file"
         haplotypeMap: "Path to the gzipped hotspot vcf file"
