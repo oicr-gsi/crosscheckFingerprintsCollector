@@ -26,3 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added input parameter maxReads, with default 0
 - if maxReads > 0, then a new task is run, downsample, using seqtk to downsample the fastq files prior to alignment
 
+
+## [1.0.4] - 2021-12-16
+## Added
+- added input markDups, if set to true will run the task markDuplicates on the bam file prior to fingerprinting.  ExtractFingerprint accounts for marked duplicates
+- added assessCoverage task to generate a samtools coverage report on the bam file (with -ff default filters), then generated a json with the mean depth
