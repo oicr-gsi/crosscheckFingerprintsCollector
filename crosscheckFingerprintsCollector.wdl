@@ -22,7 +22,6 @@ workflow crosscheckFingerprintsCollector {
         String refFasta
         String haplotypeMap
         Int maxReads = 0
-        String sampleId
    }
    parameter_meta {
         fastqR1: "fastq file for read 1"
@@ -36,7 +35,6 @@ workflow crosscheckFingerprintsCollector {
         refFasta: "Path to the reference fasta file"
         haplotypeMap: "Path to the gzipped hotspot vcf file"
         maxReads: "The maximum number of reads to process; if set, this will sample the requested number of reads"
-        sampleId : "value that will be used as the sample identifier in the vcf fingerprint"
    }
 
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
@@ -96,8 +94,7 @@ workflow crosscheckFingerprintsCollector {
         inputBai = select_first([markDuplicates.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
         haplotypeMap = haplotypeMap,
         refFasta = refFasta,
-        outputFileNamePrefix = outputFileNamePrefix,
-        sampleId = sampleId
+        outputFileNamePrefix = outputFileNamePrefix
     }
 
    output {
@@ -143,7 +140,6 @@ input {
  String refFasta
  String outputFileNamePrefix
  String haplotypeMap
- String sampleId
  Int jobMemory = 8
  Int timeout = 24
 }
@@ -153,7 +149,6 @@ parameter_meta {
  refFasta: "Path to reference FASTA file"
  outputFileNamePrefix: "prefix for making names for output files"
  haplotypeMap: "Hotspot SNPs are the locations of variants used for genotyping"
- sampleId : "value used as the sample identifier in the vcf fingerprint"
  jobMemory: "memory allocated for Job"
  modules: "Names and versions of modules"
  timeout: "Timeout in hours, needed to override imposed limits"
@@ -166,8 +161,7 @@ command <<<
                     -R ~{refFasta} \
                     -H ~{haplotypeMap} \
                     -I ~{inputBam} \
-                    -O ~{outputFileNamePrefix}.vcf \
-                    --SAMPLE_ALIAS ~{sampleId}
+                    -O ~{outputFileNamePrefix}.vcf
 
  $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
  $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
@@ -252,7 +246,6 @@ task markDuplicates {
   String outputFileNamePrefix
   Int jobMemory = 8
   Int timeout = 24
-  Int threads = 8
  }
  parameter_meta {
   inputBam: "input .bam file"
@@ -265,8 +258,12 @@ task markDuplicates {
  
 command <<<
   set -euo pipefail
-  sambamba markdup -t ~{threads} ~{inputBam} ~{outputFileNamePrefix}.dupmarked.bam
-  samtools index ~{outputFileNamePrefix}.dupmarked.bam
+  $GATK_ROOT/bin/gatk MarkDuplicates \
+                      -I ~{inputBam} \
+                      --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
+                      --VALIDATION_STRINGENCY SILENT \
+                      --CREATE_INDEX true \
+                      -O ~{outputFileNamePrefix}.dupmarked.bam
 >>>
 
  runtime {
@@ -277,7 +274,7 @@ command <<<
 
  output {
   File bam = "~{outputFileNamePrefix}.dupmarked.bam"
-  File bamIndex = "~{outputFileNamePrefix}.dupmarked.bam.bai"
+  File bamIndex = "~{outputFileNamePrefix}.dupmarked.bai"
  }
 }
 
