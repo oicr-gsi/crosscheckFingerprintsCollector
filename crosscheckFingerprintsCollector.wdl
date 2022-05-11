@@ -17,10 +17,12 @@ workflow crosscheckFingerprintsCollector {
         File? bamIndex
         String inputType
         String aligner
+        String markDups
         String outputFileNamePrefix
         String refFasta
         String haplotypeMap
         Int maxReads = 0
+        String sampleId
    }
    parameter_meta {
         fastqR1: "fastq file for read 1"
@@ -29,10 +31,12 @@ workflow crosscheckFingerprintsCollector {
         bamIndex: "bam index file"
         inputType: "one of either fastq or bam"
         aligner : "aligner to use for fastq input, either bwa or star"
+        markDups : "should the alignment be duplicate marked?, generally yes"
         outputFileNamePrefix: "Optional output prefix for the output"
         refFasta: "Path to the reference fasta file"
         haplotypeMap: "Path to the gzipped hotspot vcf file"
         maxReads: "The maximum number of reads to process; if set, this will sample the requested number of reads"
+        sampleId : "value that will be used as the sample identifier in the vcf fingerprint"
    }
 
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
@@ -70,21 +74,37 @@ workflow crosscheckFingerprintsCollector {
        }
      }
    }
-  
-
-
-   call extractFingerprint {
-     input:
+  if(markDups=="true"){
+    call markDuplicates {
+      input :
         inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
         inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        outputFileNamePrefix = outputFileNamePrefix 
+    }
+  }  
+
+   call assessCoverage {
+     input:
+        inputBam = select_first([markDuplicates.bam,bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([markDuplicates.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        outputFileNamePrefix = outputFileNamePrefix  
+   }
+   
+   call extractFingerprint {
+     input:
+        inputBam = select_first([markDuplicates.bam,bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([markDuplicates.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
         haplotypeMap = haplotypeMap,
         refFasta = refFasta,
-        outputFileNamePrefix = outputFileNamePrefix
+        outputFileNamePrefix = outputFileNamePrefix,
+        sampleId = sampleId
     }
 
-    output {
+   output {
       File outputVcf = extractFingerprint.vgz
       File outputTbi = extractFingerprint.tbi
+      File coverage = assessCoverage.coverage
+      File json = assessCoverage.json
      }
 
     meta {
@@ -102,8 +122,10 @@ workflow crosscheckFingerprintsCollector {
       }
      ]
      output_meta: {
-       outputVcf: "gzipped vcf expression levels for all genes recorded in the reference",
-       outputTbi: "expression levels for all isoforms recorded in the reference"
+       outputVcf: "the crosscheck fingerprint, gzipped vcf file",
+       outputTbi: "index for the vcf fingerprint",
+       coverage : "output from samtools coverage, with per chromosome metrics",
+       json : "metrics in json format, currently only the mean coverage for the alignment"
      }
   }
 
@@ -121,6 +143,7 @@ input {
  String refFasta
  String outputFileNamePrefix
  String haplotypeMap
+ String sampleId
  Int jobMemory = 8
  Int timeout = 24
 }
@@ -130,6 +153,7 @@ parameter_meta {
  refFasta: "Path to reference FASTA file"
  outputFileNamePrefix: "prefix for making names for output files"
  haplotypeMap: "Hotspot SNPs are the locations of variants used for genotyping"
+ sampleId : "value used as the sample identifier in the vcf fingerprint"
  jobMemory: "memory allocated for Job"
  modules: "Names and versions of modules"
  timeout: "Timeout in hours, needed to override imposed limits"
@@ -142,7 +166,8 @@ command <<<
                     -R ~{refFasta} \
                     -H ~{haplotypeMap} \
                     -I ~{inputBam} \
-                    -O ~{outputFileNamePrefix}.vcf
+                    -O ~{outputFileNamePrefix}.vcf \
+                    --SAMPLE_ALIAS ~{sampleId}
 
  $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
  $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
@@ -211,3 +236,92 @@ command <<<
   File fastqR2mod = "~{fastqR2m}.gz"
  }    
 }
+
+
+# ==========================================
+#  Duplicate Marking
+# ==========================================
+
+
+
+task markDuplicates {
+ input{
+  File inputBam
+  File inputBai
+  String modules
+  String outputFileNamePrefix
+  Int jobMemory = 8
+  Int timeout = 24
+  Int threads = 8
+ }
+ parameter_meta {
+  inputBam: "input .bam file"
+  inputBai: "index of the input .bam file"
+  outputFileNamePrefix: "prefix for making names for output files"  
+  jobMemory: "memory allocated for Job"
+  modules: "Names and versions of modules"
+  timeout: "Timeout in hours, needed to override imposed limits"
+ }
+ 
+command <<<
+  set -euo pipefail
+  sambamba markdup -t ~{threads} ~{inputBam} ~{outputFileNamePrefix}.dupmarked.bam
+  samtools index ~{outputFileNamePrefix}.dupmarked.bam
+>>>
+
+ runtime {
+  memory:  "~{jobMemory} GB"
+  modules: "~{modules}"
+  timeout: "~{timeout}"
+ }
+
+ output {
+  File bam = "~{outputFileNamePrefix}.dupmarked.bam"
+  File bamIndex = "~{outputFileNamePrefix}.dupmarked.bam.bai"
+ }
+}
+
+# ==========================================
+#  coverage metrics from the bam file used for fingerprint analysis
+# ==========================================
+
+
+ task assessCoverage{
+   input{
+    File inputBam
+    File inputBai
+    String modules
+    String outputFileNamePrefix
+    Int jobMemory = 8
+    Int timeout = 24
+   }
+   parameter_meta {
+    inputBam: "input .bam file"
+    inputBai: "index of the input .bam file"
+    outputFileNamePrefix: "prefix for making names for output files"  
+    jobMemory: "memory allocated for Job"
+    modules: "Names and versions of modules"
+    timeout: "Timeout in hours, needed to override imposed limits"
+   } 
+
+command <<<
+  set -euo pipefail
+  $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
+  cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }' | awk '{print "{\"mean coverage\":" $1 "}"}' > ~{outputFileNamePrefix}.json
+>>>
+
+  runtime {
+   memory:  "~{jobMemory} GB"
+   modules: "~{modules}"
+   timeout: "~{timeout}"
+  }
+
+  output {
+    File coverage = "~{outputFileNamePrefix}.coverage.txt"
+    File json = "~{outputFileNamePrefix}.json"
+  }
+}
+
+
+
+
