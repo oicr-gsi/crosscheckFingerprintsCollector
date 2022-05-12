@@ -116,7 +116,8 @@
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
-      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null 
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14" 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -132,6 +133,24 @@
         "type": "ALL"
       },
       "crosscheckFingerprintsCollector.outputTbi": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.json": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -266,7 +285,8 @@
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
-      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null  
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14"  
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -285,6 +305,24 @@
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -416,7 +454,8 @@
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
-      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null  
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14" 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -432,6 +471,24 @@
         "type": "ALL"
       },
       "crosscheckFingerprintsCollector.outputTbi": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.json": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -566,7 +623,8 @@
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
-      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null 
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14" 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -585,6 +643,24 @@
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -716,7 +792,8 @@
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
-      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null 
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14"
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -735,6 +812,24 @@
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -866,7 +961,8 @@
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
-      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14"
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -885,6 +981,24 @@
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      }
+    },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
