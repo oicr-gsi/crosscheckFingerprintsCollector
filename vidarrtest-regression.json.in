@@ -113,7 +113,9 @@
       "crosscheckFingerprintsCollector.markDups" : true,
       "crosscheckFingerprintsCollector.markDuplicates_modules" : "sambamba/0.8.0 samtools/1.14",
       "crosscheckFingerprintsCollector.markDuplicates_timeout" : null,
-      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64 
+      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage_timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage_jobMemory" : null 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -260,7 +262,9 @@
       "crosscheckFingerprintsCollector.markDups" : true,
       "crosscheckFingerprintsCollector.markDuplicates_modules" : "sambamba/0.8.0 samtools/1.14",
       "crosscheckFingerprintsCollector.markDuplicates_timeout" : null,
-      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64 
+      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage_timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage_jobMemory" : null  
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -407,7 +411,9 @@
       "crosscheckFingerprintsCollector.markDups" : true,
       "crosscheckFingerprintsCollector.markDuplicates_modules" : "sambamba/0.8.0 samtools/1.14",
       "crosscheckFingerprintsCollector.markDuplicates_timeout" : null,
-      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64 
+      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage_timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage_jobMemory" : null  
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -554,7 +560,9 @@
       "crosscheckFingerprintsCollector.markDups" : true,
       "crosscheckFingerprintsCollector.markDuplicates_modules" : "sambamba/0.8.0 samtools/1.14",
       "crosscheckFingerprintsCollector.markDuplicates_timeout" : null,
-      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64
+      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage_timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage_jobMemory" : null 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -701,7 +709,9 @@
       "crosscheckFingerprintsCollector.markDups" : true,
       "crosscheckFingerprintsCollector.markDuplicates_modules" : "sambamba/0.8.0 samtools/1.14",
       "crosscheckFingerprintsCollector.markDuplicates_timeout" : null,
-      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64 
+      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage_timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage_jobMemory" : null 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -848,7 +858,9 @@
       "crosscheckFingerprintsCollector.markDups" : true,
       "crosscheckFingerprintsCollector.markDuplicates_modules" : "sambamba/0.8.0 samtools/1.14",
       "crosscheckFingerprintsCollector.markDuplicates_timeout" : null,
-      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64
+      "crosscheckFingerprintsCollector.markDuplicates_jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage_timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage_jobMemory" : null
     },
     "engineArguments": {
       "write_to_cache": false,
