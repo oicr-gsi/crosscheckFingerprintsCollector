@@ -139,8 +139,7 @@
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.coverage": {
         "contents": [
           {
@@ -148,8 +147,7 @@
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.json": {
         "contents": [
           {
@@ -296,7 +294,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -304,12 +302,11 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.coverage": {
         "contents": [
           {
@@ -317,8 +314,7 @@
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.json": {
         "contents": [
           {
@@ -477,8 +473,7 @@
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.coverage": {
         "contents": [
           {
@@ -486,8 +481,7 @@
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.json": {
         "contents": [
           {
@@ -634,7 +628,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -642,12 +636,11 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.coverage": {
         "contents": [
           {
@@ -655,8 +648,7 @@
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.json": {
         "contents": [
           {
@@ -803,7 +795,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -811,12 +803,11 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.coverage": {
         "contents": [
           {
@@ -824,8 +815,7 @@
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.json": {
         "contents": [
           {
@@ -972,7 +962,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -980,12 +970,11 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.coverage": {
         "contents": [
           {
@@ -993,8 +982,7 @@
           }
         ],
         "type": "ALL"
-      }
-    },
+      },
       "crosscheckFingerprintsCollector.json": {
         "contents": [
           {
