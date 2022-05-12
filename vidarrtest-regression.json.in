@@ -110,7 +110,7 @@
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3",
       "crosscheckFingerprintsCollector.downsample.jobMemory" : null,
       "crosscheckFingerprintsCollector.downsample.timeout" : null,
-      "crosscheckFingerprintsCollector.markDups" : "true"",
+      "crosscheckFingerprintsCollector.markDups" : "true",
       "crosscheckFingerprintsCollector.markDuplicates.modules" : "sambamba/0.8.0 samtools/1.14",
       "crosscheckFingerprintsCollector.markDuplicates.threads" : null,
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
