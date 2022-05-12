@@ -1,0 +1,25 @@
+## Commands
+This section lists command(s) run by WORKFLOW workflow
+
+* Running WORKFLOW
+
+Fastq Input
+
+(optional) Downsampling
+seqtk -s N ~{outputFileNamePrefix}_R1.fastq.gz
+seqtk -s N ~{outputFileNamePrefix}_R2.fastq.gz
+
+Alignment
+see bwa mem or STAR workflows, produced bam files
+
+Fingerprint Generation (from bam files)
+
+ $GATK_ROOT/bin/gatk ExtractFingerprint \
+                    -R ~{refFasta} \
+                    -H ~{haplotypeMap} \
+                    -I ~{inputBam} \
+                    -O ~{outputFileNamePrefix}.vcf
+
+ $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
+ $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
+
