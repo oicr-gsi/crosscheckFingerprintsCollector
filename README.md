@@ -137,7 +137,7 @@ Output | Type | Description
  
  * Running WORKFLOW
  
- === Description here ===.
+ === Fingerprint Generation ===
  
  <<<
    set -euo pipefail
@@ -152,6 +152,8 @@ Output | Type | Description
   $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
   $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
  >>>
+ 
+ === downsampling,if requested ===
  <<<
   set -euo pipefail
   
@@ -161,6 +163,9 @@ Output | Type | Description
   seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
   gzip ~{fastqR2m}
  >>>
+ 
+ === Duplicate Marking, if requested ===
+ 
  <<<
    set -euo pipefail
    $GATK_ROOT/bin/gatk MarkDuplicates \
@@ -170,6 +175,8 @@ Output | Type | Description
                        --CREATE_INDEX true \
                        -O ~{outputFileNamePrefix}.dupmarked.bam
  >>>
+ 
+ === Coverage Assessment ===
  <<<
    set -euo pipefail
    $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
