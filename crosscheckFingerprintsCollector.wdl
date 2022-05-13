@@ -252,7 +252,6 @@ task markDuplicates {
   String outputFileNamePrefix
   Int jobMemory = 8
   Int timeout = 24
-  Int threads = 8
  }
  parameter_meta {
   inputBam: "input .bam file"
@@ -265,8 +264,12 @@ task markDuplicates {
  
 command <<<
   set -euo pipefail
-  sambamba markdup -t ~{threads} ~{inputBam} ~{outputFileNamePrefix}.dupmarked.bam
-  samtools index ~{outputFileNamePrefix}.dupmarked.bam
+  $GATK_ROOT/bin/gatk MarkDuplicates \
+                      -I ~{inputBam} \
+                      --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
+                      --VALIDATION_STRINGENCY SILENT \
+                      --CREATE_INDEX true \
+                      -O ~{outputFileNamePrefix}.dupmarked.bam
 >>>
 
  runtime {
@@ -277,7 +280,7 @@ command <<<
 
  output {
   File bam = "~{outputFileNamePrefix}.dupmarked.bam"
-  File bamIndex = "~{outputFileNamePrefix}.dupmarked.bam.bai"
+  File bamIndex = "~{outputFileNamePrefix}.dupmarked.bai"
  }
 }
 
