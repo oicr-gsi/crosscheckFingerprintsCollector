@@ -160,7 +160,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_FASTQ_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WG_HG38_FASTQ.metrics",
         "type": "script"
       }
     ]
@@ -326,7 +326,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_STAR_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WT_HG38_FASTQ.metrics",
         "type": "script"
       }
     ]
@@ -492,7 +492,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_FASTQ_INPUT_MAXREADS.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WG_HG38_FASTQ_MAXREADS.metrics",
         "type": "script"
       }
     ]
@@ -658,7 +658,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_STAR_INPUT_MAXREADS.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WT_HG38_FASTQ_MAXREADS.metrics",
         "type": "script"
       }
     ]
@@ -824,7 +824,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_BAM_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WG_HG38_BAM.metrics",
         "type": "script"
       }
     ]
@@ -990,7 +990,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_BAM_STAR_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WT_HG38_BAM.metrics",
         "type": "script"
       }
     ]
