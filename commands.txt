@@ -20,6 +20,7 @@ This section lists command(s) run by WORKFLOW workflow
 >>>
 
 === downsampling,if requested ===
+
 <<<
  set -euo pipefail
  
@@ -43,6 +44,7 @@ This section lists command(s) run by WORKFLOW workflow
 >>>
 
 === Coverage Assessment ===
+
 <<<
   set -euo pipefail
   $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt

@@ -17,7 +17,7 @@ workflow crosscheckFingerprintsCollector {
         File? bamIndex
         String inputType
         String aligner
-        String markDups
+        Boolean markDups
         String outputFileNamePrefix
         String refFasta
         String haplotypeMap
@@ -74,7 +74,7 @@ workflow crosscheckFingerprintsCollector {
        }
      }
    }
-  if(markDups=="true"){
+  if(markDups){
     call markDuplicates {
       input :
         inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
