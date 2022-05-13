@@ -74,6 +74,7 @@ workflow crosscheckFingerprintsCollector {
        }
      }
    }
+
   if(markDups){
     call markDuplicates {
       input :
