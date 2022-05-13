@@ -1,0 +1,52 @@
+## Commands
+This section lists command(s) run by WORKFLOW workflow
+
+* Running WORKFLOW
+
+=== Fingerprint Generation ===
+
+<<<
+  set -euo pipefail
+
+ $GATK_ROOT/bin/gatk ExtractFingerprint \
+                    -R ~{refFasta} \
+                    -H ~{haplotypeMap} \
+                    -I ~{inputBam} \
+                    -O ~{outputFileNamePrefix}.vcf \
+                    --SAMPLE_ALIAS ~{sampleId}
+
+ $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
+ $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
+>>>
+
+=== downsampling,if requested ===
+
+<<<
+ set -euo pipefail
+ 
+ seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
+ gzip ~{fastqR1m}
+ 
+ seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
+ gzip ~{fastqR2m}
+>>>
+
+=== Duplicate Marking, if requested ===
+
+<<<
+  set -euo pipefail
+  $GATK_ROOT/bin/gatk MarkDuplicates \
+                      -I ~{inputBam} \
+                      --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
+                      --VALIDATION_STRINGENCY SILENT \
+                      --CREATE_INDEX true \
+                      -O ~{outputFileNamePrefix}.dupmarked.bam
+>>>
+
+=== Coverage Assessment ===
+
+<<<
+  set -euo pipefail
+  $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
+  cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }' | awk '{print "{\"mean coverage\":" $1 "}"}' > ~{outputFileNamePrefix}.json
+>>>

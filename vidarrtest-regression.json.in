@@ -1,6 +1,6 @@
 [
   {
-    "id": "TEST_0001_WG_HG38_FASTQ_INPUT",
+    "id": "TEST_0001_WG_HG38_FASTQ",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with fastq as input",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
@@ -30,7 +30,8 @@
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ",
-	  "crosscheckFingerprintsCollector.aligner": "bwa",
+      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WG_HG38_FASTQ",
+      "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -108,7 +109,14 @@
       "crosscheckFingerprintsCollector.maxReads" : null,
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3",
       "crosscheckFingerprintsCollector.downsample.jobMemory" : null,
-      "crosscheckFingerprintsCollector.downsample.timeout" : null
+      "crosscheckFingerprintsCollector.downsample.timeout" : null,
+      "crosscheckFingerprintsCollector.markDups" : true,
+      "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
+      "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
+      "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14" 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -130,19 +138,35 @@
           }
         ],
         "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
       }
     },
     "validators": [
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_FASTQ_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WG_HG38_FASTQ.metrics",
         "type": "script"
       }
     ]
   },
   {
-    "id": "TEST_0001_WT_HG38_FASTQ_INPUT",
+    "id": "TEST_0001_WT_HG38_FASTQ",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38, with fastq as input, star as aligner",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
@@ -172,7 +196,8 @@
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ",
-	  "crosscheckFingerprintsCollector.aligner": "star",
+      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WT_HG38_FASTQ",
+      "crosscheckFingerprintsCollector.aligner": "star",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -250,7 +275,14 @@
       "crosscheckFingerprintsCollector.maxReads" : null,
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3",
       "crosscheckFingerprintsCollector.downsample.jobMemory" : null,
-      "crosscheckFingerprintsCollector.downsample.timeout" : null
+      "crosscheckFingerprintsCollector.downsample.timeout" : null,
+      "crosscheckFingerprintsCollector.markDups" : true,
+      "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
+      "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
+      "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14"  
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -260,7 +292,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -268,7 +300,23 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -278,13 +326,13 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_STAR_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WT_HG38_FASTQ.metrics",
         "type": "script"
       }
     ]
   },
   {
-    "id": "TEST_0001_WG_HG38_FASTQ_INPUT_MAXREADS",
+    "id": "TEST_0001_WG_HG38_FASTQ_MAXREADS",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with fastq as input, downsample to 50000 reads",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
@@ -313,8 +361,9 @@
       },
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-      "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ",
-	  "crosscheckFingerprintsCollector.aligner": "bwa",
+      "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ_MAXREADS",
+      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WG_HG38_FASTQ_MAXREADS",
+      "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -392,7 +441,14 @@
       "crosscheckFingerprintsCollector.maxReads" : 50000,
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3",
       "crosscheckFingerprintsCollector.downsample.jobMemory" : null,
-      "crosscheckFingerprintsCollector.downsample.timeout" : null
+      "crosscheckFingerprintsCollector.downsample.timeout" : null,
+      "crosscheckFingerprintsCollector.markDups" : true,
+      "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
+      "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
+      "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14" 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -414,19 +470,35 @@
           }
         ],
         "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
       }
     },
     "validators": [
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_FASTQ_INPUT_MAXREADS.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WG_HG38_FASTQ_MAXREADS.metrics",
         "type": "script"
       }
     ]
   },
   {
-    "id": "TEST_0001_WT_HG38_FASTQ_INPUT_MAXREADS",
+    "id": "TEST_0001_WT_HG38_FASTQ_MAXREADS",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38, with fastq as input, star as aligner, downsample to 50000 reads",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
@@ -455,8 +527,9 @@
       },
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-      "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ",
-	  "crosscheckFingerprintsCollector.aligner": "star",
+      "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ_MAXREADS",
+      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WT_HG38_FASTQ_MAXREADS",
+      "crosscheckFingerprintsCollector.aligner": "star",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -534,7 +607,14 @@
       "crosscheckFingerprintsCollector.maxReads" : 50000,
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3",
       "crosscheckFingerprintsCollector.downsample.jobMemory" : null,
-      "crosscheckFingerprintsCollector.downsample.timeout" : null
+      "crosscheckFingerprintsCollector.downsample.timeout" : null,
+      "crosscheckFingerprintsCollector.markDups" : true,
+      "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
+      "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
+      "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14" 
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -544,7 +624,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -552,7 +632,23 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_FASTQ@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -562,13 +658,13 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_FASTQ_STAR_INPUT_MAXREADS.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WT_HG38_FASTQ_MAXREADS.metrics",
         "type": "script"
       }
     ]
   },
   {
-    "id": "TEST_0001_WG_HG38_BAM_INPUT",
+    "id": "TEST_0001_WG_HG38_BAM",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with bam files as input",
     "arguments": {
       "crosscheckFingerprintsCollector.bam": {
@@ -598,7 +694,8 @@
       "crosscheckFingerprintsCollector.inputType": "bam",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_BAM",
-	  "crosscheckFingerprintsCollector.aligner": "bwa",
+      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WG_HG38_BAM",
+      "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -676,7 +773,14 @@
       "crosscheckFingerprintsCollector.maxReads" : null,
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3",
       "crosscheckFingerprintsCollector.downsample.jobMemory" : null,
-      "crosscheckFingerprintsCollector.downsample.timeout" : null
+      "crosscheckFingerprintsCollector.downsample.timeout" : null,
+      "crosscheckFingerprintsCollector.markDups" : true,
+      "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
+      "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
+      "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14"
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -686,7 +790,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -694,7 +798,23 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -704,13 +824,13 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WG_HG38_BAM_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WG_HG38_BAM.metrics",
         "type": "script"
       }
     ]
   },
   {
-    "id": "TEST_0001_WT_HG38_BAM_INPUT",
+    "id": "TEST_0001_WT_HG38_BAM",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with bam files as input",
     "arguments": {
       "crosscheckFingerprintsCollector.bam": {
@@ -740,7 +860,8 @@
       "crosscheckFingerprintsCollector.inputType": "bam",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_BAM",
-	  "crosscheckFingerprintsCollector.aligner": "star",
+      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WT_HG38_BAM",
+      "crosscheckFingerprintsCollector.aligner": "star",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_bwaRef": "/.mounts/labs/gsi/modulator/sw/data/hg38-bwa-index-with-alt-0.7.12/hg38_random.fa",
@@ -818,7 +939,14 @@
       "crosscheckFingerprintsCollector.maxReads" : null,
       "crosscheckFingerprintsCollector.downsample.modules" : "seqtk/1.3",
       "crosscheckFingerprintsCollector.downsample.jobMemory" : null,
-      "crosscheckFingerprintsCollector.downsample.timeout" : null
+      "crosscheckFingerprintsCollector.downsample.timeout" : null,
+      "crosscheckFingerprintsCollector.markDups" : true,
+      "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
+      "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
+      "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.assessCoverage.timeout" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.jobMemory" : null,
+      "crosscheckFingerprintsCollector.assessCoverage.modules" : "samtools/1.14"
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -828,7 +956,7 @@
       "crosscheckFingerprintsCollector.outputVcf": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -836,7 +964,23 @@
       "crosscheckFingerprintsCollector.outputTbi": {
         "contents": [
           {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WT_HG38_BAM@JENKINSID@"
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.coverage": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+          }
+        ],
+        "type": "ALL"
+      },
+      "crosscheckFingerprintsCollector.json": {
+        "contents": [
+          {
+            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"
@@ -846,7 +990,7 @@
       {
         "metrics_calculate": "@CHECKOUT@/tests/calculate.sh",
         "metrics_compare": "@CHECKOUT@/tests/compare.sh",
-        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/TEST_0001_WT_HG38_BAM_STAR_INPUT.metrics",
+        "output_metrics": "/.mounts/labs/gsi/testdata/crosscheckFingerprintsCollector/output_expectation/metrics/TEST_0001_WT_HG38_BAM.metrics",
         "type": "script"
       }
     ]
