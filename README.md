@@ -154,6 +154,7 @@ Output | Type | Description
  >>>
  
  === downsampling,if requested ===
+ 
  <<<
   set -euo pipefail
   
@@ -177,6 +178,7 @@ Output | Type | Description
  >>>
  
  === Coverage Assessment ===
+ 
  <<<
    set -euo pipefail
    $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
