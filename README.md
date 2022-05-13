@@ -25,12 +25,16 @@ Parameter|Value|Description
 ---|---|---
 `inputType`|String|one of either fastq or bam
 `aligner`|String|aligner to use for fastq input, either bwa or star
+`markDups`|String|should the alignment be duplicate marked?, generally yes
 `outputFileNamePrefix`|String|Optional output prefix for the output
 `refFasta`|String|Path to the reference fasta file
 `haplotypeMap`|String|Path to the gzipped hotspot vcf file
+`sampleId`|String|value that will be used as the sample identifier in the vcf fingerprint
 `downsample.modules`|String|Names and versions of modules
 `bwaMem.runBwaMem_bwaRef`|String|The reference genome to align the sample with by BWA
 `bwaMem.runBwaMem_modules`|String|Required environment modules
+`markDuplicates.modules`|String|Names and versions of modules
+`assessCoverage.modules`|String|Names and versions of modules
 `extractFingerprint.modules`|String|Names and versions of modules
 
 
@@ -110,6 +114,10 @@ Parameter|Value|Default|Description
 `star.runStar_transcriptomeSuffix`|String|"Aligned.toTranscriptome.out"|Suffix for transcriptome-aligned file
 `star.runStar_starSuffix`|String|"Aligned.sortedByCoord.out"|Suffix for sorted file
 `star.runStar_genomeIndexDir`|String|"$HG38_STAR_INDEX100_ROOT/"|Path to STAR index
+`markDuplicates.jobMemory`|Int|8|memory allocated for Job
+`markDuplicates.timeout`|Int|24|Timeout in hours, needed to override imposed limits
+`assessCoverage.jobMemory`|Int|8|memory allocated for Job
+`assessCoverage.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `extractFingerprint.jobMemory`|Int|8|memory allocated for Job
 `extractFingerprint.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 
@@ -118,8 +126,10 @@ Parameter|Value|Default|Description
 
 Output | Type | Description
 ---|---|---
-`outputVcf`|File|gzipped vcf expression levels for all genes recorded in the reference
-`outputTbi`|File|expression levels for all isoforms recorded in the reference
+`outputVcf`|File|the crosscheck fingerprint, gzipped vcf file
+`outputTbi`|File|index for the vcf fingerprint
+`coverage`|File|output from samtools coverage, with per chromosome metrics
+`json`|File|metrics in json format, currently only the mean coverage for the alignment
 
 
 ## Commands
@@ -127,29 +137,44 @@ Output | Type | Description
  
  * Running WORKFLOW
  
- Fastq Input
+ === Description here ===.
  
- (optional) Downsampling
-```
- seqtk -s N ~{outputFileNamePrefix}_R1.fastq.gz
- seqtk -s N ~{outputFileNamePrefix}_R2.fastq.gz
-```
-
- Alignment
- see bwa mem or STAR workflows, produced bam files
+ <<<
+   set -euo pipefail
  
- Fingerprint Generation (from bam files)
-``` 
   $GATK_ROOT/bin/gatk ExtractFingerprint \
                      -R ~{refFasta} \
                      -H ~{haplotypeMap} \
                      -I ~{inputBam} \
-                     -O ~{outputFileNamePrefix}.vcf
+                     -O ~{outputFileNamePrefix}.vcf \
+                     --SAMPLE_ALIAS ~{sampleId}
  
   $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
-
   $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
-```
+ >>>
+ <<<
+  set -euo pipefail
+  
+  seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
+  gzip ~{fastqR1m}
+  
+  seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
+  gzip ~{fastqR2m}
+ >>>
+ <<<
+   set -euo pipefail
+   $GATK_ROOT/bin/gatk MarkDuplicates \
+                       -I ~{inputBam} \
+                       --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
+                       --VALIDATION_STRINGENCY SILENT \
+                       --CREATE_INDEX true \
+                       -O ~{outputFileNamePrefix}.dupmarked.bam
+ >>>
+ <<<
+   set -euo pipefail
+   $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
+   cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }' | awk '{print "{\"mean coverage\":" $1 "}"}' > ~{outputFileNamePrefix}.json
+ >>>
  ## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
