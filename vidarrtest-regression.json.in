@@ -1,6 +1,6 @@
 [
   {
-    "id": "TEST_0001_WG_HG38_FASTQ_INPUT",
+    "id": "TEST_0001_WG_HG38_FASTQ",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with fastq as input",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
@@ -166,7 +166,7 @@
     ]
   },
   {
-    "id": "TEST_0001_WT_HG38_FASTQ_INPUT",
+    "id": "TEST_0001_WT_HG38_FASTQ",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38, with fastq as input, star as aligner",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
@@ -332,7 +332,7 @@
     ]
   },
   {
-    "id": "TEST_0001_WG_HG38_FASTQ_INPUT_MAXREADS",
+    "id": "TEST_0001_WG_HG38_FASTQ_MAXREADS",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with fastq as input, downsample to 50000 reads",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
@@ -361,8 +361,8 @@
       },
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-      "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ",
-      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WG_HG38_FASTQ",
+      "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ_MAXREADS",
+      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WG_HG38_FASTQ_MAXREADS",
       "crosscheckFingerprintsCollector.aligner": "bwa",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
@@ -498,7 +498,7 @@
     ]
   },
   {
-    "id": "TEST_0001_WT_HG38_FASTQ_INPUT_MAXREADS",
+    "id": "TEST_0001_WT_HG38_FASTQ_MAXREADS",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WT library using hg38, with fastq as input, star as aligner, downsample to 50000 reads",
     "arguments": {
       "crosscheckFingerprintsCollector.fastqR1": {
@@ -527,8 +527,8 @@
       },
       "crosscheckFingerprintsCollector.inputType": "fastq",
       "crosscheckFingerprintsCollector.haplotypeMap": "/.mounts/labs/gsi/modulator/sw/data/crosscheckfingerprints-haplotype-map-20210315/oicr_hg38_chr.map",
-      "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ",
-      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WT_HG38_FASTQ",
+      "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ_MAXREADS",
+      "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WT_HG38_FASTQ_MAXREADS",
       "crosscheckFingerprintsCollector.aligner": "star",
       "crosscheckFingerprintsCollector.refFasta": "/.mounts/labs/gsi/modulator/sw/data/hg38-p12/hg38_random.fa",
       "crosscheckFingerprintsCollector.bwaMem.runBwaMem_modules": "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
@@ -664,7 +664,7 @@
     ]
   },
   {
-    "id": "TEST_0001_WG_HG38_BAM_INPUT",
+    "id": "TEST_0001_WG_HG38_BAM",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with bam files as input",
     "arguments": {
       "crosscheckFingerprintsCollector.bam": {
@@ -830,7 +830,7 @@
     ]
   },
   {
-    "id": "TEST_0001_WT_HG38_BAM_INPUT",
+    "id": "TEST_0001_WT_HG38_BAM",
     "description": "runs the crosscheckFingerprintsCollector workflow on a WG library using hg38, with bam files as input",
     "arguments": {
       "crosscheckFingerprintsCollector.bam": {
