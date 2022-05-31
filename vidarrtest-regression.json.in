@@ -139,7 +139,7 @@
         ],
         "type": "ALL"
       },
-      "crosscheckFingerprintsCollector.coverage": {
+      "crosscheckFingerprintsCollector.samstats": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -305,7 +305,7 @@
         ],
         "type": "ALL"
       },
-      "crosscheckFingerprintsCollector.coverage": {
+      "crosscheckFingerprintsCollector.samstats": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -471,7 +471,7 @@
         ],
         "type": "ALL"
       },
-      "crosscheckFingerprintsCollector.coverage": {
+      "crosscheckFingerprintsCollector.samstats": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -637,7 +637,7 @@
         ],
         "type": "ALL"
       },
-      "crosscheckFingerprintsCollector.coverage": {
+      "crosscheckFingerprintsCollector.samstats": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -803,7 +803,7 @@
         ],
         "type": "ALL"
       },
-      "crosscheckFingerprintsCollector.coverage": {
+      "crosscheckFingerprintsCollector.samstats": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -969,7 +969,7 @@
         ],
         "type": "ALL"
       },
-      "crosscheckFingerprintsCollector.coverage": {
+      "crosscheckFingerprintsCollector.samstats": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
