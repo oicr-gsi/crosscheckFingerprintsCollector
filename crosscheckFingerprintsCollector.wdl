@@ -84,11 +84,12 @@ workflow crosscheckFingerprintsCollector {
     }
   }  
 
-   call assessCoverage {
+   call alignmentMetrics {
      input:
         inputBam = select_first([markDuplicates.bam,bwaMem.bwaMemBam,star.starBam,bam]),
         inputBai = select_first([markDuplicates.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
-        outputFileNamePrefix = outputFileNamePrefix  
+        outputFileNamePrefix = outputFileNamePrefix,
+        markDups = markDups  
    }
    
    call extractFingerprint {
@@ -104,8 +105,8 @@ workflow crosscheckFingerprintsCollector {
    output {
       File outputVcf = extractFingerprint.vgz
       File outputTbi = extractFingerprint.tbi
-      File coverage = assessCoverage.coverage
-      File json = assessCoverage.json
+      File json = alignmentMetrics.json
+      File samstats = alignmentMetrics.samstats
      }
 
     meta {
@@ -126,7 +127,8 @@ workflow crosscheckFingerprintsCollector {
        outputVcf: "the crosscheck fingerprint, gzipped vcf file",
        outputTbi: "index for the vcf fingerprint",
        coverage : "output from samtools coverage, with per chromosome metrics",
-       json : "metrics in json format, currently only the mean coverage for the alignment"
+       json : "metrics in json format, currently only the mean coverage for the alignment",
+       samstats : "output from the samstats summary"
      }
   }
 
@@ -290,12 +292,13 @@ command <<<
 # ==========================================
 
 
- task assessCoverage{
+ task alignmentMetrics{
    input{
     File inputBam
     File inputBai
     String modules
     String outputFileNamePrefix
+    Boolean markDups	
     Int jobMemory = 8
     Int timeout = 24
    }
@@ -310,8 +313,28 @@ command <<<
 
 command <<<
   set -euo pipefail
-  $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
-  cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }' | awk '{print "{\"mean coverage\":" $1 "}"}' > ~{outputFileNamePrefix}.json
+
+  ### samtools stats
+  $SAMTOOLS_ROOT/bin/samtools stats ~{inputBam} > ~{outputFileNamePrefix}.samstats.txt
+  reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "raw total sequences:" | cut -f3`
+  mapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads mapped:" | cut -f 3`
+  unmapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads unmapped:" | cut -f 3`
+  mapped_bases=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "bases mapped:" | cut -f 3`
+  reads_duplicated=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads duplicated:" | cut -f 3`
+
+  ### samtools coverage, with duplicates
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
+  mean_cvg=`cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
+  
+  ### samtools coverage, deduplicated
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP ~{inputBam} > ~{outputFileNamePrefix}.dedup.coverage.txt
+  mean_dedup_cvg=`cat ~{outputFileNamePrefix}.dedup.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
+  
+  ### json file
+  echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups}} > ~{outputFileNamePrefix}.json
+
+
+
 >>>
 
   runtime {
@@ -321,8 +344,8 @@ command <<<
   }
 
   output {
-    File coverage = "~{outputFileNamePrefix}.coverage.txt"
     File json = "~{outputFileNamePrefix}.json"
+    File samstats = "~{outputFileNamePrefix}.samstats.txt"
   }
 }
 
