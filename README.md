@@ -25,7 +25,7 @@ Parameter|Value|Description
 ---|---|---
 `inputType`|String|one of either fastq or bam
 `aligner`|String|aligner to use for fastq input, either bwa or star
-`markDups`|String|should the alignment be duplicate marked?, generally yes
+`markDups`|Boolean|should the alignment be duplicate marked?, generally yes
 `outputFileNamePrefix`|String|Optional output prefix for the output
 `refFasta`|String|Path to the reference fasta file
 `haplotypeMap`|String|Path to the gzipped hotspot vcf file
@@ -34,7 +34,7 @@ Parameter|Value|Description
 `bwaMem.runBwaMem_bwaRef`|String|The reference genome to align the sample with by BWA
 `bwaMem.runBwaMem_modules`|String|Required environment modules
 `markDuplicates.modules`|String|Names and versions of modules
-`assessCoverage.modules`|String|Names and versions of modules
+`alignmentMetrics.modules`|String|Names and versions of modules
 `extractFingerprint.modules`|String|Names and versions of modules
 
 
@@ -116,8 +116,8 @@ Parameter|Value|Default|Description
 `star.runStar_genomeIndexDir`|String|"$HG38_STAR_INDEX100_ROOT/"|Path to STAR index
 `markDuplicates.jobMemory`|Int|8|memory allocated for Job
 `markDuplicates.timeout`|Int|24|Timeout in hours, needed to override imposed limits
-`assessCoverage.jobMemory`|Int|8|memory allocated for Job
-`assessCoverage.timeout`|Int|24|Timeout in hours, needed to override imposed limits
+`alignmentMetrics.jobMemory`|Int|8|memory allocated for Job
+`alignmentMetrics.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `extractFingerprint.jobMemory`|Int|8|memory allocated for Job
 `extractFingerprint.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 
@@ -128,8 +128,8 @@ Output | Type | Description
 ---|---|---
 `outputVcf`|File|the crosscheck fingerprint, gzipped vcf file
 `outputTbi`|File|index for the vcf fingerprint
-`coverage`|File|output from samtools coverage, with per chromosome metrics
 `json`|File|metrics in json format, currently only the mean coverage for the alignment
+`samstats`|File|output from the samstats summary
 
 
 ## Commands
