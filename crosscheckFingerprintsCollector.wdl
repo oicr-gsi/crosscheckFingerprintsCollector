@@ -105,7 +105,6 @@ workflow crosscheckFingerprintsCollector {
    output {
       File outputVcf = extractFingerprint.vgz
       File outputTbi = extractFingerprint.tbi
-      File coverage = alignmentMetrics.coverage
       File json = alignmentMetrics.json
       File samstats = alignmentMetrics.samstats
      }
@@ -128,7 +127,8 @@ workflow crosscheckFingerprintsCollector {
        outputVcf: "the crosscheck fingerprint, gzipped vcf file",
        outputTbi: "index for the vcf fingerprint",
        coverage : "output from samtools coverage, with per chromosome metrics",
-       json : "metrics in json format, currently only the mean coverage for the alignment"
+       json : "metrics in json format, currently only the mean coverage for the alignment",
+       samstats : "output from the samstats summary"
      }
   }
 
@@ -327,8 +327,8 @@ command <<<
   mean_cvg=`cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
   
   ### samtools coverage, deduplicated
-  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
-  mean_dedup_cvg=`cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP ~{inputBam} > ~{outputFileNamePrefix}.dedup.coverage.txt
+  mean_dedup_cvg=`cat ~{outputFileNamePrefix}.dedup.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
   
   ### json file
   echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups}} > ~{outputFileNamePrefix}.json
@@ -344,7 +344,6 @@ command <<<
   }
 
   output {
-    File coverage = "~{outputFileNamePrefix}.coverage.txt"
     File json = "~{outputFileNamePrefix}.json"
     File samstats = "~{outputFileNamePrefix}.samstats.txt"
   }
