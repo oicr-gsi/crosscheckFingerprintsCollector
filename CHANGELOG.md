@@ -32,4 +32,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added input markDups, if set to true will run the task markDuplicates on the bam file prior to fingerprinting.  ExtractFingerprint accounts for marked duplicates
 - added assessCoverage task to generate a samtools coverage report on the bam file (with -ff default filters), then generated a json with the mean depth
 - added option sampleId : the provided sampleId is given to the ExtractFingeprints --SAMPLE_ALIAS argument, and will appear in the vcf fingeprint as the sample identifier.  This allows crosscheck to be run as by=SAMPLE, and will help to provide uniformity to how the fingerprint comparisons are run
-- added duplicate marking and sampleID to each of the regression tests as these are both expected to be used regularly 
+- added duplicate marking and sampleID to each of the regression tests as these are both expected to be used regularl
+
+
+## [1.0.5] - 2021-05-31
+- renamed assessCoverage task to alignmentMetrics
+- added samtools stats to generate basic stats on the final bam file
+- running samtools coverage with and withouth -ff DUP, to assess coverage before and after DUP removal
+- capturing multiple stats in the json structure 
