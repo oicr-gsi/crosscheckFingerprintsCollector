@@ -39,4 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - renamed assessCoverage task to alignmentMetrics
 - added samtools stats to generate basic stats on the final bam file
 - running samtools coverage with and withouth -ff DUP, to assess coverage before and after DUP removal
-- capturing multiple stats in the json structure 
+- capturing multiple stats in the json structure
+
+## [1.0.6] - 2021-06-20
+- added "--VALIDATION_STRINGENCY LENIENT" to gatk ExtractFingerprint 

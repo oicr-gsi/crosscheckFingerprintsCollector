@@ -170,7 +170,8 @@ command <<<
                     -H ~{haplotypeMap} \
                     -I ~{inputBam} \
                     -O ~{outputFileNamePrefix}.vcf \
-                    --SAMPLE_ALIAS ~{sampleId}
+                    --SAMPLE_ALIAS ~{sampleId} \
+                    --VALIDATION_STRINGENCY LENIENT
 
  $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
  $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
