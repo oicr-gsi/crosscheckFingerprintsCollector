@@ -1,6 +1,7 @@
 {
     "names": [
-        "crosscheckFingerprintsCollector"
+        "crosscheckFingerprintsCollector_fastq",
+        "crosscheckFingerprintsCollector_bam"
     ],
     "wdl": "crosscheckFingerprintsCollector.wdl"
 }
