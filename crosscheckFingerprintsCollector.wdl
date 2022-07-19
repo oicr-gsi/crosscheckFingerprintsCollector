@@ -253,7 +253,8 @@ task markDuplicates {
   File inputBai
   String modules
   String outputFileNamePrefix
-  Int jobMemory = 8
+  Int jobMemory = 24
+  Int overhead = 6
   Int timeout = 24
  }
  parameter_meta {
@@ -261,13 +262,14 @@ task markDuplicates {
   inputBai: "index of the input .bam file"
   outputFileNamePrefix: "prefix for making names for output files"  
   jobMemory: "memory allocated for Job"
+  overhead: "memory allocated to overhead of the job other than used in markDuplicates command"
   modules: "Names and versions of modules"
   timeout: "Timeout in hours, needed to override imposed limits"
  }
  
 command <<<
   set -euo pipefail
-  $GATK_ROOT/bin/gatk MarkDuplicates \
+  $GATK_ROOT/bin/gatk --java-options "-Xmx~{jobMemory - overhead}G" MarkDuplicates \
                       -I ~{inputBam} \
                       --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
                       --VALIDATION_STRINGENCY SILENT \
@@ -348,7 +350,5 @@ command <<<
     File samstats = "~{outputFileNamePrefix}.samstats.txt"
   }
 }
-
-
 
 

@@ -39,4 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - renamed assessCoverage task to alignmentMetrics
 - added samtools stats to generate basic stats on the final bam file
 - running samtools coverage with and withouth -ff DUP, to assess coverage before and after DUP removal
-- capturing multiple stats in the json structure 
+- capturing multiple stats in the json structure
+
+## [1.0.8] - 2022-07-19
+- Adding java option Xmx to make sure markDupilcates caommand running has enough memory 
