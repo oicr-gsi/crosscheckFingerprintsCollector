@@ -114,6 +114,7 @@
       "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.modules" : "samtools/1.14" 
@@ -280,6 +281,7 @@
       "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.modules" : "samtools/1.14"  
@@ -446,6 +448,7 @@
       "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.modules" : "samtools/1.14" 
@@ -612,6 +615,7 @@
       "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.modules" : "samtools/1.14" 
@@ -778,6 +782,7 @@
       "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.modules" : "samtools/1.14"
@@ -944,6 +949,7 @@
       "crosscheckFingerprintsCollector.markDuplicates.modules" : "gatk/4.2.0.0",
       "crosscheckFingerprintsCollector.markDuplicates.timeout" : null,
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
+      "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.modules" : "samtools/1.14"
