@@ -9,6 +9,8 @@ crosscheckFingerprintsCollector, workflow that generates genotype fingerprints u
 
 * [gatk 4.2.0.0](https://gatk.broadinstitute.org)
 * [tabix 0.2.6](http://www.htslib.org)
+* [samtools 1.1](http://www.htslib.org/)
+* [seqtk 1.3](https://github.com/lh3/seqtk)
 
 
 ## Usage
@@ -26,17 +28,9 @@ Parameter|Value|Description
 `inputType`|String|one of either fastq or bam
 `aligner`|String|aligner to use for fastq input, either bwa or star
 `markDups`|Boolean|should the alignment be duplicate marked?, generally yes
-`intervalsToParallelizeByString`|String|Comma separated list of intervals to split by (e.g. chr1,chr2,chr3+chr4).
 `outputFileNamePrefix`|String|Optional output prefix for the output
-`refFasta`|String|Path to the reference fasta file
-`haplotypeMap`|String|Path to the gzipped hotspot vcf file
+`reference`|String|the reference genome for input sample
 `sampleId`|String|value that will be used as the sample identifier in the vcf fingerprint
-`downsample.modules`|String|Names and versions of modules
-`bwaMem.runBwaMem_bwaRef`|String|The reference genome to align the sample with by BWA
-`bwaMem.runBwaMem_modules`|String|Required environment modules
-`markDuplicates.modules`|String|Names and versions of modules
-`alignmentMetrics.modules`|String|Names and versions of modules
-`extractFingerprint.modules`|String|Names and versions of modules
 
 
 #### Optional workflow parameters:
@@ -108,13 +102,11 @@ Parameter|Value|Default|Description
 `star.runStar_uniqMAPQ`|Int|255|Score for unique mappers
 `star.runStar_chimScoreDropMax`|Int|30|max drop (difference) of chimeric score (the sum of scores of allchimeric segments) from the read length
 `star.runStar_outFilterMultimapNmax`|Int|50|max number of multiple alignments allowed for a read: if exceeded, the read is considered unmapped
-`star.runStar_modules`|String|"star/2.7.6a hg38-star-index100/2.7.6a"|modules for running STAR
 `star.runStar_addParam`|String?|None|Additional STAR parameters
 `star.runStar_genereadSuffix`|String|"ReadsPerGene.out"|ReadsPerGene file suffix
 `star.runStar_chimericjunctionSuffix`|String|"Chimeric.out"|Suffix for chimeric junction file
 `star.runStar_transcriptomeSuffix`|String|"Aligned.toTranscriptome.out"|Suffix for transcriptome-aligned file
 `star.runStar_starSuffix`|String|"Aligned.sortedByCoord.out"|Suffix for sorted file
-`star.runStar_genomeIndexDir`|String|"$HG38_STAR_INDEX100_ROOT/"|Path to STAR index
 `splitStringToArray.lineSeparator`|String|","|Interval group separator - these are the intervals to split by.
 `splitStringToArray.recordSeparator`|String|"+"|Interval interval group separator - this can be used to combine multiple intervals into one group.
 `splitStringToArray.jobMemory`|Int|1|Memory allocated to job (in GB).

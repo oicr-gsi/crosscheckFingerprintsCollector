@@ -175,8 +175,8 @@ Map[String,GenomeResources] resources = {
      }
 
     meta {
-     author: "Lawrence Heisler and Gavin Peng"
-     email: "lawrence.heisler@oicr.on.ca and gpeng@oicr.on.ca"
+     author: "Lawrence Heisler"
+     email: "lawrence.heisler@oicr.on.ca"
      description: "crosscheckFingerprintsCollector, workflow that generates genotype fingerprints using gatk ExtractFingprint.  Output are vcf files that can be proccessed through gatk Crosscheck fingerprints\n##"
      dependencies: [
       {
@@ -186,6 +186,14 @@ Map[String,GenomeResources] resources = {
       {
         name: "tabix/0.2.6",
         url: "http://www.htslib.org"
+      },
+      {
+        name: "samtools/1.1",
+        url: "http://www.htslib.org/"
+      },
+      {
+        name: "seqtk/1.3",
+        url: "https://github.com/lh3/seqtk"
       }
      ]
      output_meta: {
