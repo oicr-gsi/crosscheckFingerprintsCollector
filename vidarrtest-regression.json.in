@@ -108,7 +108,19 @@
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
-      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null
+      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
+      "crosscheckFingerprintsCollector.splitStringToArray.cores": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.jobMemory": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.lineSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.modules": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.recordSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.additionalParams": null,
+      "crosscheckFingerprintsCollector.mergeBams.jobMemory": null,
+      "crosscheckFingerprintsCollector.mergeBams.overhead": null,
+      "crosscheckFingerprintsCollector.mergeBams.cores": null,
+      "crosscheckFingerprintsCollector.mergeBams.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.modules": null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -266,7 +278,19 @@
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
-      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null
+      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
+      "crosscheckFingerprintsCollector.splitStringToArray.cores": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.jobMemory": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.lineSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.modules": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.recordSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.additionalParams": null,
+      "crosscheckFingerprintsCollector.mergeBams.jobMemory": null,
+      "crosscheckFingerprintsCollector.mergeBams.overhead": null,
+      "crosscheckFingerprintsCollector.mergeBams.cores": null,
+      "crosscheckFingerprintsCollector.mergeBams.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.modules": null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -424,7 +448,19 @@
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
-      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null
+      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
+      "crosscheckFingerprintsCollector.splitStringToArray.cores": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.jobMemory": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.lineSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.modules": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.recordSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.additionalParams": null,
+      "crosscheckFingerprintsCollector.mergeBams.jobMemory": null,
+      "crosscheckFingerprintsCollector.mergeBams.overhead": null,
+      "crosscheckFingerprintsCollector.mergeBams.cores": null,
+      "crosscheckFingerprintsCollector.mergeBams.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.modules": null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -582,7 +618,19 @@
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
-      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null
+      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
+      "crosscheckFingerprintsCollector.splitStringToArray.cores": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.jobMemory": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.lineSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.modules": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.recordSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.additionalParams": null,
+      "crosscheckFingerprintsCollector.mergeBams.jobMemory": null,
+      "crosscheckFingerprintsCollector.mergeBams.overhead": null,
+      "crosscheckFingerprintsCollector.mergeBams.cores": null,
+      "crosscheckFingerprintsCollector.mergeBams.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.modules": null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -740,7 +788,19 @@
       "crosscheckFingerprintsCollector.markDuplicates.jobMemory" : 64,
       "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
-      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null
+      "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
+      "crosscheckFingerprintsCollector.splitStringToArray.cores": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.jobMemory": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.lineSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.modules": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.recordSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.additionalParams": null,
+      "crosscheckFingerprintsCollector.mergeBams.jobMemory": null,
+      "crosscheckFingerprintsCollector.mergeBams.overhead": null,
+      "crosscheckFingerprintsCollector.mergeBams.cores": null,
+      "crosscheckFingerprintsCollector.mergeBams.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.modules": null
     },
     "engineArguments": {
       "write_to_cache": false,
@@ -899,6 +959,19 @@
       "crosscheckFingerprintsCollector.markDuplicates.overhead" : 6,
       "crosscheckFingerprintsCollector.alignmentMetrics.timeout" : null,
       "crosscheckFingerprintsCollector.alignmentMetrics.jobMemory" : null,
+      "crosscheckFingerprintsCollector.splitStringToArray.cores": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.jobMemory": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.lineSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.modules": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.recordSeparator": null,
+      "crosscheckFingerprintsCollector.splitStringToArray.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.additionalParams": null,
+      "crosscheckFingerprintsCollector.mergeBams.jobMemory": null,
+      "crosscheckFingerprintsCollector.mergeBams.overhead": null,
+      "crosscheckFingerprintsCollector.mergeBams.cores": null,
+      "crosscheckFingerprintsCollector.mergeBams.timeout": null,
+      "crosscheckFingerprintsCollector.mergeBams.modules": null
+    },
     "engineArguments": {
       "write_to_cache": false,
       "read_from_cache": false
@@ -945,6 +1018,5 @@
         "type": "script"
       }
     ]
-  }
   }
 ]
