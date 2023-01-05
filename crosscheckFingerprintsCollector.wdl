@@ -9,6 +9,20 @@ struct InputGroup {
   String readGroup
 }
 
+struct GenomeResources {
+    String refFasta
+    String bwaRef
+    String refHapMap
+    String bwaMemModules
+    String starRefDir
+    String starModules
+    String extractFingerprintModules
+    String intervalsToParallelizeByString
+    String alignmentMetricsModules
+    String markDuplicatesModules
+    String downsampleModules
+}
+
 workflow crosscheckFingerprintsCollector {
    input {
         File? fastqR1
@@ -19,8 +33,7 @@ workflow crosscheckFingerprintsCollector {
         String aligner
         Boolean markDups
         String outputFileNamePrefix
-        String refFasta
-        String haplotypeMap
+        String reference
         Int maxReads = 0
         String sampleId
    }
@@ -32,12 +45,40 @@ workflow crosscheckFingerprintsCollector {
         inputType: "one of either fastq or bam"
         aligner : "aligner to use for fastq input, either bwa or star"
         markDups : "should the alignment be duplicate marked?, generally yes"
+        intervalsToParallelizeByString : "Comma separated list of intervals to split by (e.g. chr1,chr2,chr3+chr4)."
         outputFileNamePrefix: "Optional output prefix for the output"
-        refFasta: "Path to the reference fasta file"
-        haplotypeMap: "Path to the gzipped hotspot vcf file"
+        reference : "the reference genome for input sample"
         maxReads: "The maximum number of reads to process; if set, this will sample the requested number of reads"
         sampleId : "value that will be used as the sample identifier in the vcf fingerprint"
    }
+
+Map[String,GenomeResources] resources = {
+  "hg38": {
+    "refFasta" : "$HG38_ROOT/hg38_random.fa",
+    "bwaRef" : "$HG38_BWA_INDEX_ROOT/hg38_random.fa",
+    "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_chr.map",
+    "bwaMemModules" : "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
+    "starRefDir" : "$HG38_STAR_INDEX100_ROOT",
+    "starModules" :"star/2.7.3a hg38-star-index100/2.7.3a",
+    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38/p12 crosscheckfingerprints-haplotype-map/20210315",
+    "alignmentMetricsModules" : "samtools/1.15",
+    "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
+    "downsampleModules" :  "seqtk/1.3",
+    "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM"
+  },
+  "hg19": {
+    "refFasta" : "$HG19_ROOT/hg19_random.fa",
+    "bwaRef" : "$HG19_BWA_INDEX_ROOT/hg19_random.fa",
+    "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg19_chr.map",
+    "bwaMemModules" : "samtools/1.9 bwa/0.7.12 hg19-bwa-index/0.7.12",
+    "starRefDir" : "$HG19_STAR_INDEX100_ROOT",
+    "starModules" : "star/2.7.3a  hg19-star-index100/2.7.3a",
+    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg19/p13 crosscheckfingerprints-haplotype-map/20210315",
+    "alignmentMetricsModules" : "samtools/1.15",
+    "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
+    "downsampleModules" :  "seqtk/1.3",
+    "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM"
+  }}
 
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
      if(maxReads>0){
@@ -45,7 +86,8 @@ workflow crosscheckFingerprintsCollector {
         input:
           fastqR1 = select_first([fastqR1]),
           fastqR2 = select_first([fastqR2]),
-          maxReads = maxReads
+          maxReads = maxReads,
+          modules = resources [ reference ].downsampleModules
       }
      }
 
@@ -56,7 +98,9 @@ workflow crosscheckFingerprintsCollector {
            fastqR2 = select_first([downsample.fastqR2mod,fastqR2]),
            outputFileNamePrefix = outputFileNamePrefix,
            readGroups = "'@RG\\tID:CROSSCHECK\\tSM:SAMPLE'",
-           doTrim = false
+           doTrim = false,
+           runBwaMem_bwaRef = resources [ reference ].bwaRef,
+           runBwaMem_modules = resources [ reference ].bwaMemModules
         }
       }
 
@@ -70,36 +114,57 @@ workflow crosscheckFingerprintsCollector {
          input:
            inputGroups = [ starInput ],
            outputFileNamePrefix = outputFileNamePrefix,
-           runStar_chimOutType = "Junctions"
+           runStar_chimOutType = "Junctions",
+           runStar_genomeIndexDir = resources [ reference].starRefDir,
+           runStar_modules = resources [ reference].starModules
        }
      }
    }
 
-  if(markDups){
-    call markDuplicates {
-      input :
-        inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
-        outputFileNamePrefix = outputFileNamePrefix 
-    }
-  }  
+  call splitStringToArray {
+    input:
+      str = resources [ reference].intervalsToParallelizeByString
+  }
+  Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
 
+  if(markDups){
+    scatter (intervals in intervalsToParallelizeBy){
+      call markDuplicates {
+        input :
+          inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
+          inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+          outputFileNamePrefix = outputFileNamePrefix,
+          intervals = intervals,
+          modules = resources [ reference ].markDuplicatesModules 
+      }
+    }
+    Array[File] markDuplicatedBams = markDuplicates.bam
+    call mergeBams {
+      input:
+      bams = markDuplicatedBams,
+      outputFileName = outputFileNamePrefix,
+      suffix = ""
+    }
+  }
+  
    call alignmentMetrics {
      input:
-        inputBam = select_first([markDuplicates.bam,bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([markDuplicates.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        inputBam = select_first([mergeBams.mergedBam,bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([mergeBams.mergedBamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
         outputFileNamePrefix = outputFileNamePrefix,
-        markDups = markDups  
+        markDups = markDups,
+        modules = resources [ reference ].alignmentMetricsModules  
    }
    
    call extractFingerprint {
      input:
-        inputBam = select_first([markDuplicates.bam,bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([markDuplicates.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
-        haplotypeMap = haplotypeMap,
-        refFasta = refFasta,
+        inputBam = select_first([mergeBams.mergedBam,bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([mergeBams.mergedBamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        haplotypeMap = resources [ reference ].refHapMap,
+        refFasta =  resources [ reference ].refFasta,
         outputFileNamePrefix = outputFileNamePrefix,
-        sampleId = sampleId
+        sampleId = sampleId,
+        modules = resources [ reference ].extractFingerprintModules
     }
 
    output {
@@ -121,6 +186,14 @@ workflow crosscheckFingerprintsCollector {
       {
         name: "tabix/0.2.6",
         url: "http://www.htslib.org"
+      },
+      {
+        name: "samtools/1.1",
+        url: "http://www.htslib.org/"
+      },
+      {
+        name: "seqtk/1.3",
+        url: "https://github.com/lh3/seqtk"
       }
      ]
      output_meta: {
@@ -133,6 +206,51 @@ workflow crosscheckFingerprintsCollector {
   }
 
 }
+
+# ==========================================
+#  Split a string to array
+# ==========================================
+task splitStringToArray {
+  input {
+    String str
+    String lineSeparator = ","
+    String recordSeparator = "+"
+
+    Int jobMemory = 1
+    Int cores = 1
+    Int timeout = 1
+    String modules = ""
+  }
+
+  command <<<
+    set -euo pipefail
+
+    echo "~{str}" | tr '~{lineSeparator}' '\n' | tr '~{recordSeparator}' '\t'
+  >>>
+
+  output {
+    Array[Array[String]] out = read_tsv(stdout())
+  }
+
+  runtime {
+    memory: "~{jobMemory} GB"
+    cpu: "~{cores}"
+    timeout: "~{timeout}"
+    modules: "~{modules}"
+  }
+
+  parameter_meta {
+    str: "Interval string to split (e.g. chr1,chr2,chr3+chr4)."
+    lineSeparator: "Interval group separator - these are the intervals to split by."
+    recordSeparator: "Interval interval group separator - this can be used to combine multiple intervals into one group."
+    jobMemory: "Memory allocated to job (in GB)."
+    cores: "The number of cores to allocate to the job."
+    timeout: "Maximum amount of time (in hours) the task can run for."
+    modules: "Environment module name and version to load (space separated) before command execution."
+  }
+}
+
+
 # ==========================================
 #  configure and run extractFingerprintsCollector
 # ==========================================
@@ -253,7 +371,8 @@ task markDuplicates {
   File inputBai
   String modules
   String outputFileNamePrefix
-  Int jobMemory = 24
+  Array[String] intervals
+  Int jobMemory = 16
   Int overhead = 6
   Int timeout = 24
  }
@@ -269,8 +388,15 @@ task markDuplicates {
  
 command <<<
   set -euo pipefail
+  ln -s ~{inputBam} inputBam.bam
+  ln -s ~{inputBai} inputBam.bam.bai
+  samtools view -b \
+        inputBam.bam \
+        ~{sep=" " intervals} > intervalBam.bam
+  samtools index intervalBam.bam intervalBam.bam.bai
+
   $GATK_ROOT/bin/gatk --java-options "-Xmx~{jobMemory - overhead}G" MarkDuplicates \
-                      -I ~{inputBam} \
+                      -I intervalBam.bam \
                       --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
                       --VALIDATION_STRINGENCY SILENT \
                       --CREATE_INDEX true \
@@ -285,9 +411,65 @@ command <<<
 
  output {
   File bam = "~{outputFileNamePrefix}.dupmarked.bam"
-  File bamIndex = "~{outputFileNamePrefix}.dupmarked.bai"
  }
 }
+
+# ==========================================
+#  Merge Bam files
+# ==========================================
+
+task mergeBams {
+  input {
+    Array[File] bams
+    String outputFileName
+    String suffix = ".merge"
+    String? additionalParams
+
+    Int jobMemory = 24
+    Int overhead = 6
+    Int cores = 1
+    Int timeout = 6
+    String modules = "gatk/4.1.6.0"
+  }
+
+  command <<<
+    set -euo pipefail
+
+    gatk --java-options "-Xmx~{jobMemory - overhead}G" MergeSamFiles \
+    ~{sep=" " prefix("--INPUT=", bams)} \
+    --OUTPUT="~{outputFileName}~{suffix}.bam" \
+    --CREATE_INDEX=true \
+    --SORT_ORDER=coordinate \
+    --ASSUME_SORTED=false \
+    --USE_THREADING=true \
+    --VALIDATION_STRINGENCY=SILENT \
+    ~{additionalParams}
+  >>>
+
+  output {
+    File mergedBam = "~{outputFileName}~{suffix}.bam"
+    File mergedBamIndex = "~{outputFileName}~{suffix}.bai"
+  }
+
+  runtime {
+    memory: "~{jobMemory} GB"
+    cpu: "~{cores}"
+    timeout: "~{timeout}"
+    modules: "~{modules}"
+  }
+
+  parameter_meta {
+    bams: "Array of bam files to merge together."
+    outputFileName: "Output files will be prefixed with this."
+    additionalParams: "Additional parameters to pass to GATK MergeSamFiles."
+    jobMemory: "Memory allocated to job (in GB)."
+    overhead: "Java overhead memory (in GB). jobMemory - overhead == java Xmx/heap memory."
+    cores: "The number of cores to allocate to the job."
+    timeout: "Maximum amount of time (in hours) the task can run for."
+    modules: "Environment module name and version to load (space separated) before command execution."
+  }
+}
+
 
 # ==========================================
 #  coverage metrics from the bam file used for fingerprint analysis
@@ -300,7 +482,7 @@ command <<<
     File inputBai
     String modules
     String outputFileNamePrefix
-    Boolean markDups	
+    Boolean markDups
     Int jobMemory = 8
     Int timeout = 24
    }
@@ -350,5 +532,3 @@ command <<<
     File samstats = "~{outputFileNamePrefix}.samstats.txt"
   }
 }
-
-
