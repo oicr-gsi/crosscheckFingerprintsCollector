@@ -153,6 +153,7 @@ Map[String,GenomeResources] resources = {
         inputBai = select_first([mergeBams.mergedBamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
         outputFileNamePrefix = outputFileNamePrefix,
         markDups = markDups,
+        maxReads = maxReads,
         modules = resources [ reference ].alignmentMetricsModules  
    }
    
@@ -485,6 +486,7 @@ task mergeBams {
     Boolean markDups
     Int jobMemory = 8
     Int timeout = 24
+    String maxReads
    }
    parameter_meta {
     inputBam: "input .bam file"
@@ -492,6 +494,7 @@ task mergeBams {
     outputFileNamePrefix: "prefix for making names for output files"  
     jobMemory: "memory allocated for Job"
     modules: "Names and versions of modules"
+    maxReads : "the maximum number of reads to use"
     timeout: "Timeout in hours, needed to override imposed limits"
    } 
 
@@ -515,7 +518,7 @@ command <<<
   mean_dedup_cvg=`cat ~{outputFileNamePrefix}.dedup.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
   
   ### json file
-  echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups}} > ~{outputFileNamePrefix}.json
+  echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups},\"maxReads\":~{maxReads}} > ~{outputFileNamePrefix}.json
 
 
 
