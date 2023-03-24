@@ -32,6 +32,7 @@ workflow crosscheckFingerprintsCollector {
         String inputType
         String aligner
         Boolean markDups
+        Boolean filterBam
         String outputFileNamePrefix
         String reference
         Int maxReads = 0
@@ -121,36 +122,52 @@ Map[String,GenomeResources] resources = {
      }
    }
 
-  call splitStringToArray {
-    input:
-      str = resources [ reference].intervalsToParallelizeByString
+  if(filterBam){
+    call filterBamToIntervals {
+      input:
+         inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
+         inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+         outputFileNamePrefix = outputFileNamePrefix,
+         modules = "samtools/1.14"     
+    }
   }
-  Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
+
 
   if(markDups){
+
+    call splitStringToArray {
+      input:
+        str = resources [ reference].intervalsToParallelizeByString
+    }
+
+    Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
+
     scatter (intervals in intervalsToParallelizeBy){
       call markDuplicates {
         input :
-          inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
-          inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+          inputBam = select_first([filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
+          inputBai = select_first([filterBamToIntervals.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
           outputFileNamePrefix = outputFileNamePrefix,
           intervals = intervals,
           modules = resources [ reference ].markDuplicatesModules 
       }
     }
     Array[File] markDuplicatedBams = markDuplicates.bam
-    call mergeBams {
+    
+	
+	call mergeBams {
       input:
       bams = markDuplicatedBams,
       outputFileName = outputFileNamePrefix,
       suffix = ""
     }
   }
+
   
    call alignmentMetrics {
      input:
-        inputBam = select_first([mergeBams.mergedBam,bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([mergeBams.mergedBamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        inputBam = select_first([mergeBams.mergedBam,filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([mergeBams.mergedBamIndex,filterBamToIntervals.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
         outputFileNamePrefix = outputFileNamePrefix,
         markDups = markDups,
         maxReads = maxReads,
@@ -159,8 +176,8 @@ Map[String,GenomeResources] resources = {
    
    call extractFingerprint {
      input:
-        inputBam = select_first([mergeBams.mergedBam,bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([mergeBams.mergedBamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        inputBam = select_first([mergeBams.mergedBam,filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([mergeBams.mergedBamIndex,filterBamToIntervals.bamIndex,star.starIndex,bamIndex]),
         haplotypeMap = resources [ reference ].refHapMap,
         refFasta =  resources [ reference ].refFasta,
         outputFileNamePrefix = outputFileNamePrefix,
@@ -207,6 +224,57 @@ Map[String,GenomeResources] resources = {
   }
 
 }
+
+
+
+# ==========================================
+#  Filter Bam to Intervals
+# ==========================================
+
+
+
+task filterBamToIntervals {
+ input{
+  File inputBam
+  File inputBai
+  File intervalBed
+  String modules
+  String outputFileNamePrefix
+  Int jobMemory = 16
+  Int overhead = 6
+  Int timeout = 24
+ }
+ parameter_meta {
+  inputBam: "input .bam file"
+  inputBai: "index of the input .bam file"
+  outputFileNamePrefix: "prefix for making names for output files"  
+  jobMemory: "memory allocated for Job"
+  overhead: "memory allocated to overhead of the job other than used in markDuplicates command"
+  modules: "Names and versions of modules"
+  timeout: "Timeout in hours, needed to override imposed limits"
+ }
+ 
+command <<<
+  set -euo pipefail
+  samtools view -b ~{inputBam} -L ~{intervalBed} > ~{outputFileNamePrefix}.filtered.bam
+  samtools index ~{outputFileNamePrefix}.filtered.bam
+>>>
+
+ runtime {
+  memory:  "~{jobMemory} GB"
+  modules: "~{modules}"
+  timeout: "~{timeout}"
+ }
+
+ output {
+  File bam = "~{outputFileNamePrefix}.filtered.bam"
+  File bamIndex = "~{outputFileNamePrefix}.filtered.bam.bai"
+ }
+}
+
+
+
+
 
 # ==========================================
 #  Split a string to array
