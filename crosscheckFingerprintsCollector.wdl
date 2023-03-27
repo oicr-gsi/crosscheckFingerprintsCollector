@@ -21,6 +21,7 @@ struct GenomeResources {
     String alignmentMetricsModules
     String markDuplicatesModules
     String downsampleModules
+    String intervalBed
 }
 
 workflow crosscheckFingerprintsCollector {
@@ -58,6 +59,7 @@ Map[String,GenomeResources] resources = {
     "refFasta" : "$HG38_ROOT/hg38_random.fa",
     "bwaRef" : "$HG38_BWA_INDEX_ROOT/hg38_random.fa",
     "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_chr.map",
+    "intervalBed": "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_intervals.bed",
     "bwaMemModules" : "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
     "starRefDir" : "$HG38_STAR_INDEX100_ROOT",
     "starModules" :"star/2.7.3a hg38-star-index100/2.7.3a",
@@ -71,6 +73,7 @@ Map[String,GenomeResources] resources = {
     "refFasta" : "$HG19_ROOT/hg19_random.fa",
     "bwaRef" : "$HG19_BWA_INDEX_ROOT/hg19_random.fa",
     "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg19_chr.map",
+    "intervalBed": "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg19_intervals.bed",
     "bwaMemModules" : "samtools/1.9 bwa/0.7.12 hg19-bwa-index/0.7.12",
     "starRefDir" : "$HG19_STAR_INDEX100_ROOT",
     "starModules" : "star/2.7.3a  hg19-star-index100/2.7.3a",
@@ -127,8 +130,9 @@ Map[String,GenomeResources] resources = {
       input:
          inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
          inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+         intervalBed = resources [ reference].intervalBed,
          outputFileNamePrefix = outputFileNamePrefix,
-         modules = "samtools/1.14"     
+         modules = "crosscheckfingerprints-haplotype-map samtools/1.14"     
     }
   }
 
@@ -237,7 +241,7 @@ task filterBamToIntervals {
  input{
   File inputBam
   File inputBai
-  File intervalBed
+  String intervalBed
   String modules
   String outputFileNamePrefix
   Int jobMemory = 16

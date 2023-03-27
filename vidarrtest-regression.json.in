@@ -28,6 +28,7 @@
         "type": "EXTERNAL"
       },
       "crosscheckFingerprintsCollector.inputType": "fastq",
+      "crosscheckFingerprintsCollector.filterBam": true,
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ",
       "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WG_HG38_FASTQ",
       "crosscheckFingerprintsCollector.aligner": "bwa",
@@ -198,6 +199,7 @@
         "type": "EXTERNAL"
       },
       "crosscheckFingerprintsCollector.inputType": "fastq",
+      "crosscheckFingerprintsCollector.filterBam": true,
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ",
       "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WT_HG38_FASTQ",
       "crosscheckFingerprintsCollector.aligner": "star",
@@ -368,6 +370,7 @@
         "type": "EXTERNAL"
       },
       "crosscheckFingerprintsCollector.inputType": "fastq",
+      "crosscheckFingerprintsCollector.filterBam": true,
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_FASTQ_MAXREADS",
       "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WG_HG38_FASTQ_MAXREADS",
       "crosscheckFingerprintsCollector.aligner": "bwa",
@@ -538,6 +541,7 @@
         "type": "EXTERNAL"
       },
       "crosscheckFingerprintsCollector.inputType": "fastq",
+      "crosscheckFingerprintsCollector.filterBam": true,
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_FASTQ_MAXREADS",
       "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WT_HG38_FASTQ_MAXREADS",
       "crosscheckFingerprintsCollector.aligner": "star",
@@ -708,6 +712,7 @@
         "type": "EXTERNAL"
       },
       "crosscheckFingerprintsCollector.inputType": "bam",
+      "crosscheckFingerprintsCollector.filterBam": true,
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WG_HG38_BAM",
       "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WG_HG38_BAM",
       "crosscheckFingerprintsCollector.aligner": "bwa",
@@ -878,6 +883,7 @@
         "type": "EXTERNAL"
       },
       "crosscheckFingerprintsCollector.inputType": "bam",
+      "crosscheckFingerprintsCollector.filterBam": true,
       "crosscheckFingerprintsCollector.outputFileNamePrefix": "TEST_0001_WT_HG38_BAM",
       "crosscheckFingerprintsCollector.sampleId" : "TEST_0001_WT_HG38_BAM",
       "crosscheckFingerprintsCollector.aligner": "star",
