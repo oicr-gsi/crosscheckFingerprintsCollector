@@ -28,6 +28,7 @@ Parameter|Value|Description
 `inputType`|String|one of either fastq or bam
 `aligner`|String|aligner to use for fastq input, either bwa or star
 `markDups`|Boolean|should the alignment be duplicate marked?, generally yes
+`filterBam`|Boolean|should use filterBamToInterval to prefiltering of the bam file to intervals? Generally true
 `outputFileNamePrefix`|String|Optional output prefix for the output
 `reference`|String|the reference genome for input sample
 `sampleId`|String|value that will be used as the sample identifier in the vcf fingerprint
@@ -107,6 +108,9 @@ Parameter|Value|Default|Description
 `star.runStar_chimericjunctionSuffix`|String|"Chimeric.out"|Suffix for chimeric junction file
 `star.runStar_transcriptomeSuffix`|String|"Aligned.toTranscriptome.out"|Suffix for transcriptome-aligned file
 `star.runStar_starSuffix`|String|"Aligned.sortedByCoord.out"|Suffix for sorted file
+`filterBamToIntervals.jobMemory`|Int|16|memory allocated for Job
+`filterBamToIntervals.overhead`|Int|6|memory allocated to overhead of the job other than used in markDuplicates command
+`filterBamToIntervals.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `splitStringToArray.lineSeparator`|String|","|Interval group separator - these are the intervals to split by.
 `splitStringToArray.recordSeparator`|String|"+"|Interval interval group separator - this can be used to combine multiple intervals into one group.
 `splitStringToArray.jobMemory`|Int|1|Memory allocated to job (in GB).
@@ -139,57 +143,57 @@ Output | Type | Description
 
 
 ## Commands
- This section lists command(s) run by WORKFLOW workflow
- 
- * Running WORKFLOW
- 
- === Fingerprint Generation ===
- 
- <<<
-   set -euo pipefail
- 
-  $GATK_ROOT/bin/gatk ExtractFingerprint \
-                     -R ~{refFasta} \
-                     -H ~{haplotypeMap} \
-                     -I ~{inputBam} \
-                     -O ~{outputFileNamePrefix}.vcf \
-                     --SAMPLE_ALIAS ~{sampleId}
- 
-  $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
-  $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
- >>>
- 
- === downsampling,if requested ===
- 
- <<<
-  set -euo pipefail
+  This section lists command(s) run by CROSSCHECKFINGEPRINTSCOLLECTOR workflow
   
-  seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
-  gzip ~{fastqR1m}
+  * Running CROSSCHECKFINGEPRINTSCOLLECTOR
   
-  seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
-  gzip ~{fastqR2m}
- >>>
- 
- === Duplicate Marking, if requested ===
- 
- <<<
+ ### Fingerprint Generation 
+  
+ ```
+    set -euo pipefail
+  
+   $GATK_ROOT/bin/gatk ExtractFingerprint \
+                      -R ~{refFasta} \
+                      -H ~{haplotypeMap} \
+                      -I ~{inputBam} \
+                      -O ~{outputFileNamePrefix}.vcf \
+                      --SAMPLE_ALIAS ~{sampleId}
+  
+   $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
+   $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
+ ```
+  
+ ### downsampling,if requested 
+  
+ ```
    set -euo pipefail
-   $GATK_ROOT/bin/gatk MarkDuplicates \
-                       -I ~{inputBam} \
-                       --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
-                       --VALIDATION_STRINGENCY SILENT \
-                       --CREATE_INDEX true \
-                       -O ~{outputFileNamePrefix}.dupmarked.bam
- >>>
- 
- === Coverage Assessment ===
- 
- <<<
-   set -euo pipefail
-   $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
-   cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }' | awk '{print "{\"mean coverage\":" $1 "}"}' > ~{outputFileNamePrefix}.json
- >>>
+   
+   seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
+   gzip ~{fastqR1m}
+   
+   seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
+   gzip ~{fastqR2m}
+ ```
+  
+ ### Duplicate Marking, if requested 
+  
+ ```
+    set -euo pipefail
+    $GATK_ROOT/bin/gatk MarkDuplicates \
+                        -I ~{inputBam} \
+                        --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
+                        --VALIDATION_STRINGENCY SILENT \
+                        --CREATE_INDEX true \
+                        -O ~{outputFileNamePrefix}.dupmarked.bam
+ ```
+  
+ ### Coverage Assessment 
+  
+ ```
+    set -euo pipefail
+    $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
+    cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }' | awk '{print "{\"mean coverage\":" $1 "}"}' > ~{outputFileNamePrefix}.json
+ ```
  ## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .

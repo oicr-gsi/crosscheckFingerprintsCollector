@@ -47,6 +47,7 @@ workflow crosscheckFingerprintsCollector {
         inputType: "one of either fastq or bam"
         aligner : "aligner to use for fastq input, either bwa or star"
         markDups : "should the alignment be duplicate marked?, generally yes"
+        filterBam: "should use filterBamToInterval to prefiltering of the bam file to intervals? Generally true"
         intervalsToParallelizeByString : "Comma separated list of intervals to split by (e.g. chr1,chr2,chr3+chr4)."
         outputFileNamePrefix: "Optional output prefix for the output"
         reference : "the reference genome for input sample"
