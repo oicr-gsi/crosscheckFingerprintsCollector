@@ -61,10 +61,10 @@ Map[String,GenomeResources] resources = {
     "bwaRef" : "$HG38_BWA_INDEX_ROOT/hg38_random.fa",
     "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_chr.map",
     "intervalBed": "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_intervals.bed",
-    "bwaMemModules" : "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
+    "bwaMemModules" : "samtools/1.9 bwa/0.7.17 hg38-bwa-index-with-alt/0.7.17",
     "starRefDir" : "$HG38_STAR_INDEX100_ROOT",
     "starModules" :"star/2.7.3a hg38-star-index100/2.7.3a",
-    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38/p12 crosscheckfingerprints-haplotype-map/20210315",
+    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38/p12 crosscheckfingerprints-haplotype-map/20230324",
     "alignmentMetricsModules" : "samtools/1.15",
     "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
     "downsampleModules" :  "seqtk/1.3",
@@ -75,10 +75,10 @@ Map[String,GenomeResources] resources = {
     "bwaRef" : "$HG19_BWA_INDEX_ROOT/hg19_random.fa",
     "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg19_chr.map",
     "intervalBed": "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg19_intervals.bed",
-    "bwaMemModules" : "samtools/1.9 bwa/0.7.12 hg19-bwa-index/0.7.12",
+    "bwaMemModules" : "samtools/1.9 bwa/0.7.17 hg19-bwa-index/0.7.17",
     "starRefDir" : "$HG19_STAR_INDEX100_ROOT",
     "starModules" : "star/2.7.3a  hg19-star-index100/2.7.3a",
-    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg19/p13 crosscheckfingerprints-haplotype-map/20210315",
+    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg19/p13 crosscheckfingerprints-haplotype-map/20230324",
     "alignmentMetricsModules" : "samtools/1.15",
     "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
     "downsampleModules" :  "seqtk/1.3",
@@ -133,7 +133,7 @@ Map[String,GenomeResources] resources = {
          inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
          intervalBed = resources [ reference].intervalBed,
          outputFileNamePrefix = outputFileNamePrefix,
-         modules = "crosscheckfingerprints-haplotype-map samtools/1.14"     
+         modules = "crosscheckfingerprints-haplotype-map/20230324 samtools/1.14"     
     }
   }
 
@@ -217,6 +217,17 @@ Map[String,GenomeResources] resources = {
       {
         name: "seqtk/1.3",
         url: "https://github.com/lh3/seqtk"
+      },
+      { name: "gsi crosscheckfingerprints-haplotype-map module",
+        url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
+      },
+      { 
+        name: "gsi hg38 modules : hg38/p12 hg38-bwa-index-with-alt/0.7.17 hg38-star-index100/2.7.3a",
+        url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
+      },
+      {
+        name: "gsi hg19 modules : hg19/p13 hg19-bwa-index/0.7.17 hg19-star-index100/2.7.3a",
+        url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
       }
      ]
      output_meta: {
