@@ -11,6 +11,9 @@ crosscheckFingerprintsCollector, workflow that generates genotype fingerprints u
 * [tabix 0.2.6](http://www.htslib.org)
 * [samtools 1.1](http://www.htslib.org/)
 * [seqtk 1.3](https://github.com/lh3/seqtk)
+* [gsi crosscheckfingerprints-haplotype-map module](https://gitlab.oicr.on.ca/ResearchIT/modulator)
+* [gsi hg38 modules : hg38 p12 hg38-bwa-index-with-alt 0.7.17 hg38-star-index100 2.7.3a](https://gitlab.oicr.on.ca/ResearchIT/modulator)
+* [gsi hg19 modules : hg19 p13 hg19-bwa-index 0.7.17 hg19-star-index100 2.7.3a](https://gitlab.oicr.on.ca/ResearchIT/modulator)
 
 
 ## Usage
