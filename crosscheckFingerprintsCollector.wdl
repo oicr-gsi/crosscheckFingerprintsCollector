@@ -21,6 +21,7 @@ struct GenomeResources {
     String alignmentMetricsModules
     String markDuplicatesModules
     String downsampleModules
+    String intervalBed
 }
 
 workflow crosscheckFingerprintsCollector {
@@ -32,6 +33,7 @@ workflow crosscheckFingerprintsCollector {
         String inputType
         String aligner
         Boolean markDups
+        Boolean filterBam
         String outputFileNamePrefix
         String reference
         Int maxReads = 0
@@ -45,6 +47,7 @@ workflow crosscheckFingerprintsCollector {
         inputType: "one of either fastq or bam"
         aligner : "aligner to use for fastq input, either bwa or star"
         markDups : "should the alignment be duplicate marked?, generally yes"
+        filterBam: "should use filterBamToInterval to prefiltering of the bam file to intervals? Generally true"
         intervalsToParallelizeByString : "Comma separated list of intervals to split by (e.g. chr1,chr2,chr3+chr4)."
         outputFileNamePrefix: "Optional output prefix for the output"
         reference : "the reference genome for input sample"
@@ -57,10 +60,11 @@ Map[String,GenomeResources] resources = {
     "refFasta" : "$HG38_ROOT/hg38_random.fa",
     "bwaRef" : "$HG38_BWA_INDEX_ROOT/hg38_random.fa",
     "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_chr.map",
-    "bwaMemModules" : "samtools/1.9 bwa/0.7.12 hg38-bwa-index-with-alt/0.7.12",
+    "intervalBed": "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_intervals.bed",
+    "bwaMemModules" : "samtools/1.9 bwa/0.7.17 hg38-bwa-index-with-alt/0.7.17",
     "starRefDir" : "$HG38_STAR_INDEX100_ROOT",
     "starModules" :"star/2.7.3a hg38-star-index100/2.7.3a",
-    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38/p12 crosscheckfingerprints-haplotype-map/20210315",
+    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38/p12 crosscheckfingerprints-haplotype-map/20230324",
     "alignmentMetricsModules" : "samtools/1.15",
     "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
     "downsampleModules" :  "seqtk/1.3",
@@ -70,10 +74,11 @@ Map[String,GenomeResources] resources = {
     "refFasta" : "$HG19_ROOT/hg19_random.fa",
     "bwaRef" : "$HG19_BWA_INDEX_ROOT/hg19_random.fa",
     "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg19_chr.map",
-    "bwaMemModules" : "samtools/1.9 bwa/0.7.12 hg19-bwa-index/0.7.12",
+    "intervalBed": "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg19_intervals.bed",
+    "bwaMemModules" : "samtools/1.9 bwa/0.7.17 hg19-bwa-index/0.7.17",
     "starRefDir" : "$HG19_STAR_INDEX100_ROOT",
     "starModules" : "star/2.7.3a  hg19-star-index100/2.7.3a",
-    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg19/p13 crosscheckfingerprints-haplotype-map/20210315",
+    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg19/p13 crosscheckfingerprints-haplotype-map/20230324",
     "alignmentMetricsModules" : "samtools/1.15",
     "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
     "downsampleModules" :  "seqtk/1.3",
@@ -121,36 +126,53 @@ Map[String,GenomeResources] resources = {
      }
    }
 
-  call splitStringToArray {
-    input:
-      str = resources [ reference].intervalsToParallelizeByString
+  if(filterBam){
+    call filterBamToIntervals {
+      input:
+         inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
+         inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+         intervalBed = resources [ reference].intervalBed,
+         outputFileNamePrefix = outputFileNamePrefix,
+         modules = "crosscheckfingerprints-haplotype-map/20230324 samtools/1.14"     
+    }
   }
-  Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
+
 
   if(markDups){
+
+    call splitStringToArray {
+      input:
+        str = resources [ reference].intervalsToParallelizeByString
+    }
+
+    Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
+
     scatter (intervals in intervalsToParallelizeBy){
       call markDuplicates {
         input :
-          inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
-          inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+          inputBam = select_first([filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
+          inputBai = select_first([filterBamToIntervals.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
           outputFileNamePrefix = outputFileNamePrefix,
           intervals = intervals,
           modules = resources [ reference ].markDuplicatesModules 
       }
     }
     Array[File] markDuplicatedBams = markDuplicates.bam
-    call mergeBams {
+    
+	
+	call mergeBams {
       input:
       bams = markDuplicatedBams,
       outputFileName = outputFileNamePrefix,
       suffix = ""
     }
   }
+
   
    call alignmentMetrics {
      input:
-        inputBam = select_first([mergeBams.mergedBam,bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([mergeBams.mergedBamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        inputBam = select_first([mergeBams.mergedBam,filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([mergeBams.mergedBamIndex,filterBamToIntervals.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
         outputFileNamePrefix = outputFileNamePrefix,
         markDups = markDups,
         maxReads = maxReads,
@@ -159,8 +181,8 @@ Map[String,GenomeResources] resources = {
    
    call extractFingerprint {
      input:
-        inputBam = select_first([mergeBams.mergedBam,bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([mergeBams.mergedBamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        inputBam = select_first([mergeBams.mergedBam,filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
+        inputBai = select_first([mergeBams.mergedBamIndex,filterBamToIntervals.bamIndex,star.starIndex,bamIndex]),
         haplotypeMap = resources [ reference ].refHapMap,
         refFasta =  resources [ reference ].refFasta,
         outputFileNamePrefix = outputFileNamePrefix,
@@ -195,6 +217,17 @@ Map[String,GenomeResources] resources = {
       {
         name: "seqtk/1.3",
         url: "https://github.com/lh3/seqtk"
+      },
+      { name: "gsi crosscheckfingerprints-haplotype-map module",
+        url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
+      },
+      { 
+        name: "gsi hg38 modules : hg38/p12 hg38-bwa-index-with-alt/0.7.17 hg38-star-index100/2.7.3a",
+        url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
+      },
+      {
+        name: "gsi hg19 modules : hg19/p13 hg19-bwa-index/0.7.17 hg19-star-index100/2.7.3a",
+        url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
       }
      ]
      output_meta: {
@@ -207,6 +240,57 @@ Map[String,GenomeResources] resources = {
   }
 
 }
+
+
+
+# ==========================================
+#  Filter Bam to Intervals
+# ==========================================
+
+
+
+task filterBamToIntervals {
+ input{
+  File inputBam
+  File inputBai
+  String intervalBed
+  String modules
+  String outputFileNamePrefix
+  Int jobMemory = 16
+  Int overhead = 6
+  Int timeout = 24
+ }
+ parameter_meta {
+  inputBam: "input .bam file"
+  inputBai: "index of the input .bam file"
+  outputFileNamePrefix: "prefix for making names for output files"  
+  jobMemory: "memory allocated for Job"
+  overhead: "memory allocated to overhead of the job other than used in markDuplicates command"
+  modules: "Names and versions of modules"
+  timeout: "Timeout in hours, needed to override imposed limits"
+ }
+ 
+command <<<
+  set -euo pipefail
+  samtools view -b ~{inputBam} -L ~{intervalBed} > ~{outputFileNamePrefix}.filtered.bam
+  samtools index ~{outputFileNamePrefix}.filtered.bam
+>>>
+
+ runtime {
+  memory:  "~{jobMemory} GB"
+  modules: "~{modules}"
+  timeout: "~{timeout}"
+ }
+
+ output {
+  File bam = "~{outputFileNamePrefix}.filtered.bam"
+  File bamIndex = "~{outputFileNamePrefix}.filtered.bam.bai"
+ }
+}
+
+
+
+
 
 # ==========================================
 #  Split a string to array
