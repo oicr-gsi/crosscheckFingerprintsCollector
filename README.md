@@ -137,22 +137,22 @@ Parameter|Value|Default|Description
 
 ### Outputs
 
-Output | Type | Description
----|---|---
-`outputVcf`|File|the crosscheck fingerprint, gzipped vcf file
-`outputTbi`|File|index for the vcf fingerprint
-`json`|File|metrics in json format, currently only the mean coverage for the alignment
-`samstats`|File|output from the samstats summary
+Output | Type | Description | Labels
+---|---|---|---
+`outputVcf`|File|the crosscheck fingerprint, gzipped vcf file|vidarr_label: outputVcf
+`outputTbi`|File|index for the vcf fingerprint|vidarr_label: outputTbi
+`json`|File|metrics in json format, currently only the mean coverage for the alignment|vidarr_label: json 
+`samstats`|File|output from the samstats summary|vidarr_label: samstats 
 
 
 ## Commands
-  This section lists command(s) run by CROSSCHECKFINGEPRINTSCOLLECTOR workflow
+This section lists command(s) run by CROSSCHECKFINGEPRINTSCOLLECTOR workflow
   
-  * Running CROSSCHECKFINGEPRINTSCOLLECTOR
+* Running CROSSCHECKFINGEPRINTSCOLLECTOR
   
- ### Fingerprint Generation 
+### Fingerprint Generation 
   
- ```
+```
     set -euo pipefail
   
    $GATK_ROOT/bin/gatk ExtractFingerprint \
@@ -164,11 +164,11 @@ Output | Type | Description
   
    $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
    $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
- ```
+```
   
- ### downsampling,if requested 
+### downsampling,if requested 
   
- ```
+```
    set -euo pipefail
    
    seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
@@ -176,11 +176,11 @@ Output | Type | Description
    
    seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
    gzip ~{fastqR2m}
- ```
+```
   
- ### Duplicate Marking, if requested 
+### Duplicate Marking, if requested 
   
- ```
+```
     set -euo pipefail
     $GATK_ROOT/bin/gatk MarkDuplicates \
                         -I ~{inputBam} \
@@ -188,16 +188,16 @@ Output | Type | Description
                         --VALIDATION_STRINGENCY SILENT \
                         --CREATE_INDEX true \
                         -O ~{outputFileNamePrefix}.dupmarked.bam
- ```
+```
   
- ### Coverage Assessment 
+### Coverage Assessment 
   
- ```
+```
     set -euo pipefail
     $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
     cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }' | awk '{print "{\"mean coverage\":" $1 "}"}' > ~{outputFileNamePrefix}.json
- ```
- ## Support
+```
+## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
 

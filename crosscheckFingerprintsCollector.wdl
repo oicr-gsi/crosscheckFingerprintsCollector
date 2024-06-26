@@ -230,13 +230,28 @@ Map[String,GenomeResources] resources = {
         url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
       }
      ]
-     output_meta: {
-       outputVcf: "the crosscheck fingerprint, gzipped vcf file",
-       outputTbi: "index for the vcf fingerprint",
-       coverage : "output from samtools coverage, with per chromosome metrics",
-       json : "metrics in json format, currently only the mean coverage for the alignment",
-       samstats : "output from the samstats summary"
-     }
+    output_meta: {
+    outputVcf: {
+        description: "the crosscheck fingerprint, gzipped vcf file",
+        vidarr_label: "outputVcf"
+    },
+    outputTbi: {
+        description: "index for the vcf fingerprint",
+        vidarr_label: "outputTbi"
+    },
+    coverage : {
+        description: "output from samtools coverage, with per chromosome metrics",
+        vidarr_label: "coverage "
+    },
+    json : {
+        description: "metrics in json format, currently only the mean coverage for the alignment",
+        vidarr_label: "json "
+    },
+    samstats : {
+        description: "output from the samstats summary",
+        vidarr_label: "samstats "
+    }
+}
   }
 
 }
