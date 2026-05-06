@@ -201,9 +201,10 @@ Map[String,GenomeResources] resources = {
    Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
 
    scatter (idx in range(length(bamsToProcess))) {
-     String lanePrefix = "~{outputFileNamePrefix}_~{idx}"
+     String lanePrefix = sub(sub(basename(bamsToProcess[idx]), "\\.bam$", ""), "\\.cram$", "")
 
-     if (filterBam) {
+     # Skip for merged input: filterBamPreSplit already filtered before splitting
+     if (filterBam && is_lane_level) {
        call filterBam as filterBamLane {
          input:
            inputBam = bamsToProcess[idx],
@@ -266,7 +267,6 @@ Map[String,GenomeResources] resources = {
       }
    }
 
-   # Collect per-lane arrays into single tar archives — vidarr does not support Array[File] outputs
    call gatherOutputs {
      input:
        vcfs     = extractFingerprint.vgz,
@@ -281,7 +281,7 @@ Map[String,GenomeResources] resources = {
       File outputTbi = gatherOutputs.tbiTar
       File json      = gatherOutputs.jsonTar
       File samstats  = gatherOutputs.samstatsTar
-     }
+   }
 
     meta {
      author: "Lawrence Heisler, Gavin Peng"
@@ -318,24 +318,25 @@ Map[String,GenomeResources] resources = {
      ]
      output_meta: {
      outputVcf: {
-         description: "tar archive of per-lane crosscheck fingerprint vcf.gz files",
+         description: "tar archive of per-lane crosscheck fingerprint vcf.gz files, file names carry read group",
          vidarr_label: "outputVcf"
      },
      outputTbi: {
-         description: "tar archive of per-lane vcf.gz.tbi index files",
+         description: "tar archive of per-lane vcf.gz.tbi index files, file names carry read group",
          vidarr_label: "outputTbi"
      },
      json: {
-         description: "tar archive of per-lane metrics json files",
+         description: "tar archive of per-lane alignment metrics json files, file names carry read group",
          vidarr_label: "json"
      },
      samstats: {
-         description: "tar archive of per-lane samstats summary files",
+         description: "tar archive of per-lane samstats summary files, file names carry read group",
          vidarr_label: "samstats"
      }
      }
   }
 }
+
 
 
 
