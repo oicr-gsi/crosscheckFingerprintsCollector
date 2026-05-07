@@ -203,8 +203,7 @@ Map[String,GenomeResources] resources = {
    scatter (idx in range(length(bamsToProcess))) {
      String lanePrefix = sub(sub(basename(bamsToProcess[idx]), "\\.bam$", ""), "\\.cram$", "")
 
-     # Skip for merged input: filterBamPreSplit already filtered before splitting
-     if (filterBam && is_lane_level) {
+     if (filterBam) {
        call filterBam as filterBamLane {
          input:
            inputBam = bamsToProcess[idx],
