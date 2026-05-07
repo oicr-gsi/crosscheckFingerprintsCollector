@@ -141,136 +141,133 @@ Parameter|Value|Default|Description
 `alignmentMetrics.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `extractFingerprint.jobMemory`|Int|8|memory allocated for Job
 `extractFingerprint.timeout`|Int|24|Timeout in hours, needed to override imposed limits
-`gatherOutputs.jobMemory`|Int|4|memory allocated for Job
-`gatherOutputs.timeout`|Int|4|Timeout in hours, needed to override imposed limits
-`gatherOutputs.modules`|String|""|Names and versions of modules
 
 
 ### Outputs
 
 Output | Type | Description | Labels
 ---|---|---|---
-`outputVcf`|File|tar archive of per-lane crosscheck fingerprint vcf.gz files|vidarr_label: outputVcf
-`outputTbi`|File|tar archive of per-lane vcf.gz.tbi index files|vidarr_label: outputTbi
-`json`|File|tar archive of per-lane metrics json files|vidarr_label: json
-`samstats`|File|tar archive of per-lane samstats summary files|vidarr_label: samstats
+`outputVcf`|Pair[Array[File]+,Map[String,String]]|per-lane crosscheck fingerprint vcf.gz files, file names carry read group|
+`outputTbi`|Pair[Array[File]+,Map[String,String]]|per-lane vcf.gz.tbi index files, file names carry read group|
+`json`|Pair[Array[File]+,Map[String,String]]|per-lane alignment metrics json files, file names carry read group|
+`samstats`|Pair[Array[File]+,Map[String,String]]|per-lane samstats summary files, file names carry read group|
 
 
 ## Commands
- This section lists command(s) run by WORKFLOW workflow
- 
- * Running WORKFLOW
- 
- ```
-     set -euo pipefail
-     EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
-     if [ "$EXT" = "cram" ]; then
-       # samtools split does not support -T; convert CRAM to BAM first
-       ln -s ~{inputBam} input.cram
-       ln -s ~{inputBai} input.cram.crai
-       samtools view -b -T ~{refFasta} -o input_converted.bam input.cram
-       samtools index input_converted.bam
-       samtools split -f "~{outputFileNamePrefix}_%!.bam" input_converted.bam
-     else
-       ln -s ~{inputBam} input.bam
-       ln -s ~{inputBai} input.bam.bai
-       samtools split -f "~{outputFileNamePrefix}_%!.bam" input.bam
-     fi
-     for f in ~{outputFileNamePrefix}_*.bam; do samtools index "$f"; done
- ```
- ```
-   set -euo pipefail
-   EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
-   ln -s ~{inputBam} input.$EXT
-   if [ "$EXT" = "cram" ]; then ln -s ~{inputBai} input.cram.crai
-   else                          ln -s ~{inputBai} input.bam.bai
-   fi
-   samtools view -b -T ~{refFasta} -L ~{intervalBed} input.$EXT > ~{outputFileNamePrefix}.filtered.bam
-   samtools index ~{outputFileNamePrefix}.filtered.bam
- ```
- ```
-     set -euo pipefail
- 
-     echo "~{str}" | tr '~{lineSeparator}' '\n' | tr '~{recordSeparator}' '\t'
- ```
- ```
-   set -euo pipefail
- 
-  $GATK_ROOT/bin/gatk ExtractFingerprint \
-                     -R ~{refFasta} \
-                     -H ~{haplotypeMap} \
-                     -I ~{inputBam} \
-                     -O ~{outputFileNamePrefix}.vcf \
-                     --SAMPLE_ALIAS ~{sampleId}
- 
-  $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
-  $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz
- ```
- ```
+This section lists command(s) run by crosscheckFingerprintsCollector workflow
+
+* Running crosscheckFingerprintsCollector
+
+```
+    set -euo pipefail
+    EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+    if [ "$EXT" = "cram" ]; then
+      # samtools split does not support -T; convert CRAM to BAM first
+      ln -s ~{inputBam} input.cram
+      ln -s ~{inputBai} input.cram.crai
+      samtools view -b -T ~{refFasta} -o input_converted.bam input.cram
+      samtools index input_converted.bam
+      samtools split -f "~{outputFileNamePrefix}_%!.bam" input_converted.bam
+    else
+      ln -s ~{inputBam} input.bam
+      ln -s ~{inputBai} input.bam.bai
+      samtools split -f "~{outputFileNamePrefix}_%!.bam" input.bam
+    fi
+    for f in ~{outputFileNamePrefix}_*.bam; do samtools index "$f"; done
+```
+```
   set -euo pipefail
- 
-  seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
-  gzip ~{fastqR1m}
- 
-  seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
-  gzip ~{fastqR2m}
- ```
- ```
-   set -euo pipefail
-   EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
-   ln -s ~{inputBam} input.$EXT
-   if [ "$EXT" = "cram" ]; then ln -s ~{inputBai} input.cram.crai
-   else                          ln -s ~{inputBai} input.bam.bai
-   fi
-   samtools view -b -T ~{refFasta} input.$EXT \
-         ~{sep=" " intervals} > intervalBam.bam
-   samtools index intervalBam.bam intervalBam.bam.bai
- 
-   $GATK_ROOT/bin/gatk --java-options "-Xmx~{jobMemory - overhead}G" MarkDuplicates \
-                       -I intervalBam.bam \
-                       --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
-                       --VALIDATION_STRINGENCY SILENT \
-                       --CREATE_INDEX true \
-                       -O ~{outputFileNamePrefix}.dupmarked.bam
- ```
- ```
-     set -euo pipefail
- 
-     gatk --java-options "-Xmx~{jobMemory - overhead}G" MergeSamFiles \
-     ~{sep=" " prefix("--INPUT=", bams)} \
-     --OUTPUT="~{outputFileName}~{suffix}.bam" \
-     --CREATE_INDEX=true \
-     --SORT_ORDER=coordinate \
-     --ASSUME_SORTED=false \
-     --USE_THREADING=true \
-     --VALIDATION_STRINGENCY=SILENT \
-     ~{additionalParams}
- ```
- ```
-   set -euo pipefail
- 
-   ### samtools stats
-   $SAMTOOLS_ROOT/bin/samtools stats --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.samstats.txt
-   reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "raw total sequences:" | cut -f3`
-   mapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads mapped:" | cut -f 3`
-   unmapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads unmapped:" | cut -f 3`
-   mapped_bases=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "bases mapped:" | cut -f 3`
-   reads_duplicated=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads duplicated:" | cut -f 3`
- 
-   ### samtools coverage, with duplicates
-   $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
-   mean_cvg=`cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
- 
-   ### samtools coverage, deduplicated
-   $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.dedup.coverage.txt
-   mean_dedup_cvg=`cat ~{outputFileNamePrefix}.dedup.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
- 
-   ### json file
-   echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups},\"maxReads\":~{maxReads}} > ~{outputFileNamePrefix}.json
- 
- 
- ```
- ## Support
+  EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+  ln -s ~{inputBam} input.$EXT
+  if [ "$EXT" = "cram" ]; then ln -s ~{inputBai} input.cram.crai
+  else                          ln -s ~{inputBai} input.bam.bai
+  fi
+  samtools view -b -T ~{refFasta} -L ~{intervalBed} input.$EXT > ~{outputFileNamePrefix}.filtered.bam
+  samtools index ~{outputFileNamePrefix}.filtered.bam
+```
+```
+    set -euo pipefail
+
+    echo "~{str}" | tr '~{lineSeparator}' '\n' | tr '~{recordSeparator}' '\t'
+```
+```
+  set -euo pipefail
+
+ $GATK_ROOT/bin/gatk ExtractFingerprint \
+                    -R ~{refFasta} \
+                    -H ~{haplotypeMap} \
+                    -I ~{inputBam} \
+                    -O ~{outputFileNamePrefix}.vcf \
+                    --SAMPLE_ALIAS ~{sampleId}
+
+ $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
+ $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz
+```
+```
+ set -euo pipefail
+
+ seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
+ gzip ~{fastqR1m}
+
+ seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
+ gzip ~{fastqR2m}
+```
+```
+  set -euo pipefail
+  EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+  ln -s ~{inputBam} input.$EXT
+  if [ "$EXT" = "cram" ]; then ln -s ~{inputBai} input.cram.crai
+  else                          ln -s ~{inputBai} input.bam.bai
+  fi
+  samtools view -b -T ~{refFasta} input.$EXT \
+        ~{sep=" " intervals} > intervalBam.bam
+  samtools index intervalBam.bam intervalBam.bam.bai
+
+  $GATK_ROOT/bin/gatk --java-options "-Xmx~{jobMemory - overhead}G" MarkDuplicates \
+                      -I intervalBam.bam \
+                      --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
+                      --VALIDATION_STRINGENCY SILENT \
+                      --CREATE_INDEX true \
+                      -O ~{outputFileNamePrefix}.dupmarked.bam
+```
+```
+    set -euo pipefail
+
+    gatk --java-options "-Xmx~{jobMemory - overhead}G" MergeSamFiles \
+    ~{sep=" " prefix("--INPUT=", bams)} \
+    --OUTPUT="~{outputFileName}~{suffix}.bam" \
+    --CREATE_INDEX=true \
+    --SORT_ORDER=coordinate \
+    --ASSUME_SORTED=false \
+    --USE_THREADING=true \
+    --VALIDATION_STRINGENCY=SILENT \
+    ~{additionalParams}
+```
+```
+  set -euo pipefail
+
+  ### samtools stats
+  $SAMTOOLS_ROOT/bin/samtools stats --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.samstats.txt
+  reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "raw total sequences:" | cut -f3`
+  mapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads mapped:" | cut -f 3`
+  unmapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads unmapped:" | cut -f 3`
+  mapped_bases=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "bases mapped:" | cut -f 3`
+  reads_duplicated=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads duplicated:" | cut -f 3`
+
+  ### samtools coverage, with duplicates
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
+  mean_cvg=`cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
+
+  ### samtools coverage, deduplicated
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.dedup.coverage.txt
+  mean_dedup_cvg=`cat ~{outputFileNamePrefix}.dedup.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
+
+  ### json file
+  echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups},\"maxReads\":~{maxReads}} > ~{outputFileNamePrefix}.json
+
+
+```
+## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi) or send an email to gsi@oicr.on.ca .
 

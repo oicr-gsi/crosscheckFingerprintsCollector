@@ -1,7 +1,7 @@
 ## Commands
-This section lists command(s) run by WORKFLOW workflow
+This section lists command(s) run by crosscheckFingerprintsCollector workflow
 
-* Running WORKFLOW
+* Running crosscheckFingerprintsCollector
 
 ```
     set -euo pipefail
