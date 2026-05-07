@@ -266,20 +266,11 @@ Map[String,GenomeResources] resources = {
       }
    }
 
-   call gatherOutputs {
-     input:
-       vcfs     = extractFingerprint.vgz,
-       tbis     = extractFingerprint.tbi,
-       jsons    = alignmentMetrics.json,
-       samstats = alignmentMetrics.samstats,
-       outputFileNamePrefix = outputFileNamePrefix
-   }
-
    output {
-      File outputVcf = gatherOutputs.vcfTar
-      File outputTbi = gatherOutputs.tbiTar
-      File json      = gatherOutputs.jsonTar
-      File samstats  = gatherOutputs.samstatsTar
+      Pair[Array[File]+, Map[String,String]] outputVcf = (extractFingerprint.vgz, {"vidarr_label": "outputVcf"})
+      Pair[Array[File]+, Map[String,String]] outputTbi = (extractFingerprint.tbi, {"vidarr_label": "outputTbi"})
+      Pair[Array[File]+, Map[String,String]] json      = (alignmentMetrics.json,  {"vidarr_label": "json"})
+      Pair[Array[File]+, Map[String,String]] samstats  = (alignmentMetrics.samstats, {"vidarr_label": "samstats"})
    }
 
     meta {
@@ -317,20 +308,16 @@ Map[String,GenomeResources] resources = {
      ]
      output_meta: {
      outputVcf: {
-         description: "tar archive of per-lane crosscheck fingerprint vcf.gz files, file names carry read group",
-         vidarr_label: "outputVcf"
+         description: "per-lane crosscheck fingerprint vcf.gz files, file names carry read group"
      },
      outputTbi: {
-         description: "tar archive of per-lane vcf.gz.tbi index files, file names carry read group",
-         vidarr_label: "outputTbi"
+         description: "per-lane vcf.gz.tbi index files, file names carry read group"
      },
      json: {
-         description: "tar archive of per-lane alignment metrics json files, file names carry read group",
-         vidarr_label: "json"
+         description: "per-lane alignment metrics json files, file names carry read group"
      },
      samstats: {
-         description: "tar archive of per-lane samstats summary files, file names carry read group",
-         vidarr_label: "samstats"
+         description: "per-lane samstats summary files, file names carry read group"
      }
      }
   }
@@ -338,55 +325,6 @@ Map[String,GenomeResources] resources = {
 
 
 
-
-# ==========================================
-#  Gather per-lane output arrays into tar archives
-#  (vidarr does not support Array[File] outputs)
-# ==========================================
-
-task gatherOutputs {
-  input {
-    Array[File] vcfs
-    Array[File] tbis
-    Array[File] jsons
-    Array[File] samstats
-    String outputFileNamePrefix
-    Int jobMemory = 4
-    Int timeout = 4
-    String modules = ""
-  }
-  parameter_meta {
-    vcfs: "per-lane fingerprint vcf.gz files"
-    tbis: "per-lane vcf.gz.tbi index files"
-    jsons: "per-lane alignment metrics json files"
-    samstats: "per-lane samstats summary files"
-    outputFileNamePrefix: "prefix for output tar archive names"
-    jobMemory: "memory allocated for Job"
-    timeout: "Timeout in hours, needed to override imposed limits"
-    modules: "Names and versions of modules"
-  }
-
-  command <<<
-    set -euo pipefail
-    tar -czf ~{outputFileNamePrefix}.fingerprints.vcf.tar.gz    ~{sep=" " vcfs}
-    tar -czf ~{outputFileNamePrefix}.fingerprints.tbi.tar.gz    ~{sep=" " tbis}
-    tar -czf ~{outputFileNamePrefix}.metrics.json.tar.gz        ~{sep=" " jsons}
-    tar -czf ~{outputFileNamePrefix}.metrics.samstats.tar.gz    ~{sep=" " samstats}
-  >>>
-
-  output {
-    File vcfTar      = "~{outputFileNamePrefix}.fingerprints.vcf.tar.gz"
-    File tbiTar      = "~{outputFileNamePrefix}.fingerprints.tbi.tar.gz"
-    File jsonTar     = "~{outputFileNamePrefix}.metrics.json.tar.gz"
-    File samstatsTar = "~{outputFileNamePrefix}.metrics.samstats.tar.gz"
-  }
-
-  runtime {
-    memory:  "~{jobMemory} GB"
-    modules: "~{modules}"
-    timeout: "~{timeout}"
-  }
-}
 
 
 # ==========================================
