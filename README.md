@@ -141,6 +141,8 @@ Parameter|Value|Default|Description
 `alignmentMetrics.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `extractFingerprint.jobMemory`|Int|8|memory allocated for Job
 `extractFingerprint.timeout`|Int|24|Timeout in hours, needed to override imposed limits
+`fingerprintReadgroupInfo.jobMemory`|Int|8|memory allocated for job
+`fingerprintReadgroupInfo.timeout`|Int|24|timeout in hours
 
 
 ### Outputs
@@ -151,6 +153,7 @@ Output | Type | Description | Labels
 `outputTbi`|Pair[Array[File]+,Map[String,String]]|per-lane vcf.gz.tbi index files, file names carry read group|
 `json`|Pair[Array[File]+,Map[String,String]]|per-lane alignment metrics json files, file names carry read group|
 `samstats`|Pair[Array[File]+,Map[String,String]]|per-lane samstats summary files, file names carry read group|
+`readgroupInfo`|Pair[File,Map[String,String]]|JSON array mapping each fingerprint name to the read group tags found in its source bam/cram|
 
 
 ## Commands
@@ -266,6 +269,43 @@ This section lists command(s) run by crosscheckFingerprintsCollector workflow
   echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups},\"maxReads\":~{maxReads}} > ~{outputFileNamePrefix}.json
 
 
+```
+```
+    set -euo pipefail
+    python3 << 'PYEOF'
+import subprocess, json, os
+
+bam_paths = '~{sep=" " bams}'.split()
+fp_paths  = '~{sep=" " fingerprints}'.split()
+ref       = '~{refFasta}'
+out_file  = '~{outputFileNamePrefix}.readgroup_info.json'
+
+result = []
+for bam, fp in zip(bam_paths, fp_paths):
+    fp_name = os.path.basename(fp)
+    for ext in ('.vcf.gz', '.vcf'):
+        if fp_name.endswith(ext):
+            fp_name = fp_name[:-len(ext)]
+            break
+
+    proc = subprocess.run(
+        ['samtools', 'view', '-H', '-T', ref, bam],
+        capture_output=True, text=True, check=True
+    )
+
+    for line in proc.stdout.splitlines():
+        if line.startswith('@RG'):
+            fields = line.split('\t')
+            entry = {'fingerprint': fp_name}
+            for field in fields[1:]:
+                tag, _, val = field.partition(':')
+                entry[tag] = val
+            result.append(entry)
+            break
+
+with open(out_file, 'w') as f:
+    json.dump(result, f, indent=2)
+PYEOF
 ```
 ## Support
 

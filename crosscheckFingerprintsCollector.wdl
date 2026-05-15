@@ -266,11 +266,21 @@ Map[String,GenomeResources] resources = {
       }
    }
 
+   call fingerprintReadgroupInfo {
+     input:
+       bams                 = laneResult,
+       fingerprints         = extractFingerprint.vgz,
+       refFasta             = resources[reference].refFasta,
+       outputFileNamePrefix = outputFileNamePrefix,
+       modules              = resources[reference].alignmentMetricsModules
+   }
+
    output {
-      Pair[Array[File]+, Map[String,String]] outputVcf = (extractFingerprint.vgz, {"vidarr_label": "outputVcf"})
-      Pair[Array[File]+, Map[String,String]] outputTbi = (extractFingerprint.tbi, {"vidarr_label": "outputTbi"})
-      Pair[Array[File]+, Map[String,String]] json      = (alignmentMetrics.json,  {"vidarr_label": "json"})
-      Pair[Array[File]+, Map[String,String]] samstats  = (alignmentMetrics.samstats, {"vidarr_label": "samstats"})
+      Pair[Array[File]+, Map[String,String]] outputVcf    = (extractFingerprint.vgz,        {"vidarr_label": "outputVcf"})
+      Pair[Array[File]+, Map[String,String]] outputTbi    = (extractFingerprint.tbi,         {"vidarr_label": "outputTbi"})
+      Pair[Array[File]+, Map[String,String]] json         = (alignmentMetrics.json,          {"vidarr_label": "json"})
+      Pair[Array[File]+, Map[String,String]] samstats     = (alignmentMetrics.samstats,      {"vidarr_label": "samstats"})
+      Pair[File,         Map[String,String]] readgroupInfo = (fingerprintReadgroupInfo.json,  {"vidarr_label": "readgroupInfo"})
    }
 
     meta {
@@ -318,6 +328,9 @@ Map[String,GenomeResources] resources = {
      },
      samstats: {
          description: "per-lane samstats summary files, file names carry read group"
+     },
+     readgroupInfo: {
+         description: "JSON array mapping each fingerprint name to the read group tags found in its source bam/cram"
      }
      }
   }
@@ -760,5 +773,80 @@ command <<<
   output {
     File json     = "~{outputFileNamePrefix}.json"
     File samstats = "~{outputFileNamePrefix}.samstats.txt"
+  }
+}
+
+
+# ==========================================
+#  Build a JSON array that maps each fingerprint
+#  name to the @RG tags found in its source bam/cram
+# ==========================================
+
+task fingerprintReadgroupInfo {
+  input {
+    Array[File] bams
+    Array[File] fingerprints
+    String refFasta
+    String outputFileNamePrefix
+    String modules
+    Int jobMemory = 8
+    Int timeout = 24
+  }
+  parameter_meta {
+    bams:                 "lane-level bam/cram files used for fingerprint extraction (parallel to fingerprints)"
+    fingerprints:         "fingerprint vcf.gz files (parallel to bams)"
+    refFasta:             "path to reference FASTA (required for CRAM decoding)"
+    outputFileNamePrefix: "prefix for the output JSON file"
+    modules:              "Names and versions of modules"
+    jobMemory:            "memory allocated for job"
+    timeout:              "timeout in hours"
+  }
+
+  command <<<
+    set -euo pipefail
+    python3 << 'PYEOF'
+import subprocess, json, os
+
+bam_paths = '~{sep=" " bams}'.split()
+fp_paths  = '~{sep=" " fingerprints}'.split()
+ref       = '~{refFasta}'
+out_file  = '~{outputFileNamePrefix}.readgroup_info.json'
+
+result = []
+for bam, fp in zip(bam_paths, fp_paths):
+    fp_name = os.path.basename(fp)
+    for ext in ('.vcf.gz', '.vcf'):
+        if fp_name.endswith(ext):
+            fp_name = fp_name[:-len(ext)]
+            break
+
+    proc = subprocess.run(
+        ['samtools', 'view', '-H', '-T', ref, bam],
+        capture_output=True, text=True, check=True
+    )
+
+    for line in proc.stdout.splitlines():
+        if line.startswith('@RG'):
+            fields = line.split('\t')
+            entry = {'fingerprint': fp_name}
+            for field in fields[1:]:
+                tag, _, val = field.partition(':')
+                entry[tag] = val
+            result.append(entry)
+            break
+
+with open(out_file, 'w') as f:
+    json.dump(result, f, indent=2)
+PYEOF
+  >>>
+
+  output {
+    File json = "~{outputFileNamePrefix}.readgroup_info.json"
+  }
+
+  runtime {
+    memory:  "~{jobMemory} GB"
+    modules: "~{modules}"
+    timeout: "~{timeout}"
   }
 }
