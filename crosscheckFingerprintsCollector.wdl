@@ -458,7 +458,7 @@ task splitStringToArray {
     String recordSeparator = "+"
 
     Int jobMemory = 1
-    Int cores = 1
+    Int threads = 1
     Int timeout = 1
     String modules = ""
   }
@@ -475,7 +475,7 @@ task splitStringToArray {
 
   runtime {
     memory: "~{jobMemory} GB"
-    cpu: "~{cores}"
+    cpu: "~{threads}"
     timeout: "~{timeout}"
     modules: "~{modules}"
   }
@@ -485,7 +485,7 @@ task splitStringToArray {
     lineSeparator: "Interval group separator - these are the intervals to split by."
     recordSeparator: "Interval interval group separator - this can be used to combine multiple intervals into one group."
     jobMemory: "Memory allocated to job (in GB)."
-    cores: "The number of cores to allocate to the job."
+    threads: "The number of threads to allocate to the job."
     timeout: "Maximum amount of time (in hours) the task can run for."
     modules: "Environment module name and version to load (space separated) before command execution."
   }
@@ -668,7 +668,7 @@ task mergeBams {
 
     Int jobMemory = 24
     Int overhead = 6
-    Int cores = 1
+    Int threads = 1
     Int timeout = 6
     String modules = "gatk/4.1.6.0"
   }
@@ -694,7 +694,7 @@ task mergeBams {
 
   runtime {
     memory: "~{jobMemory} GB"
-    cpu: "~{cores}"
+    cpu: "~{threads}"
     timeout: "~{timeout}"
     modules: "~{modules}"
   }
@@ -705,7 +705,7 @@ task mergeBams {
     additionalParams: "Additional parameters to pass to GATK MergeSamFiles."
     jobMemory: "Memory allocated to job (in GB)."
     overhead: "Java overhead memory (in GB). jobMemory - overhead == java Xmx/heap memory."
-    cores: "The number of cores to allocate to the job."
+    threads: "The number of threads to allocate to the job."
     timeout: "Maximum amount of time (in hours) the task can run for."
     modules: "Environment module name and version to load (space separated) before command execution."
   }

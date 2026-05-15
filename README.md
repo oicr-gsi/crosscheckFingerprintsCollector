@@ -122,7 +122,7 @@ Parameter|Value|Default|Description
 `splitStringToArray.lineSeparator`|String|","|Interval group separator - these are the intervals to split by.
 `splitStringToArray.recordSeparator`|String|"+"|Interval interval group separator - this can be used to combine multiple intervals into one group.
 `splitStringToArray.jobMemory`|Int|1|Memory allocated to job (in GB).
-`splitStringToArray.cores`|Int|1|The number of cores to allocate to the job.
+`splitStringToArray.threads`|Int|1|The number of threads to allocate to the job.
 `splitStringToArray.timeout`|Int|1|Maximum amount of time (in hours) the task can run for.
 `splitStringToArray.modules`|String|""|Environment module name and version to load (space separated) before command execution.
 `filterBamLane.jobMemory`|Int|16|memory allocated for Job
@@ -134,7 +134,7 @@ Parameter|Value|Default|Description
 `mergeIntervalBams.additionalParams`|String?|None|Additional parameters to pass to GATK MergeSamFiles.
 `mergeIntervalBams.jobMemory`|Int|24|Memory allocated to job (in GB).
 `mergeIntervalBams.overhead`|Int|6|Java overhead memory (in GB). jobMemory - overhead == java Xmx/heap memory.
-`mergeIntervalBams.cores`|Int|1|The number of cores to allocate to the job.
+`mergeIntervalBams.threads`|Int|1|The number of threads to allocate to the job.
 `mergeIntervalBams.timeout`|Int|6|Maximum amount of time (in hours) the task can run for.
 `mergeIntervalBams.modules`|String|"gatk/4.1.6.0"|Environment module name and version to load (space separated) before command execution.
 `alignmentMetrics.jobMemory`|Int|8|memory allocated for Job
