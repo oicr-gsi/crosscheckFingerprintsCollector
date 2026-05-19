@@ -22,6 +22,8 @@ struct GenomeResources {
     String markDuplicatesModules
     String downsampleModules
     String intervalBed
+    String filterBamModules
+    String splitLanesModules
 }
 
 workflow crosscheckFingerprintsCollector {
@@ -30,10 +32,13 @@ workflow crosscheckFingerprintsCollector {
         File? fastqR2
         File? bam
         File? bamIndex
+        File? cram
+        File? cramIndex
         String inputType
         String aligner
         Boolean markDups
         Boolean filterBam
+        Boolean is_lane_level = true
         String outputFileNamePrefix
         String reference
         Int maxReads = 0
@@ -44,15 +49,17 @@ workflow crosscheckFingerprintsCollector {
         fastqR2: "fastq file for read 2"
         bam: "bam file"
         bamIndex: "bam index file"
-        inputType: "one of either fastq or bam"
-        aligner : "aligner to use for fastq input, either bwa or star"
-        markDups : "should the alignment be duplicate marked?, generally yes"
-        filterBam: "should use filterBamToInterval to prefiltering of the bam file to intervals? Generally true"
-        intervalsToParallelizeByString : "Comma separated list of intervals to split by (e.g. chr1,chr2,chr3+chr4)."
+        cram: "cram file (may be a merged-lanes cram)"
+        cramIndex: "index for the cram file"
+        inputType: "one of fastq, bam, or cram"
+        aligner: "aligner to use for fastq input, either bwa or star"
+        markDups: "should the alignment be duplicate marked?, generally yes"
+        filterBam: "should use filterBamToInterval to prefiltering of the bam/cram file to intervals? Generally true"
+        is_lane_level: "true if the input bam/cram is already at lane level; false if it is a merged-lanes file that needs to be split before processing"
         outputFileNamePrefix: "Optional output prefix for the output"
-        reference : "the reference genome for input sample"
+        reference: "the reference genome for input sample"
         maxReads: "The maximum number of reads to process; if set, this will sample the requested number of reads"
-        sampleId : "value that will be used as the sample identifier in the vcf fingerprint"
+        sampleId: "value that will be used as the sample identifier in the vcf fingerprint"
    }
 
 Map[String,GenomeResources] resources = {
@@ -65,10 +72,12 @@ Map[String,GenomeResources] resources = {
     "starRefDir" : "$HG38_STAR_INDEX100_ROOT",
     "starModules" :"star/2.7.3a hg38-star-index100/2.7.3a",
     "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38/p12 crosscheckfingerprints-haplotype-map/20230324",
-    "alignmentMetricsModules" : "samtools/1.15",
-    "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
+    "alignmentMetricsModules" : "samtools/1.15 hg38/p12",
+    "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15 hg38/p12",
     "downsampleModules" :  "seqtk/1.3",
-    "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM"
+    "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM",
+    "filterBamModules" : "crosscheckfingerprints-haplotype-map/20230324 samtools/1.14 hg38/p12",
+    "splitLanesModules" : "samtools/1.15 hg38/p12"
   },
   "hg19": {
     "refFasta" : "$HG19_ROOT/hg19_random.fa",
@@ -79,12 +88,17 @@ Map[String,GenomeResources] resources = {
     "starRefDir" : "$HG19_STAR_INDEX100_ROOT",
     "starModules" : "star/2.7.3a  hg19-star-index100/2.7.3a",
     "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg19/p13 crosscheckfingerprints-haplotype-map/20230324",
-    "alignmentMetricsModules" : "samtools/1.15",
-    "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
+    "alignmentMetricsModules" : "samtools/1.15 hg19/p13",
+    "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15 hg19/p13",
     "downsampleModules" :  "seqtk/1.3",
-    "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM"
+    "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM",
+    "filterBamModules" : "crosscheckfingerprints-haplotype-map/20230324 samtools/1.14 hg19/p13",
+    "splitLanesModules" : "samtools/1.15 hg19/p13"
   }}
 
+   # -------------------------------------------------------
+   # Stage 1: Align fastq inputs if needed
+   # -------------------------------------------------------
    if(inputType=="fastq" && defined(fastqR1) && defined(fastqR2)){
      if(maxReads>0){
       call downsample{
@@ -110,12 +124,12 @@ Map[String,GenomeResources] resources = {
       }
 
       if(aligner=="star"){
-       InputGroup starInput = { 
+       InputGroup starInput = {
          "fastqR1": select_first([downsample.fastqR1mod,fastqR1]),
          "fastqR2": select_first([downsample.fastqR2mod,fastqR2]),
          "readGroup": "ID:CROSSCHECK SM:SAMPLE"
        }
-       call star.star { 
+       call star.star {
          input:
            inputGroups = [ starInput ],
            outputFileNamePrefix = outputFileNamePrefix,
@@ -126,80 +140,152 @@ Map[String,GenomeResources] resources = {
      }
    }
 
-  if(filterBam){
-    call filterBamToIntervals {
-      input:
-         inputBam = select_first([bwaMem.bwaMemBam,star.starBam,bam]),
-         inputBai = select_first([bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
-         intervalBed = resources [ reference].intervalBed,
+   # -------------------------------------------------------
+   # Stage 2: Resolve the initial bam/cram from alignment or
+   #          direct input, then optionally split into lanes.
+   #
+   #   - fastq-derived alignments are already single-lane; no
+   #     splitting is needed regardless of is_lane_level.
+   #   - For bam/cram input with is_lane_level=false, call
+   #     splitLanes to produce one file per read group.
+   #
+   # After this stage, bamsToProcess / baisToProcess are an
+   # Array[File] of length 1 (lane-level) or N (split lanes).
+   # The downstream scatter handles both cases identically,
+   # eliminating duplicated processing logic.
+   # -------------------------------------------------------
+   File initBam = select_first([bwaMem.bwaMemBam, star.starBam, bam, cram])
+   File initBai = select_first([bwaMem.bwaMemIndex, star.starIndex, bamIndex, cramIndex])
+
+   # For merged input: filter to intervals before splitting so splitLanes works
+   # on a much smaller file. Lane-level input is filtered inside the scatter below.
+   if (filterBam && !is_lane_level && inputType != "fastq") {
+     call filterBam as filterBamPreSplit {
+       input:
+         inputBam = initBam,
+         inputBai = initBai,
+         intervalBed = resources[reference].intervalBed,
+         refFasta = resources[reference].refFasta,
          outputFileNamePrefix = outputFileNamePrefix,
-         modules = "crosscheckfingerprints-haplotype-map/20230324 samtools/1.14"     
-    }
-  }
-
-
-  if(markDups){
-
-    call splitStringToArray {
-      input:
-        str = resources [ reference].intervalsToParallelizeByString
-    }
-
-    Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
-
-    scatter (intervals in intervalsToParallelizeBy){
-      call markDuplicates {
-        input :
-          inputBam = select_first([filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
-          inputBai = select_first([filterBamToIntervals.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
-          outputFileNamePrefix = outputFileNamePrefix,
-          intervals = intervals,
-          modules = resources [ reference ].markDuplicatesModules 
-      }
-    }
-    Array[File] markDuplicatedBams = markDuplicates.bam
-    
-	
-	call mergeBams {
-      input:
-      bams = markDuplicatedBams,
-      outputFileName = outputFileNamePrefix,
-      suffix = ""
-    }
-  }
-
-  
-   call alignmentMetrics {
-     input:
-        inputBam = select_first([mergeBams.mergedBam,filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([mergeBams.mergedBamIndex,filterBamToIntervals.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
-        outputFileNamePrefix = outputFileNamePrefix,
-        markDups = markDups,
-        maxReads = maxReads,
-        modules = resources [ reference ].alignmentMetricsModules  
+         modules = resources[reference].filterBamModules
+     }
    }
-   
-   call extractFingerprint {
-     input:
-        inputBam = select_first([mergeBams.mergedBam,filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
-        inputBai = select_first([mergeBams.mergedBamIndex,filterBamToIntervals.bamIndex,star.starIndex,bamIndex]),
-        haplotypeMap = resources [ reference ].refHapMap,
-        refFasta =  resources [ reference ].refFasta,
-        outputFileNamePrefix = outputFileNamePrefix,
-        sampleId = sampleId,
-        modules = resources [ reference ].extractFingerprintModules
-    }
 
-   output {
-      File outputVcf = extractFingerprint.vgz
-      File outputTbi = extractFingerprint.tbi
-      File json = alignmentMetrics.json
-      File samstats = alignmentMetrics.samstats
+   if (!is_lane_level && inputType != "fastq") {
+     File splitInput    = select_first([filterBamPreSplit.bam,      initBam])
+     File splitInputBai = select_first([filterBamPreSplit.bamIndex, initBai])
+     call splitLanes {
+       input:
+         inputBam = splitInput,
+         inputBai = splitInputBai,
+         refFasta = resources[reference].refFasta,
+         outputFileNamePrefix = outputFileNamePrefix,
+         modules = resources[reference].splitLanesModules
+     }
+   }
+
+   # Single-element array for lane-level input; multi-element for split lanes.
+   Array[File] bamsToProcess = select_first([splitLanes.laneBams, [initBam]])
+   Array[File] baisToProcess = select_first([splitLanes.laneBamIndexes, [initBai]])
+
+   # -------------------------------------------------------
+   # Stage 3: Per-lane processing (scattered in parallel)
+   #   filterBamToIntervals -> markDuplicates (chr-scatter)
+   #   -> merge chr bams  — all steps are optional and reuse
+   #   the same tasks regardless of lane vs merged input.
+   # -------------------------------------------------------
+   call splitStringToArray {
+     input:
+       str = resources[reference].intervalsToParallelizeByString
+   }
+   Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
+
+   scatter (idx in range(length(bamsToProcess))) {
+     String lanePrefix = sub(sub(basename(bamsToProcess[idx]), "\\.bam$", ""), "\\.cram$", "")
+
+     if (filterBam) {
+       call filterBam as filterBamLane {
+         input:
+           inputBam = bamsToProcess[idx],
+           inputBai = baisToProcess[idx],
+           intervalBed = resources[reference].intervalBed,
+           refFasta = resources[reference].refFasta,
+           outputFileNamePrefix = lanePrefix,
+           modules = resources[reference].filterBamModules
+       }
      }
 
+     if (markDups) {
+       scatter (intervals in intervalsToParallelizeBy) {
+         call markDuplicates {
+           input:
+             inputBam = select_first([filterBamLane.bam, bamsToProcess[idx]]),
+             inputBai = select_first([filterBamLane.bamIndex, baisToProcess[idx]]),
+             outputFileNamePrefix = lanePrefix,
+             intervals = intervals,
+             refFasta = resources[reference].refFasta,
+             modules = resources[reference].markDuplicatesModules
+         }
+       }
+       call mergeBams as mergeIntervalBams {
+         input:
+           bams = markDuplicates.bam,
+           outputFileName = lanePrefix,
+           suffix = ""
+       }
+     }
+
+     # Best available output for this lane, in priority order:
+     #   markDups merged > filterBam filtered > original lane bam
+     File laneResult      = select_first([mergeIntervalBams.mergedBam,      filterBamLane.bam,      bamsToProcess[idx]])
+     File laneResultIndex = select_first([mergeIntervalBams.mergedBamIndex, filterBamLane.bamIndex, baisToProcess[idx]])
+
+     # -------------------------------------------------------
+     # Stage 4: Metrics and fingerprint — one per lane bam
+     # -------------------------------------------------------
+     call alignmentMetrics {
+       input:
+          inputBam = laneResult,
+          inputBai = laneResultIndex,
+          outputFileNamePrefix = lanePrefix,
+          markDups = markDups,
+          maxReads = maxReads,
+          refFasta = resources[reference].refFasta,
+          modules = resources[reference].alignmentMetricsModules
+     }
+
+     call extractFingerprint {
+       input:
+          inputBam = laneResult,
+          inputBai = laneResultIndex,
+          haplotypeMap = resources[reference].refHapMap,
+          refFasta = resources[reference].refFasta,
+          outputFileNamePrefix = lanePrefix,
+          sampleId = sampleId,
+          modules = resources[reference].extractFingerprintModules
+      }
+   }
+
+   call fingerprintReadgroupInfo {
+     input:
+       bams                 = laneResult,
+       fingerprints         = extractFingerprint.vgz,
+       refFasta             = resources[reference].refFasta,
+       outputFileNamePrefix = outputFileNamePrefix,
+       modules              = resources[reference].alignmentMetricsModules
+   }
+
+   output {
+      Pair[Array[File]+, Map[String,String]] outputVcf    = (extractFingerprint.vgz,        {"vidarr_label": "outputVcf"})
+      Pair[Array[File]+, Map[String,String]] outputTbi    = (extractFingerprint.tbi,         {"vidarr_label": "outputTbi"})
+      Pair[Array[File]+, Map[String,String]] json         = (alignmentMetrics.json,          {"vidarr_label": "json"})
+      Pair[Array[File]+, Map[String,String]] samstats     = (alignmentMetrics.samstats,      {"vidarr_label": "samstats"})
+      Pair[File,         Map[String,String]] readgroupInfo = (fingerprintReadgroupInfo.json,  {"vidarr_label": "readgroupInfo"})
+   }
+
     meta {
-     author: "Lawrence Heisler"
-     email: "lawrence.heisler@oicr.on.ca"
+     author: "Lawrence Heisler, Gavin Peng"
+     email: "lawrence.heisler@oicr.on.ca, gpeng@oicr.on.ca"
      description: "crosscheckFingerprintsCollector, workflow that generates genotype fingerprints using gatk ExtractFingprint.  Output are vcf files that can be proccessed through gatk Crosscheck fingerprints\n##"
      dependencies: [
       {
@@ -221,7 +307,7 @@ Map[String,GenomeResources] resources = {
       { name: "gsi crosscheckfingerprints-haplotype-map module",
         url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
       },
-      { 
+      {
         name: "gsi hg38 modules : hg38/p12 hg38-bwa-index-with-alt/0.7.17 hg38-star-index100/2.7.3a",
         url: "https://gitlab.oicr.on.ca/ResearchIT/modulator"
       },
@@ -232,24 +318,19 @@ Map[String,GenomeResources] resources = {
      ]
      output_meta: {
      outputVcf: {
-         description: "the crosscheck fingerprint, gzipped vcf file",
-         vidarr_label: "outputVcf"
+         description: "per-lane crosscheck fingerprint vcf.gz files, file names carry read group"
      },
      outputTbi: {
-         description: "index for the vcf fingerprint",
-         vidarr_label: "outputTbi"
-     },
-     coverage: {
-         description: "output from samtools coverage, with per chromosome metrics",
-         vidarr_label: "coverage"
+         description: "per-lane vcf.gz.tbi index files, file names carry read group"
      },
      json: {
-         description: "metrics in json format, currently only the mean coverage for the alignment",
-         vidarr_label: "json"
+         description: "per-lane alignment metrics json files, file names carry read group"
      },
      samstats: {
-         description: "output from the samstats summary",
-         vidarr_label: "samstats"
+         description: "per-lane samstats summary files, file names carry read group"
+     },
+     readgroupInfo: {
+         description: "JSON array mapping each fingerprint name to the read group tags found in its source bam/cram"
      }
      }
   }
@@ -257,17 +338,74 @@ Map[String,GenomeResources] resources = {
 
 
 
+
+
 # ==========================================
-#  Filter Bam to Intervals
+#  Split a merged bam/cram into per-lane bam
+#  files using samtools split (by read group)
 # ==========================================
 
+task splitLanes {
+  input {
+    File inputBam
+    File inputBai
+    String refFasta
+    String outputFileNamePrefix
+    String modules
+    Int jobMemory = 16
+    Int timeout = 24
+  }
+  parameter_meta {
+    inputBam: "input .bam or .cram file to split by read group"
+    inputBai: "index for the input file (.bai or .crai)"
+    refFasta: "path to reference FASTA (required for CRAM input)"
+    outputFileNamePrefix: "prefix for output lane bam files"
+    modules: "Names and versions of modules"
+    jobMemory: "memory allocated for Job"
+    timeout: "Timeout in hours, needed to override imposed limits"
+  }
+
+  command <<<
+    set -euo pipefail
+    EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+    if [ "$EXT" = "cram" ]; then
+      # samtools split does not support -T; convert CRAM to BAM first
+      ln -s ~{inputBam} input.cram
+      ln -s ~{inputBai} input.cram.crai
+      samtools view -b -T ~{refFasta} -o input_converted.bam input.cram
+      samtools index input_converted.bam
+      samtools split -f "~{outputFileNamePrefix}_%!.bam" input_converted.bam
+    else
+      ln -s ~{inputBam} input.bam
+      ln -s ~{inputBai} input.bam.bai
+      samtools split -f "~{outputFileNamePrefix}_%!.bam" input.bam
+    fi
+    for f in ~{outputFileNamePrefix}_*.bam; do samtools index "$f"; done
+  >>>
+
+  output {
+    Array[File] laneBams       = glob("~{outputFileNamePrefix}_*.bam")
+    Array[File] laneBamIndexes = glob("~{outputFileNamePrefix}_*.bam.bai")
+  }
+
+  runtime {
+    memory:  "~{jobMemory} GB"
+    modules: "~{modules}"
+    timeout: "~{timeout}"
+  }
+}
 
 
-task filterBamToIntervals {
+# ==========================================
+#  Filter Bam/Cram to Intervals
+# ==========================================
+
+task filterBam {
  input{
   File inputBam
   File inputBai
   String intervalBed
+  String refFasta
   String modules
   String outputFileNamePrefix
   Int jobMemory = 16
@@ -275,18 +413,24 @@ task filterBamToIntervals {
   Int timeout = 24
  }
  parameter_meta {
-  inputBam: "input .bam file"
-  inputBai: "index of the input .bam file"
-  outputFileNamePrefix: "prefix for making names for output files"  
+  inputBam: "input .bam or .cram file"
+  inputBai: "index of the input file"
+  outputFileNamePrefix: "prefix for making names for output files"
+  refFasta: "path to reference FASTA (required for CRAM input, harmless for BAM)"
   jobMemory: "memory allocated for Job"
   overhead: "memory allocated to overhead of the job other than used in markDuplicates command"
   modules: "Names and versions of modules"
   timeout: "Timeout in hours, needed to override imposed limits"
  }
- 
+
 command <<<
   set -euo pipefail
-  samtools view -b ~{inputBam} -L ~{intervalBed} > ~{outputFileNamePrefix}.filtered.bam
+  EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+  ln -s ~{inputBam} input.$EXT
+  if [ "$EXT" = "cram" ]; then ln -s ~{inputBai} input.cram.crai
+  else                          ln -s ~{inputBai} input.bam.bai
+  fi
+  samtools view -b -T ~{refFasta} -L ~{intervalBed} input.$EXT > ~{outputFileNamePrefix}.filtered.bam
   samtools index ~{outputFileNamePrefix}.filtered.bam
 >>>
 
@@ -297,12 +441,10 @@ command <<<
  }
 
  output {
-  File bam = "~{outputFileNamePrefix}.filtered.bam"
+  File bam      = "~{outputFileNamePrefix}.filtered.bam"
   File bamIndex = "~{outputFileNamePrefix}.filtered.bam.bai"
  }
 }
-
-
 
 
 
@@ -316,7 +458,7 @@ task splitStringToArray {
     String recordSeparator = "+"
 
     Int jobMemory = 1
-    Int cores = 1
+    Int threads = 1
     Int timeout = 1
     String modules = ""
   }
@@ -333,7 +475,7 @@ task splitStringToArray {
 
   runtime {
     memory: "~{jobMemory} GB"
-    cpu: "~{cores}"
+    cpu: "~{threads}"
     timeout: "~{timeout}"
     modules: "~{modules}"
   }
@@ -343,7 +485,7 @@ task splitStringToArray {
     lineSeparator: "Interval group separator - these are the intervals to split by."
     recordSeparator: "Interval interval group separator - this can be used to combine multiple intervals into one group."
     jobMemory: "Memory allocated to job (in GB)."
-    cores: "The number of cores to allocate to the job."
+    threads: "The number of threads to allocate to the job."
     timeout: "Maximum amount of time (in hours) the task can run for."
     modules: "Environment module name and version to load (space separated) before command execution."
   }
@@ -353,7 +495,6 @@ task splitStringToArray {
 # ==========================================
 #  configure and run extractFingerprintsCollector
 # ==========================================
-
 
 task extractFingerprint {
 input {
@@ -390,7 +531,7 @@ command <<<
                     --SAMPLE_ALIAS ~{sampleId}
 
  $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
- $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
+ $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz
 >>>
 
  runtime {
@@ -412,7 +553,6 @@ command <<<
 #  downsample the fastq files to the first N reads
 # ==========================================
 
-
 task downsample {
  input{
   File fastqR1
@@ -422,7 +562,7 @@ task downsample {
   Int jobMemory = 8
   Int timeout = 24
  }
- 
+
  parameter_meta {
   fastqR1 : "Read1 fastq file"
   fastqR2 : "Read2 fastq file"
@@ -431,16 +571,16 @@ task downsample {
   modules: "Names and versions of modules"
   timeout: "Timeout in hours, needed to override imposed limits"
  }
- 
+
  String fastqR1m = basename(fastqR1,".fastq.gz") + ".mod.fastq"
  String fastqR2m = basename(fastqR2,".fastq.gz") + ".mod.fastq"
-  
+
 command <<<
  set -euo pipefail
- 
+
  seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
  gzip ~{fastqR1m}
- 
+
  seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
  gzip ~{fastqR2m}
 >>>
@@ -454,7 +594,7 @@ command <<<
  output {
   File fastqR1mod = "~{fastqR1m}.gz"
   File fastqR2mod = "~{fastqR2m}.gz"
- }    
+ }
 }
 
 
@@ -462,12 +602,11 @@ command <<<
 #  Duplicate Marking
 # ==========================================
 
-
-
 task markDuplicates {
  input{
   File inputBam
   File inputBai
+  String refFasta
   String modules
   String outputFileNamePrefix
   Array[String] intervals
@@ -476,21 +615,24 @@ task markDuplicates {
   Int timeout = 24
  }
  parameter_meta {
-  inputBam: "input .bam file"
-  inputBai: "index of the input .bam file"
-  outputFileNamePrefix: "prefix for making names for output files"  
+  inputBam: "input .bam or .cram file"
+  inputBai: "index of the input file"
+  refFasta: "path to reference FASTA (required for CRAM input, harmless for BAM)"
+  outputFileNamePrefix: "prefix for making names for output files"
   jobMemory: "memory allocated for Job"
   overhead: "memory allocated to overhead of the job other than used in markDuplicates command"
   modules: "Names and versions of modules"
   timeout: "Timeout in hours, needed to override imposed limits"
  }
- 
+
 command <<<
   set -euo pipefail
-  ln -s ~{inputBam} inputBam.bam
-  ln -s ~{inputBai} inputBam.bam.bai
-  samtools view -b \
-        inputBam.bam \
+  EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+  ln -s ~{inputBam} input.$EXT
+  if [ "$EXT" = "cram" ]; then ln -s ~{inputBai} input.cram.crai
+  else                          ln -s ~{inputBai} input.bam.bai
+  fi
+  samtools view -b -T ~{refFasta} input.$EXT \
         ~{sep=" " intervals} > intervalBam.bam
   samtools index intervalBam.bam intervalBam.bam.bai
 
@@ -526,7 +668,7 @@ task mergeBams {
 
     Int jobMemory = 24
     Int overhead = 6
-    Int cores = 1
+    Int threads = 1
     Int timeout = 6
     String modules = "gatk/4.1.6.0"
   }
@@ -546,13 +688,13 @@ task mergeBams {
   >>>
 
   output {
-    File mergedBam = "~{outputFileName}~{suffix}.bam"
+    File mergedBam      = "~{outputFileName}~{suffix}.bam"
     File mergedBamIndex = "~{outputFileName}~{suffix}.bai"
   }
 
   runtime {
     memory: "~{jobMemory} GB"
-    cpu: "~{cores}"
+    cpu: "~{threads}"
     timeout: "~{timeout}"
     modules: "~{modules}"
   }
@@ -563,7 +705,7 @@ task mergeBams {
     additionalParams: "Additional parameters to pass to GATK MergeSamFiles."
     jobMemory: "Memory allocated to job (in GB)."
     overhead: "Java overhead memory (in GB). jobMemory - overhead == java Xmx/heap memory."
-    cores: "The number of cores to allocate to the job."
+    threads: "The number of threads to allocate to the job."
     timeout: "Maximum amount of time (in hours) the task can run for."
     modules: "Environment module name and version to load (space separated) before command execution."
   }
@@ -574,11 +716,11 @@ task mergeBams {
 #  coverage metrics from the bam file used for fingerprint analysis
 # ==========================================
 
-
  task alignmentMetrics{
    input{
     File inputBam
     File inputBai
+    String refFasta
     String modules
     String outputFileNamePrefix
     Boolean markDups
@@ -589,18 +731,19 @@ task mergeBams {
    parameter_meta {
     inputBam: "input .bam file"
     inputBai: "index of the input .bam file"
-    outputFileNamePrefix: "prefix for making names for output files"  
+    refFasta: "path to reference FASTA (required for CRAM input, harmless for BAM)"
+    outputFileNamePrefix: "prefix for making names for output files"
     jobMemory: "memory allocated for Job"
     modules: "Names and versions of modules"
-    maxReads : "the maximum number of reads to use"
+    maxReads: "the maximum number of reads to use"
     timeout: "Timeout in hours, needed to override imposed limits"
-   } 
+   }
 
 command <<<
   set -euo pipefail
 
   ### samtools stats
-  $SAMTOOLS_ROOT/bin/samtools stats ~{inputBam} > ~{outputFileNamePrefix}.samstats.txt
+  $SAMTOOLS_ROOT/bin/samtools stats --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.samstats.txt
   reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "raw total sequences:" | cut -f3`
   mapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads mapped:" | cut -f 3`
   unmapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads unmapped:" | cut -f 3`
@@ -608,16 +751,15 @@ command <<<
   reads_duplicated=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads duplicated:" | cut -f 3`
 
   ### samtools coverage, with duplicates
-  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
   mean_cvg=`cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
-  
+
   ### samtools coverage, deduplicated
-  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP ~{inputBam} > ~{outputFileNamePrefix}.dedup.coverage.txt
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.dedup.coverage.txt
   mean_dedup_cvg=`cat ~{outputFileNamePrefix}.dedup.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
-  
+
   ### json file
   echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups},\"maxReads\":~{maxReads}} > ~{outputFileNamePrefix}.json
-
 
 
 >>>
@@ -629,7 +771,82 @@ command <<<
   }
 
   output {
-    File json = "~{outputFileNamePrefix}.json"
+    File json     = "~{outputFileNamePrefix}.json"
     File samstats = "~{outputFileNamePrefix}.samstats.txt"
+  }
+}
+
+
+# ==========================================
+#  Build a JSON array that maps each fingerprint
+#  name to the @RG tags found in its source bam/cram
+# ==========================================
+
+task fingerprintReadgroupInfo {
+  input {
+    Array[File] bams
+    Array[File] fingerprints
+    String refFasta
+    String outputFileNamePrefix
+    String modules
+    Int jobMemory = 8
+    Int timeout = 24
+  }
+  parameter_meta {
+    bams:                 "lane-level bam/cram files used for fingerprint extraction (parallel to fingerprints)"
+    fingerprints:         "fingerprint vcf.gz files (parallel to bams)"
+    refFasta:             "path to reference FASTA (required for CRAM decoding)"
+    outputFileNamePrefix: "prefix for the output JSON file"
+    modules:              "Names and versions of modules"
+    jobMemory:            "memory allocated for job"
+    timeout:              "timeout in hours"
+  }
+
+  command <<<
+    set -euo pipefail
+    python3 << 'PYEOF'
+import subprocess, json, os
+
+bam_paths = '~{sep=" " bams}'.split()
+fp_paths  = '~{sep=" " fingerprints}'.split()
+ref       = '~{refFasta}'
+out_file  = '~{outputFileNamePrefix}.readgroup_info.json'
+
+result = []
+for bam, fp in zip(bam_paths, fp_paths):
+    fp_name = os.path.basename(fp)
+    for ext in ('.vcf.gz', '.vcf'):
+        if fp_name.endswith(ext):
+            fp_name = fp_name[:-len(ext)]
+            break
+
+    proc = subprocess.run(
+        ['samtools', 'view', '-H', '-T', ref, bam],
+        capture_output=True, text=True, check=True
+    )
+
+    for line in proc.stdout.splitlines():
+        if line.startswith('@RG'):
+            fields = line.split('\t')
+            entry = {'fingerprint': fp_name}
+            for field in fields[1:]:
+                tag, _, val = field.partition(':')
+                entry[tag] = val
+            result.append(entry)
+            break
+
+with open(out_file, 'w') as f:
+    json.dump(result, f, indent=2)
+PYEOF
+  >>>
+
+  output {
+    File json = "~{outputFileNamePrefix}.readgroup_info.json"
+  }
+
+  runtime {
+    memory:  "~{jobMemory} GB"
+    modules: "~{modules}"
+    timeout: "~{timeout}"
   }
 }
