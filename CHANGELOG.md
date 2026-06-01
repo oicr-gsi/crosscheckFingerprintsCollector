@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-06-01
+### Added
+- [GRD-1175](https://jira.oicr.on.ca/browse/GRD-1175) Support for hg38_noAlt index
+
 ## [1.3.0] - 2026-05-07
 ### Added
 - [GBS-6863](https://jira.oicr.on.ca/browse/GBS-6863) - add cram inputs, split the merged cram to lanes (by readgroup) and generate fingerprints for each

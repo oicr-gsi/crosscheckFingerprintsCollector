@@ -63,6 +63,22 @@ workflow crosscheckFingerprintsCollector {
    }
 
 Map[String,GenomeResources] resources = {
+  "hg38_noAlt": {
+    "refFasta" : "$HG38_NOALT_ROOT/hg38_noAlt.fa",
+    "bwaRef" : "$HG38_BWA_INDEX_NOALT_ROOT/hg38_noAlt.fa",
+    "refHapMap" : "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_chr.map",
+    "intervalBed": "$CROSSCHECKFINGERPRINTS_HAPLOTYPE_MAP_ROOT/oicr_hg38_intervals.bed",
+    "bwaMemModules" : "samtools/1.9 bwa/0.7.17 hg38-bwa-index-noalt/0.7.17",
+    "starRefDir" : "$HG38_NOALT_STAR_INDEX100_ROOT",
+    "starModules" :"star/2.7.10b hg38-noalt-star-index100/2.7.10b-gencode44",
+    "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38-noalt/p12 crosscheckfingerprints-haplotype-map/20230324",
+    "alignmentMetricsModules" : "samtools/1.15 hg38-noalt/p12",
+    "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15 hg38-noalt/p12",
+    "downsampleModules" :  "seqtk/1.3",
+    "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM",
+    "filterBamModules" : "crosscheckfingerprints-haplotype-map/20230324 samtools/1.14 hg38-noalt/p12",
+    "splitLanesModules" : "samtools/1.15 hg38-noalt/p12"
+  },
   "hg38": {
     "refFasta" : "$HG38_ROOT/hg38_random.fa",
     "bwaRef" : "$HG38_BWA_INDEX_ROOT/hg38_random.fa",
