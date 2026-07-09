@@ -147,39 +147,7 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputVcf": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.outputTbi": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.samstats": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.json": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.readgroupInfo": {
+      "crosscheckFingerprintsCollector.outputFingerprints": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -345,39 +313,7 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputVcf": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.outputTbi": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.samstats": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.json": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.readgroupInfo": {
+      "crosscheckFingerprintsCollector.outputFingerprints": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -543,39 +479,7 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputVcf": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.outputTbi": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.samstats": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.json": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.readgroupInfo": {
+      "crosscheckFingerprintsCollector.outputFingerprints": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -741,39 +645,7 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputVcf": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.outputTbi": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.samstats": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.json": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.readgroupInfo": {
+      "crosscheckFingerprintsCollector.outputFingerprints": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -939,39 +811,7 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputVcf": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.outputTbi": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.samstats": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.json": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.readgroupInfo": {
+      "crosscheckFingerprintsCollector.outputFingerprints": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -1137,39 +977,7 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputVcf": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.outputTbi": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.samstats": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.json": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.readgroupInfo": {
+      "crosscheckFingerprintsCollector.outputFingerprints": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
@@ -1335,42 +1143,10 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputVcf": {
+      "crosscheckFingerprintsCollector.outputFingerprints": {
         "contents": [
           {
             "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.outputTbi": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.samstats": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.json": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
-          }
-        ],
-        "type": "ALL"
-      },
-      "crosscheckFingerprintsCollector.readgroupInfo": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
           }
         ],
         "type": "ALL"

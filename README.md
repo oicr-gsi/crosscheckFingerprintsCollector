@@ -149,11 +149,7 @@ Parameter|Value|Default|Description
 
 Output | Type | Description | Labels
 ---|---|---|---
-`outputVcf`|Pair[Array[File]+,Map[String,String]]|per-lane crosscheck fingerprint vcf.gz files, file names carry read group|
-`outputTbi`|Pair[Array[File]+,Map[String,String]]|per-lane vcf.gz.tbi index files, file names carry read group|
-`json`|Pair[Array[File]+,Map[String,String]]|per-lane alignment metrics json files, file names carry read group|
-`samstats`|Pair[Array[File]+,Map[String,String]]|per-lane samstats summary files, file names carry read group|
-`readgroupInfo`|Pair[File,Map[String,String]]|JSON array mapping each fingerprint name to the read group tags found in its source bam/cram|
+`outputFingerprints`|Array[OutputGroup]|per-lane output groups; each carries the lane read group ID (limsId), the crosscheck fingerprint vcf.gz and its .tbi index, the alignment metrics json, and the samstats summary|vidarr_label: outputFingerprints
 
 
 ## Commands
@@ -272,40 +268,8 @@ This section lists command(s) run by crosscheckFingerprintsCollector workflow
 ```
 ```
     set -euo pipefail
-    python3 << 'PYEOF'
-import subprocess, json, os
-
-bam_paths = '~{sep=" " bams}'.split()
-fp_paths  = '~{sep=" " fingerprints}'.split()
-ref       = '~{refFasta}'
-out_file  = '~{outputFileNamePrefix}.readgroup_info.json'
-
-result = []
-for bam, fp in zip(bam_paths, fp_paths):
-    fp_name = os.path.basename(fp)
-    for ext in ('.vcf.gz', '.vcf'):
-        if fp_name.endswith(ext):
-            fp_name = fp_name[:-len(ext)]
-            break
-
-    proc = subprocess.run(
-        ['samtools', 'view', '-H', '-T', ref, bam],
-        capture_output=True, text=True, check=True
-    )
-
-    for line in proc.stdout.splitlines():
-        if line.startswith('@RG'):
-            fields = line.split('\t')
-            entry = {'fingerprint': fp_name}
-            for field in fields[1:]:
-                tag, _, val = field.partition(':')
-                entry[tag] = val
-            result.append(entry)
-            break
-
-with open(out_file, 'w') as f:
-    json.dump(result, f, indent=2)
-PYEOF
+    samtools view -H -T ~{refFasta} ~{inputBam} \
+      | awk -F'\t' '!found && /^@RG/ { for (i=1; i<=NF; i++) if ($i ~ /^ID:/) { sub(/^ID:/, "", $i); print $i; found=1 } }'
 ```
 ## Support
 

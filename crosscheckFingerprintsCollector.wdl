@@ -9,6 +9,14 @@ struct InputGroup {
   String readGroup
 }
 
+struct OutputGroup{
+   String limsId
+   File outputVcf
+   File outputTbi
+   File json
+   File samstats
+}
+
 struct GenomeResources {
     String refFasta
     String bwaRef
@@ -264,23 +272,26 @@ Map[String,GenomeResources] resources = {
           sampleId = sampleId,
           modules = resources[reference].extractFingerprintModules
       }
-   }
 
-   call fingerprintReadgroupInfo {
-     input:
-       bams                 = laneResult,
-       fingerprints         = extractFingerprint.vgz,
-       refFasta             = resources[reference].refFasta,
-       outputFileNamePrefix = outputFileNamePrefix,
-       modules              = resources[reference].alignmentMetricsModules
+     # Extract the read group ID (RGID) from this lane's bam/cram; used as limsId.
+     call fingerprintReadgroupInfo {
+       input:
+         inputBam = laneResult,
+         refFasta = resources[reference].refFasta,
+         modules  = resources[reference].alignmentMetricsModules
+     }
+
+     OutputGroup laneOutput = {
+       "limsId":    fingerprintReadgroupInfo.readgroupId,
+       "outputVcf": extractFingerprint.vgz,
+       "outputTbi": extractFingerprint.tbi,
+       "json":      alignmentMetrics.json,
+       "samstats":  alignmentMetrics.samstats
+     }
    }
 
    output {
-      Pair[Array[File]+, Map[String,String]] outputVcf    = (extractFingerprint.vgz,        {"vidarr_label": "outputVcf"})
-      Pair[Array[File]+, Map[String,String]] outputTbi    = (extractFingerprint.tbi,         {"vidarr_label": "outputTbi"})
-      Pair[Array[File]+, Map[String,String]] json         = (alignmentMetrics.json,          {"vidarr_label": "json"})
-      Pair[Array[File]+, Map[String,String]] samstats     = (alignmentMetrics.samstats,      {"vidarr_label": "samstats"})
-      Pair[File,         Map[String,String]] readgroupInfo = (fingerprintReadgroupInfo.json,  {"vidarr_label": "readgroupInfo"})
+      Array[OutputGroup] outputFingerprints = laneOutput
    }
 
     meta {
@@ -317,20 +328,8 @@ Map[String,GenomeResources] resources = {
       }
      ]
      output_meta: {
-     outputVcf: {
-         description: "per-lane crosscheck fingerprint vcf.gz files, file names carry read group"
-     },
-     outputTbi: {
-         description: "per-lane vcf.gz.tbi index files, file names carry read group"
-     },
-     json: {
-         description: "per-lane alignment metrics json files, file names carry read group"
-     },
-     samstats: {
-         description: "per-lane samstats summary files, file names carry read group"
-     },
-     readgroupInfo: {
-         description: "JSON array mapping each fingerprint name to the read group tags found in its source bam/cram"
+     outputFingerprints: {
+         description: "per-lane output groups; each carries the lane read group ID (limsId), the crosscheck fingerprint vcf.gz and its .tbi index, the alignment metrics json, and the samstats summary"
      }
      }
   }
@@ -778,70 +777,34 @@ command <<<
 
 
 # ==========================================
-#  Build a JSON array that maps each fingerprint
-#  name to the @RG tags found in its source bam/cram
+#  Extract the read group ID (RGID) from the
+#  @RG header line of a lane's bam/cram file
 # ==========================================
 
 task fingerprintReadgroupInfo {
   input {
-    Array[File] bams
-    Array[File] fingerprints
+    File inputBam
     String refFasta
-    String outputFileNamePrefix
     String modules
     Int jobMemory = 8
     Int timeout = 24
   }
   parameter_meta {
-    bams:                 "lane-level bam/cram files used for fingerprint extraction (parallel to fingerprints)"
-    fingerprints:         "fingerprint vcf.gz files (parallel to bams)"
-    refFasta:             "path to reference FASTA (required for CRAM decoding)"
-    outputFileNamePrefix: "prefix for the output JSON file"
-    modules:              "Names and versions of modules"
-    jobMemory:            "memory allocated for job"
-    timeout:              "timeout in hours"
+    inputBam:  "lane-level bam/cram file used for fingerprint extraction"
+    refFasta:  "path to reference FASTA (required for CRAM decoding)"
+    modules:   "Names and versions of modules"
+    jobMemory: "memory allocated for job"
+    timeout:   "timeout in hours"
   }
 
   command <<<
     set -euo pipefail
-    python3 << 'PYEOF'
-import subprocess, json, os
-
-bam_paths = '~{sep=" " bams}'.split()
-fp_paths  = '~{sep=" " fingerprints}'.split()
-ref       = '~{refFasta}'
-out_file  = '~{outputFileNamePrefix}.readgroup_info.json'
-
-result = []
-for bam, fp in zip(bam_paths, fp_paths):
-    fp_name = os.path.basename(fp)
-    for ext in ('.vcf.gz', '.vcf'):
-        if fp_name.endswith(ext):
-            fp_name = fp_name[:-len(ext)]
-            break
-
-    proc = subprocess.run(
-        ['samtools', 'view', '-H', '-T', ref, bam],
-        capture_output=True, text=True, check=True
-    )
-
-    for line in proc.stdout.splitlines():
-        if line.startswith('@RG'):
-            fields = line.split('\t')
-            entry = {'fingerprint': fp_name}
-            for field in fields[1:]:
-                tag, _, val = field.partition(':')
-                entry[tag] = val
-            result.append(entry)
-            break
-
-with open(out_file, 'w') as f:
-    json.dump(result, f, indent=2)
-PYEOF
+    samtools view -H -T ~{refFasta} ~{inputBam} \
+      | awk -F'\t' '!found && /^@RG/ { for (i=1; i<=NF; i++) if ($i ~ /^ID:/) { sub(/^ID:/, "", $i); print $i; found=1 } }'
   >>>
 
   output {
-    File json = "~{outputFileNamePrefix}.readgroup_info.json"
+    String readgroupId = read_string(stdout())
   }
 
   runtime {
