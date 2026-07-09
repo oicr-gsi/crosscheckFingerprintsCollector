@@ -147,14 +147,43 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputFingerprints": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+      "crosscheckFingerprintsCollector.outputFingerprints": [
+        {
+          "limsId": "CROSSCHECK",
+          "outputVcf": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "outputTbi": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "json": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "samstats": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
           }
-        ],
-        "type": "ALL"
-      }
+        }
+      ]
     },
     "validators": [
       {
@@ -313,14 +342,43 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputFingerprints": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+      "crosscheckFingerprintsCollector.outputFingerprints": [
+        {
+          "limsId": "CROSSCHECK",
+          "outputVcf": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "outputTbi": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "json": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "samstats": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
           }
-        ],
-        "type": "ALL"
-      }
+        }
+      ]
     },
     "validators": [
       {
@@ -479,14 +537,43 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputFingerprints": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+      "crosscheckFingerprintsCollector.outputFingerprints": [
+        {
+          "limsId": "CROSSCHECK",
+          "outputVcf": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "outputTbi": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "json": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "samstats": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
           }
-        ],
-        "type": "ALL"
-      }
+        }
+      ]
     },
     "validators": [
       {
@@ -645,14 +732,43 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputFingerprints": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+      "crosscheckFingerprintsCollector.outputFingerprints": [
+        {
+          "limsId": "CROSSCHECK",
+          "outputVcf": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "outputTbi": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "json": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "samstats": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
           }
-        ],
-        "type": "ALL"
-      }
+        }
+      ]
     },
     "validators": [
       {
@@ -811,14 +927,43 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputFingerprints": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+      "crosscheckFingerprintsCollector.outputFingerprints": [
+        {
+          "limsId": "CROSSCHECK",
+          "outputVcf": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "outputTbi": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "json": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "samstats": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
           }
-        ],
-        "type": "ALL"
-      }
+        }
+      ]
     },
     "validators": [
       {
@@ -977,14 +1122,43 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputFingerprints": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+      "crosscheckFingerprintsCollector.outputFingerprints": [
+        {
+          "limsId": "CROSSCHECK",
+          "outputVcf": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "outputTbi": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "json": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "samstats": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_FASTQ@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
           }
-        ],
-        "type": "ALL"
-      }
+        }
+      ]
     },
     "validators": [
       {
@@ -1143,14 +1317,78 @@
       "read_from_cache": false
     },
     "metadata": {
-      "crosscheckFingerprintsCollector.outputFingerprints": {
-        "contents": [
-          {
-            "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+      "crosscheckFingerprintsCollector.outputFingerprints": [
+        {
+          "limsId": "PLACEHOLDER_LANE1_RGID",
+          "outputVcf": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "outputTbi": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "json": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "samstats": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
           }
-        ],
-        "type": "ALL"
-      }
+        },
+        {
+          "limsId": "PLACEHOLDER_LANE2_RGID",
+          "outputVcf": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "outputTbi": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "json": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
+          "samstats": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          }
+        }
+      ]
     },
     "validators": [
       {
