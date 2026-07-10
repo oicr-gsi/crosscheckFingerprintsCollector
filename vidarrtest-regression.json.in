@@ -149,7 +149,14 @@
     "metadata": {
       "crosscheckFingerprintsCollector.outputFingerprints": [
         {
-          "limsId": "PLACEHOLDER_LANE1_RGID",
+          "limsId": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
           "outputVcf": {
             "contents": [
               {
@@ -184,7 +191,14 @@
           }
         },
         {
-          "limsId": "PLACEHOLDER_LANE2_RGID",
+          "limsId": {
+            "contents": [
+              {
+                "outputDirectory": "@SCRATCH@/@DATE@_Workflow_crosscheckFingerprintsCollector_TEST_0001_WG_HG38_CRAM_MULTILANE@JENKINSID@"
+              }
+            ],
+            "type": "ALL"
+          },
           "outputVcf": {
             "contents": [
               {
