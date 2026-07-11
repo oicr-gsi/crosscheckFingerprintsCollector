@@ -209,12 +209,7 @@ Map[String,GenomeResources] resources = {
    Array[Array[String]] intervalsToParallelizeBy = splitStringToArray.out
 
    scatter (idx in range(length(bamsToProcess))) {
-     # Derive a clean per-lane prefix: strip the .bam/.cram extension, then replace any
-     # remaining dots with underscores. Output-provisioning derives file identity from the
-     # name and mishandles base names containing multiple dots (e.g. a STAR-named input
-     # "X.Aligned.sortedByCoord.out.bam"), which stalls provision-out for that lane.
-     String laneBase   = sub(sub(basename(bamsToProcess[idx]), "\\.bam$", ""), "\\.cram$", "")
-     String lanePrefix = sub(laneBase, "\\.", "_")
+     String lanePrefix = sub(sub(basename(bamsToProcess[idx]), "\\.bam$", ""), "\\.cram$", "")
 
      if (filterBam) {
        call filterBam as filterBamLane {
