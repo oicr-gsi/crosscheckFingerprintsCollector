@@ -28,10 +28,10 @@ java -jar cromwell.jar run crosscheckFingerprintsCollector.wdl --inputs inputs.j
 #### Required workflow parameters:
 Parameter|Value|Description
 ---|---|---
-`inputType`|String|one of either fastq or bam
+`inputType`|String|one of fastq, bam, or cram
 `aligner`|String|aligner to use for fastq input, either bwa or star
 `markDups`|Boolean|should the alignment be duplicate marked?, generally yes
-`filterBam`|Boolean|should use filterBamToInterval to prefiltering of the bam file to intervals? Generally true
+`filterBam`|Boolean|should use filterBamToInterval to prefiltering of the bam/cram file to intervals? Generally true
 `outputFileNamePrefix`|String|Optional output prefix for the output
 `reference`|String|the reference genome for input sample
 `sampleId`|String|value that will be used as the sample identifier in the vcf fingerprint
@@ -44,6 +44,9 @@ Parameter|Value|Default|Description
 `fastqR2`|File?|None|fastq file for read 2
 `bam`|File?|None|bam file
 `bamIndex`|File?|None|bam index file
+`cram`|File?|None|cram file (may be a merged-lanes cram)
+`cramIndex`|File?|None|index for the cram file
+`is_lane_level`|Boolean|true|true if the input bam/cram is already at lane level; false if it is a merged-lanes file that needs to be split before processing
 `maxReads`|Int|0|The maximum number of reads to process; if set, this will sample the requested number of reads
 
 
@@ -111,91 +114,198 @@ Parameter|Value|Default|Description
 `star.runStar_chimericjunctionSuffix`|String|"Chimeric.out"|Suffix for chimeric junction file
 `star.runStar_transcriptomeSuffix`|String|"Aligned.toTranscriptome.out"|Suffix for transcriptome-aligned file
 `star.runStar_starSuffix`|String|"Aligned.sortedByCoord.out"|Suffix for sorted file
-`filterBamToIntervals.jobMemory`|Int|16|memory allocated for Job
-`filterBamToIntervals.overhead`|Int|6|memory allocated to overhead of the job other than used in markDuplicates command
-`filterBamToIntervals.timeout`|Int|24|Timeout in hours, needed to override imposed limits
+`filterBamPreSplit.jobMemory`|Int|16|memory allocated for Job
+`filterBamPreSplit.overhead`|Int|6|memory allocated to overhead of the job other than used in markDuplicates command
+`filterBamPreSplit.timeout`|Int|24|Timeout in hours, needed to override imposed limits
+`splitLanes.jobMemory`|Int|16|memory allocated for Job
+`splitLanes.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `splitStringToArray.lineSeparator`|String|","|Interval group separator - these are the intervals to split by.
 `splitStringToArray.recordSeparator`|String|"+"|Interval interval group separator - this can be used to combine multiple intervals into one group.
 `splitStringToArray.jobMemory`|Int|1|Memory allocated to job (in GB).
-`splitStringToArray.cores`|Int|1|The number of cores to allocate to the job.
+`splitStringToArray.threads`|Int|1|The number of threads to allocate to the job.
 `splitStringToArray.timeout`|Int|1|Maximum amount of time (in hours) the task can run for.
 `splitStringToArray.modules`|String|""|Environment module name and version to load (space separated) before command execution.
+`filterBamLane.jobMemory`|Int|16|memory allocated for Job
+`filterBamLane.overhead`|Int|6|memory allocated to overhead of the job other than used in markDuplicates command
+`filterBamLane.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `markDuplicates.jobMemory`|Int|16|memory allocated for Job
 `markDuplicates.overhead`|Int|6|memory allocated to overhead of the job other than used in markDuplicates command
 `markDuplicates.timeout`|Int|24|Timeout in hours, needed to override imposed limits
-`mergeBams.additionalParams`|String?|None|Additional parameters to pass to GATK MergeSamFiles.
-`mergeBams.jobMemory`|Int|24|Memory allocated to job (in GB).
-`mergeBams.overhead`|Int|6|Java overhead memory (in GB). jobMemory - overhead == java Xmx/heap memory.
-`mergeBams.cores`|Int|1|The number of cores to allocate to the job.
-`mergeBams.timeout`|Int|6|Maximum amount of time (in hours) the task can run for.
-`mergeBams.modules`|String|"gatk/4.1.6.0"|Environment module name and version to load (space separated) before command execution.
+`mergeIntervalBams.additionalParams`|String?|None|Additional parameters to pass to GATK MergeSamFiles.
+`mergeIntervalBams.jobMemory`|Int|24|Memory allocated to job (in GB).
+`mergeIntervalBams.overhead`|Int|6|Java overhead memory (in GB). jobMemory - overhead == java Xmx/heap memory.
+`mergeIntervalBams.threads`|Int|1|The number of threads to allocate to the job.
+`mergeIntervalBams.timeout`|Int|6|Maximum amount of time (in hours) the task can run for.
+`mergeIntervalBams.modules`|String|"gatk/4.1.6.0"|Environment module name and version to load (space separated) before command execution.
 `alignmentMetrics.jobMemory`|Int|8|memory allocated for Job
 `alignmentMetrics.timeout`|Int|24|Timeout in hours, needed to override imposed limits
 `extractFingerprint.jobMemory`|Int|8|memory allocated for Job
 `extractFingerprint.timeout`|Int|24|Timeout in hours, needed to override imposed limits
+`fingerprintReadgroupInfo.jobMemory`|Int|8|memory allocated for job
+`fingerprintReadgroupInfo.timeout`|Int|24|timeout in hours
 
 
 ### Outputs
 
 Output | Type | Description | Labels
 ---|---|---|---
-`outputVcf`|File|the crosscheck fingerprint, gzipped vcf file|vidarr_label: outputVcf
-`outputTbi`|File|index for the vcf fingerprint|vidarr_label: outputTbi
-`json`|File|metrics in json format, currently only the mean coverage for the alignment|vidarr_label: json 
-`samstats`|File|output from the samstats summary|vidarr_label: samstats 
+`outputVcf`|Pair[Array[File]+,Map[String,String]]|per-lane crosscheck fingerprint vcf.gz files, file names carry read group|
+`outputTbi`|Pair[Array[File]+,Map[String,String]]|per-lane vcf.gz.tbi index files, file names carry read group|
+`json`|Pair[Array[File]+,Map[String,String]]|per-lane alignment metrics json files, file names carry read group|
+`samstats`|Pair[Array[File]+,Map[String,String]]|per-lane samstats summary files, file names carry read group|
+`readgroupInfo`|Pair[File,Map[String,String]]|JSON array mapping each fingerprint name to the read group tags found in its source bam/cram|
 
 
 ## Commands
-This section lists command(s) run by CROSSCHECKFINGEPRINTSCOLLECTOR workflow
-  
-* Running CROSSCHECKFINGEPRINTSCOLLECTOR
-  
-### Fingerprint Generation 
-  
+This section lists command(s) run by crosscheckFingerprintsCollector workflow
+
+* Running crosscheckFingerprintsCollector
+
 ```
     set -euo pipefail
-  
-   $GATK_ROOT/bin/gatk ExtractFingerprint \
-                      -R ~{refFasta} \
-                      -H ~{haplotypeMap} \
-                      -I ~{inputBam} \
-                      -O ~{outputFileNamePrefix}.vcf \
-                      --SAMPLE_ALIAS ~{sampleId}
-  
-   $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
-   $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz 
+    EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+    if [ "$EXT" = "cram" ]; then
+      # samtools split does not support -T; convert CRAM to BAM first
+      ln -s ~{inputBam} input.cram
+      ln -s ~{inputBai} input.cram.crai
+      samtools view -b -T ~{refFasta} -o input_converted.bam input.cram
+      samtools index input_converted.bam
+      samtools split -f "~{outputFileNamePrefix}_%!.bam" input_converted.bam
+    else
+      ln -s ~{inputBam} input.bam
+      ln -s ~{inputBai} input.bam.bai
+      samtools split -f "~{outputFileNamePrefix}_%!.bam" input.bam
+    fi
+    for f in ~{outputFileNamePrefix}_*.bam; do samtools index "$f"; done
 ```
-  
-### downsampling,if requested 
-  
 ```
-   set -euo pipefail
-   
-   seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
-   gzip ~{fastqR1m}
-   
-   seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
-   gzip ~{fastqR2m}
+  set -euo pipefail
+  EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+  ln -s ~{inputBam} input.$EXT
+  if [ "$EXT" = "cram" ]; then ln -s ~{inputBai} input.cram.crai
+  else                          ln -s ~{inputBai} input.bam.bai
+  fi
+  samtools view -b -T ~{refFasta} -L ~{intervalBed} input.$EXT > ~{outputFileNamePrefix}.filtered.bam
+  samtools index ~{outputFileNamePrefix}.filtered.bam
 ```
-  
-### Duplicate Marking, if requested 
-  
-```
-    set -euo pipefail
-    $GATK_ROOT/bin/gatk MarkDuplicates \
-                        -I ~{inputBam} \
-                        --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
-                        --VALIDATION_STRINGENCY SILENT \
-                        --CREATE_INDEX true \
-                        -O ~{outputFileNamePrefix}.dupmarked.bam
-```
-  
-### Coverage Assessment 
-  
 ```
     set -euo pipefail
-    $SAMTOOLS_ROOT/bin/samtools coverage ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
-    cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }' | awk '{print "{\"mean coverage\":" $1 "}"}' > ~{outputFileNamePrefix}.json
+
+    echo "~{str}" | tr '~{lineSeparator}' '\n' | tr '~{recordSeparator}' '\t'
+```
+```
+  set -euo pipefail
+
+ $GATK_ROOT/bin/gatk ExtractFingerprint \
+                    -R ~{refFasta} \
+                    -H ~{haplotypeMap} \
+                    -I ~{inputBam} \
+                    -O ~{outputFileNamePrefix}.vcf \
+                    --SAMPLE_ALIAS ~{sampleId}
+
+ $TABIX_ROOT/bin/bgzip -c ~{outputFileNamePrefix}.vcf > ~{outputFileNamePrefix}.vcf.gz
+ $TABIX_ROOT/bin/tabix -p vcf ~{outputFileNamePrefix}.vcf.gz
+```
+```
+ set -euo pipefail
+
+ seqtk sample -s 100 ~{fastqR1} ~{maxReads} > ~{fastqR1m}
+ gzip ~{fastqR1m}
+
+ seqtk sample -s 100 ~{fastqR2} ~{maxReads} > ~{fastqR2m}
+ gzip ~{fastqR2m}
+```
+```
+  set -euo pipefail
+  EXT=$(basename ~{inputBam} | rev | cut -d. -f1 | rev)
+  ln -s ~{inputBam} input.$EXT
+  if [ "$EXT" = "cram" ]; then ln -s ~{inputBai} input.cram.crai
+  else                          ln -s ~{inputBai} input.bam.bai
+  fi
+  samtools view -b -T ~{refFasta} input.$EXT \
+        ~{sep=" " intervals} > intervalBam.bam
+  samtools index intervalBam.bam intervalBam.bam.bai
+
+  $GATK_ROOT/bin/gatk --java-options "-Xmx~{jobMemory - overhead}G" MarkDuplicates \
+                      -I intervalBam.bam \
+                      --METRICS_FILE ~{outputFileNamePrefix}.dupmetrics \
+                      --VALIDATION_STRINGENCY SILENT \
+                      --CREATE_INDEX true \
+                      -O ~{outputFileNamePrefix}.dupmarked.bam
+```
+```
+    set -euo pipefail
+
+    gatk --java-options "-Xmx~{jobMemory - overhead}G" MergeSamFiles \
+    ~{sep=" " prefix("--INPUT=", bams)} \
+    --OUTPUT="~{outputFileName}~{suffix}.bam" \
+    --CREATE_INDEX=true \
+    --SORT_ORDER=coordinate \
+    --ASSUME_SORTED=false \
+    --USE_THREADING=true \
+    --VALIDATION_STRINGENCY=SILENT \
+    ~{additionalParams}
+```
+```
+  set -euo pipefail
+
+  ### samtools stats
+  $SAMTOOLS_ROOT/bin/samtools stats --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.samstats.txt
+  reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "raw total sequences:" | cut -f3`
+  mapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads mapped:" | cut -f 3`
+  unmapped_reads=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads unmapped:" | cut -f 3`
+  mapped_bases=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "bases mapped:" | cut -f 3`
+  reads_duplicated=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads duplicated:" | cut -f 3`
+
+  ### samtools coverage, with duplicates
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
+  mean_cvg=`cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
+
+  ### samtools coverage, deduplicated
+  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP --reference ~{refFasta} ~{inputBam} > ~{outputFileNamePrefix}.dedup.coverage.txt
+  mean_dedup_cvg=`cat ~{outputFileNamePrefix}.dedup.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
+
+  ### json file
+  echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups},\"maxReads\":~{maxReads}} > ~{outputFileNamePrefix}.json
+
+
+```
+```
+    set -euo pipefail
+    python3 << 'PYEOF'
+import subprocess, json, os
+
+bam_paths = '~{sep=" " bams}'.split()
+fp_paths  = '~{sep=" " fingerprints}'.split()
+ref       = '~{refFasta}'
+out_file  = '~{outputFileNamePrefix}.readgroup_info.json'
+
+result = []
+for bam, fp in zip(bam_paths, fp_paths):
+    fp_name = os.path.basename(fp)
+    for ext in ('.vcf.gz', '.vcf'):
+        if fp_name.endswith(ext):
+            fp_name = fp_name[:-len(ext)]
+            break
+
+    proc = subprocess.run(
+        ['samtools', 'view', '-H', '-T', ref, bam],
+        capture_output=True, text=True, check=True
+    )
+
+    for line in proc.stdout.splitlines():
+        if line.startswith('@RG'):
+            fields = line.split('\t')
+            entry = {'fingerprint': fp_name}
+            for field in fields[1:]:
+                tag, _, val = field.partition(':')
+                entry[tag] = val
+            result.append(entry)
+            break
+
+with open(out_file, 'w') as f:
+    json.dump(result, f, indent=2)
+PYEOF
 ```
 ## Support
 
