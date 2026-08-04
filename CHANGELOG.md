@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [1.3.1] - 2026-06-01
 ### Added
 - [GRD-1175](https://jira.oicr.on.ca/browse/GRD-1175) Support for hg38_noAlt index
@@ -28,9 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [GRD-797](https://jira.oicr.on.ca/browse/GRD-797) - add vidarr labels to outputs (changes to medata only)
 
 
-## [1.1.0] - 2024-06-25
+## [1.1.0] - 2023-03-28
 ### Added
-- [GRD-797](https://jira.oicr.on.ca/browse/GRD-797) - add vidarr labels to outputs (changes to medata only)
+- [GRD-541](https://jira.oicr.on.ca/browse/GRD-541) - allow prefiltering of the bam file to intervals
 
 ## [1.0.0] - 2021-10-01
 ### Added
