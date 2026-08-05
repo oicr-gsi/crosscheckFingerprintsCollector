@@ -11,10 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.0] - 2026-05-07
 ### Added
 - [GBS-6863](https://jira.oicr.on.ca/browse/GBS-6863) - add cram inputs, split the merged cram to lanes (by readgroup) and generate fingerprints for each
-- 
+
+## [1.2.2] - 2026-07-30
+### Added
+- [GRD-1175](https://jira.oicr.on.ca/browse/GRD-1175) - added hg38_noAlt support to bam-only version
+- Ensured this version is BAM-only
+
 ## [1.2.1] - 2026-07-30
 ### Added
 - [GRD-1175](https://jira.oicr.on.ca/browse/GRD-1175) - added hg38_noAlt support to bam-only version
+- THIS VERSION IS BUGGY, CRAM INPUTS ARE STILL IN PLACE.
 
 ## [1.2.0] - 2024-06-25
 ### Added
