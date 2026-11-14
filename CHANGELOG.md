@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2026-11-10
+### Changed
+- [GRD-1239](https://jira.oicr.on.ca/browse/GRD-1239) - mean_raw_cvg and mean_dedup_cvg in the metrics json are now the mean depth over the fingerprint intervals (samtools depth over the interval bed, divided by the merged interval length) instead of over the whole genome; the interval length is reported as target_space
+
 ## [1.3.1] - 2026-06-01
 ### Added
 - [GRD-1175](https://jira.oicr.on.ca/browse/GRD-1175) Support for hg38_noAlt index
