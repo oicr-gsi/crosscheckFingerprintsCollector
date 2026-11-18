@@ -65,7 +65,7 @@ Map[String,GenomeResources] resources = {
     "starRefDir" : "$HG38_NOALT_STAR_INDEX100_ROOT",
     "starModules" :"star/2.7.10b hg38-noalt-star-index100/2.7.10b-gencode44",
     "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38-noalt/p12 crosscheckfingerprints-haplotype-map/20230324",
-    "alignmentMetricsModules" : "samtools/1.15 hg38-noalt/p12",
+    "alignmentMetricsModules" : "samtools/1.15 hg38-noalt/p12 crosscheckfingerprints-haplotype-map/20230324",
     "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15 hg38-noalt/p12",
     "downsampleModules" :  "seqtk/1.3",
     "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM",
@@ -81,7 +81,7 @@ Map[String,GenomeResources] resources = {
     "starRefDir" : "$HG38_STAR_INDEX100_ROOT",
     "starModules" :"star/2.7.3a hg38-star-index100/2.7.3a",
     "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg38/p12 crosscheckfingerprints-haplotype-map/20230324",
-    "alignmentMetricsModules" : "samtools/1.15",
+    "alignmentMetricsModules" : "samtools/1.15 crosscheckfingerprints-haplotype-map/20230324",
     "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
     "downsampleModules" :  "seqtk/1.3",
     "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM"
@@ -95,7 +95,7 @@ Map[String,GenomeResources] resources = {
     "starRefDir" : "$HG19_STAR_INDEX100_ROOT",
     "starModules" : "star/2.7.3a  hg19-star-index100/2.7.3a",
     "extractFingerprintModules" : "gatk/4.2.0.0 tabix/0.2.6 hg19/p13 crosscheckfingerprints-haplotype-map/20230324",
-    "alignmentMetricsModules" : "samtools/1.15",
+    "alignmentMetricsModules" : "samtools/1.15 crosscheckfingerprints-haplotype-map/20230324",
     "markDuplicatesModules" : "gatk/4.2.0.0 samtools/1.15",
     "downsampleModules" :  "seqtk/1.3",
     "intervalsToParallelizeByString" : "chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY,chrM"
@@ -189,6 +189,7 @@ Map[String,GenomeResources] resources = {
      input:
         inputBam = select_first([mergeBams.mergedBam,filterBamToIntervals.bam,bwaMem.bwaMemBam,star.starBam,bam]),
         inputBai = select_first([mergeBams.mergedBamIndex,filterBamToIntervals.bamIndex,bwaMem.bwaMemIndex,star.starIndex,bamIndex]),
+        intervalBed = resources [ reference ].intervalBed,
         outputFileNamePrefix = outputFileNamePrefix,
         markDups = markDups,
         maxReads = maxReads,
@@ -260,7 +261,7 @@ Map[String,GenomeResources] resources = {
          vidarr_label: "coverage"
      },
      json: {
-         description: "metrics in json format, currently only the mean coverage for the alignment",
+         description: "metrics in json format: read counts from samtools stats, and mean coverage (raw and deduplicated) over the fingerprint intervals, with the merged interval length used as the denominator (target_space)",
          vidarr_label: "json"
      },
      samstats: {
@@ -595,6 +596,7 @@ task mergeBams {
    input{
     File inputBam
     File inputBai
+    String intervalBed
     String modules
     String outputFileNamePrefix
     Boolean markDups
@@ -605,7 +607,9 @@ task mergeBams {
    parameter_meta {
     inputBam: "input .bam file"
     inputBai: "index of the input .bam file"
+    intervalBed: "bed file of the fingerprint intervals; mean coverage is calculated over these"
     outputFileNamePrefix: "prefix for making names for output files"  
+    markDups: "whether duplicate marking was run; recorded in the json"
     jobMemory: "memory allocated for Job"
     modules: "Names and versions of modules"
     maxReads : "the maximum number of reads to use"
@@ -623,16 +627,25 @@ command <<<
   mapped_bases=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "bases mapped:" | cut -f 3`
   reads_duplicated=`cat ~{outputFileNamePrefix}.samstats.txt | grep ^SN | grep "reads duplicated:" | cut -f 3`
 
-  ### samtools coverage, with duplicates
-  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL ~{inputBam} > ~{outputFileNamePrefix}.coverage.txt
-  mean_cvg=`cat ~{outputFileNamePrefix}.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
-  
-  ### samtools coverage, deduplicated
-  $SAMTOOLS_ROOT/bin/samtools coverage --ff UNMAP,SECONDARY,QCFAIL,DUP ~{inputBam} > ~{outputFileNamePrefix}.dedup.coverage.txt
-  mean_dedup_cvg=`cat ~{outputFileNamePrefix}.dedup.coverage.txt | grep -P "^chr\d+\t|^chrX\t|^chrY\t" | awk '{ space += ($3-$2)+1; bases += $7*($3-$2);} END { print bases/space }'`
-  
+  ### mean coverage over the fingerprint intervals: summed per-base depth over
+  ### the intervals divided by their merged length, so overlapping intervals
+  ### are counted once
+  target_space=$(grep -v -e '^#' -e '^track' -e '^browser' ~{intervalBed} | sort -k1,1 -k2,2n \
+    | awk -F'\t' '$1 != chr || $2 > end { total += end - start; chr = $1; start = $2; end = $3; next }
+                  $3 > end { end = $3 }
+                  END { total += end - start; print total }')
+  mean_depth () {
+    awk -v space="$target_space" '{ s += $3 } END { if (space > 0) print s / space; else print 0 }'
+  }
+
+  ### with duplicates (UNMAP,SECONDARY,QCFAIL reads excluded)
+  mean_cvg=$($SAMTOOLS_ROOT/bin/samtools depth -g DUP -b ~{intervalBed} ~{inputBam} | mean_depth)
+
+  ### deduplicated (UNMAP,SECONDARY,QCFAIL,DUP reads excluded)
+  mean_dedup_cvg=$($SAMTOOLS_ROOT/bin/samtools depth -b ~{intervalBed} ~{inputBam} | mean_depth)
+
   ### json file
-  echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg\,\"markDups\":~{markDups},\"maxReads\":~{maxReads}} > ~{outputFileNamePrefix}.json
+  echo \{\"reads\":$reads,\"mapped_reads\":$mapped_reads,\"unmapped_reads\":$unmapped_reads,\"mapped_bases\":$mapped_bases,\"reads_duplicated\":$reads_duplicated,\"mean_raw_cvg\":$mean_cvg,\"mean_dedup_cvg\":$mean_dedup_cvg,\"target_space\":$target_space,\"markDups\":~{markDups},\"maxReads\":~{maxReads}} > ~{outputFileNamePrefix}.json
 
 
 
